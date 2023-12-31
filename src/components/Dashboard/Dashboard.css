@@ -1,0 +1,16 @@
+.dashboard-container > *{
+    opacity: 0;
+  animation: viewContent 0.5s ease-in-out forwards;
+  }
+
+  @keyframes viewContent {
+    0% {
+        opacity: 0;
+        
+        
+    }
+    100% {
+        opacity: 1;
+        
+    }
+  }
