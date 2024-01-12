@@ -212,7 +212,10 @@ const ManageAdmins = () => {
               />
             </div>
             <button
-              class="mr-12 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              type="button"
+              id="createProductButton"
+              data-modal-toggle="createProductModal"
+              class="flex items-center justify-center text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
               onClick={ViewAddAdminHandler}
             >
               Add
