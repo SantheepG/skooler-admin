@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const EditProductView = ({ closeModal, product }) => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [subcategoriesDisabled, setSubcategoriesDisabled] = useState(true);
+  const [updateDetails, setUpdateDetails] = useState({
+    name: "",
+    description: "",
+    stock: 0,
+    size: null,
+    color: null,
+    price: 0,
+    discount: 0,
+    discounted_price: 0,
+    images: null,
+    category_id: 0,
+    subcategory_id: 0,
+  });
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -43,34 +57,129 @@ const EditProductView = ({ closeModal, product }) => {
       const response = await axios.get(
         `http://127.0.0.1:8000/api/categories/${selectedValue}`
       );
-      const subcategoriesWithData = response.data.map((subcategory) => ({
-        value: subcategory.subcategory_id,
-        label: subcategory.name,
-      }));
-      setSubcategories(subcategoriesWithData);
+
+      setSubcategories(response.data.subcategory);
       setSubcategoriesDisabled(false);
     } catch (error) {
       console.log("Error fetching subcategories:", error);
     }
   };
 
-  const updateProductDetails = () => {};
+  const handleSubCategoryChange = async (event) => {
+    const selectedValue = event.target.value;
+    setSelectedSubcategory(selectedValue);
+    console.log(selectedValue);
+    setUpdateDetails({
+      ...updateDetails,
+      subcategory_id: selectedValue,
+    });
+    //setSelectedSubcategory("");
+  };
+
+  const resetStates = () => {
+    setSelectedCategory(0);
+    setSelectedSubcategory(0);
+    setUpdateDetails({
+      name: "",
+      description: "",
+      stock: 0,
+      size: null,
+      color: null,
+      price: 0,
+      discount: 0,
+      discounted_price: 0,
+      images: null,
+      category_id: null,
+      subcategory_id: null,
+    });
+  };
+
+  const updateProductDetails = async () => {
+    try {
+      if (
+        updateDetails.name !== "" &&
+        updateDetails.description !== "" &&
+        updateDetails.price !== 0 &&
+        selectedCategory !== 0
+        //AddProductDetails.subcategory_id !== 0
+      ) {
+        const response = await axios.put(
+          "http://127.0.0.1:8000/api/product/update",
+          {
+            products_id: product.products_id,
+            name: updateDetails.name,
+            description: updateDetails.description,
+            stock: parseFloat(updateDetails.stock),
+            size: updateDetails.size,
+            color: updateDetails.color,
+            price: parseFloat(updateDetails.price),
+            discount:
+              updateDetails.discount === 0
+                ? null
+                : parseFloat(updateDetails.discount),
+            discounted_price:
+              updateDetails.discount === 0
+                ? null
+                : parseFloat(
+                    updateDetails.price -
+                      updateDetails.price * (updateDetails.discount / 100)
+                  ),
+            images: updateDetails.images,
+            category_id: selectedCategory,
+            subcategory_id: selectedSubcategory,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          console.log("Details updated");
+
+          toast.success("Details updated");
+
+          const timerId = setTimeout(() => {
+            resetStates();
+            closeModal();
+          }, 1600);
+
+          setUpdateDetails([]);
+
+          return () => clearTimeout(timerId);
+        }
+      } else {
+        console.error("Required fields are empty");
+        console.log(updateDetails);
+        toast.error("Required fields are empty");
+      }
+    } catch (error) {
+      console.error(error.message);
+      console.log(updateDetails);
+      //console.log(addAdminData);
+      toast.error("Invalid inputs. Please check");
+    }
+  };
 
   return (
     <React.Fragment>
       <div class="relative w-full max-w-5xl max-h-full">
+        <div className="fixed">
+          <ToastContainer />
+        </div>
         <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
               Edit Product
               <div className="text-xs text-gray-500">
-                Product ID : {product.products_id}
+                Product ID : #{product.products_id}
               </div>
             </h3>
 
             <div>
               <button
-                type="submit"
+                type="button"
                 class="text-white mr-5 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-white-300 font-xs rounded-lg text-xs px-5 py-1.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 onClick={updateProductDetails}
               >
@@ -110,7 +219,9 @@ const EditProductView = ({ closeModal, product }) => {
                   <label
                     for="name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  ></label>
+                  >
+                    Product name
+                  </label>
                   <input
                     type="text"
                     name="name"
@@ -118,6 +229,12 @@ const EditProductView = ({ closeModal, product }) => {
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder={product.name}
                     required=""
+                    onChange={(e) =>
+                      setUpdateDetails({
+                        ...updateDetails,
+                        name: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
@@ -134,6 +251,12 @@ const EditProductView = ({ closeModal, product }) => {
                         rows="4"
                         class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
                         placeholder={product.description}
+                        onChange={(e) =>
+                          setUpdateDetails({
+                            ...updateDetails,
+                            description: e.target.value,
+                          })
+                        }
                       ></textarea>
                     </div>
                   </div>
@@ -304,7 +427,6 @@ const EditProductView = ({ closeModal, product }) => {
                   <select
                     id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    value={selectedCategory}
                     onChange={handleCategoryChange}
                   >
                     <option value="" disabled selected>
@@ -331,13 +453,17 @@ const EditProductView = ({ closeModal, product }) => {
                   <select
                     id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    onChange={handleSubCategoryChange}
                   >
                     <option value="" disabled selected>
                       Choose Subcategory
                     </option>
                     {subcategories.map((subcategory) => (
-                      <option key={subcategory.value} value={subcategory.value}>
-                        {subcategory.label}
+                      <option
+                        key={subcategory.subcategory_id}
+                        value={subcategory.subcategory_id}
+                      >
+                        {subcategory.name}
                       </option>
                     ))}
                   </select>
@@ -356,6 +482,35 @@ const EditProductView = ({ closeModal, product }) => {
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder={product.price}
                     required=""
+                    onChange={(e) =>
+                      setUpdateDetails({
+                        ...updateDetails,
+                        price: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <label
+                    for="item-stock"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Stock Qty
+                  </label>
+                  <input
+                    type="number"
+                    name="item-stock"
+                    id="item-stock"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder={product.stock}
+                    required=""
+                    min={0}
+                    onChange={(e) =>
+                      setUpdateDetails({
+                        ...updateDetails,
+                        stock: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
@@ -372,6 +527,13 @@ const EditProductView = ({ closeModal, product }) => {
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder={product.discount}
                     required=""
+                    min={0}
+                    onChange={(e) =>
+                      setUpdateDetails({
+                        ...updateDetails,
+                        discount: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
@@ -388,6 +550,12 @@ const EditProductView = ({ closeModal, product }) => {
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder={product.color}
                     required=""
+                    onChange={(e) =>
+                      setUpdateDetails({
+                        ...updateDetails,
+                        color: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
@@ -404,6 +572,12 @@ const EditProductView = ({ closeModal, product }) => {
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder={product.size}
                     required=""
+                    onChange={(e) =>
+                      setUpdateDetails({
+                        ...updateDetails,
+                        size: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>

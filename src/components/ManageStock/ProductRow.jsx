@@ -23,32 +23,22 @@ const OrderRow = ({ product, previewProduct, editProduct, deleteProduct }) => {
             {product.name}
           </div>
         </th>
-        <td class="px-6 py-3">
-          <div class="flex items-center">{product.price}</div>
-        </td>
-        <td class="px-10 py-3 ">
-          <div class="flex items-center">{product.discount}%</div>
-        </td>
-
-        <td class="px-4 py-3">
-          <div class="flex items-center">{product.category_id}</div>
-        </td>
-        <td class="px-4 py-3">
-          <div class="flex items-center">{product.subcategory_id}</div>
-        </td>
-        <td class="px-6 py-3">
+        <td class="px-8 py-3">
           {product.stock < 5 ? (
-            <div class="flex items-center text-red-600">{product.stock}</div>
+            <div class="flex font-semibold items-center text-red-600">
+              {product.stock}
+            </div>
           ) : (
             <div class="flex items-center">{product.stock}</div>
           )}
         </td>
-        <td class="px-5 py-3">
-          <div class="flex items-center">4.5/5</div>
+        <td class="px-10 py-3">
+          <div class="flex items-center">{product.category_id}</div>
         </td>
-        <td class="px-6 py-3">
-          <div class="flex items-center">15</div>
+        <td class="px-14 py-3">
+          <div class="flex items-center">{product.subcategory_id}</div>
         </td>
+
         <td class="px-6 py-4">
           <a
             href="#"
@@ -66,7 +56,7 @@ const OrderRow = ({ product, previewProduct, editProduct, deleteProduct }) => {
             </svg>
           </a>
           <ul
-            className={`fixed z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
+            className={`absolute z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
               viewEditDropdown ? "-mx-10" : "hidden"
             }`}
             aria-labelledby="dropdownMenuButton1"
@@ -95,20 +85,7 @@ const OrderRow = ({ product, previewProduct, editProduct, deleteProduct }) => {
                   editProduct();
                 }}
               >
-                Edit
-              </a>
-            </li>
-            <li>
-              <a
-                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-red-700 hover:bg-neutral-100 active:text-red-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-red-600"
-                href="#"
-                data-te-dropdown-item-ref
-                onClick={() => {
-                  setViewEditDropdown(false);
-                  deleteProduct();
-                }}
-              >
-                Delete
+                Update stock
               </a>
             </li>
           </ul>

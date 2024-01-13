@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProductRow from "./ProductRow";
 import ProductPreview from "./ProductPreview";
-import EditProductView from "./EditProductView";
+import UpdateStockView from "./UpdateStockView";
 
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
@@ -63,6 +63,41 @@ const ManageStock = () => {
       console.log(error);
     }
   };
+
+  const updateStock = async (stockChange, id) => {
+    try {
+      if (stockChange !== currentProduct.stock) {
+        const response = await axios.post("", {
+          product_id: id,
+          stockChange,
+          stockUpdate: stockChange,
+        });
+        if (response) {
+          console.log("stock updated");
+          toast.success("Stock updated", {
+            duration: 1200,
+            position: "top-center",
+            //icon: "❌",
+          });
+          const timerId = setTimeout(() => {
+            setReloadComponent(true);
+          }, 1600);
+
+          return () => clearTimeout(timerId);
+        } else {
+          console.log("Something went wrong");
+          toast.error("Something went wrong", {
+            duration: 1200,
+            position: "top-center",
+            //icon: "❌",
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <React.Fragment>
       <div className="relative m-5">
@@ -102,39 +137,12 @@ const ManageStock = () => {
               />
             </div>
             <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-              <button
-                type="button"
-                id="createProductButton"
-                data-modal-toggle="createProductModal"
-                class="flex items-center justify-center text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-                onClick={() => {
-                  setAddProductClicked(!addProductClicked);
-                  setOverlayClicked(!overlayClicked);
-                }}
-              >
-                Add product
-              </button>
-              <button
-                id="filterDropdownButton"
-                data-dropdown-toggle="filterDropdown"
-                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                type="button"
-              >
-                Filter
-                <svg
-                  class="-mr-1 ml-1.5 w-5 h-5"
-                  fill="currentColor"
-                  viewbox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  />
-                </svg>
-              </button>
+              <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <option value="" disabled selected>
+                  Filter
+                </option>
+                <option>Filter</option>
+              </select>
             </div>
           </div>
           <table
@@ -151,26 +159,13 @@ const ManageStock = () => {
                   Product
                 </th>
                 <th scope="col" class="p-4">
-                  Price
-                </th>
-                <th scope="col" class="p-4 px-6">
-                  Discount
+                  Stock
                 </th>
                 <th scope="col" class="p-4">
                   Category
                 </th>
                 <th scope="col" class="p-4">
                   Subcategory
-                </th>
-                <th scope="col" class="p-4">
-                  Stock
-                </th>
-
-                <th scope="col" class="p-4">
-                  Rating
-                </th>
-                <th scope="col" class="p-4">
-                  Sales
                 </th>
 
                 <th scope="col" class="p-4">
@@ -233,8 +228,11 @@ const ManageStock = () => {
             editProductClicked ? "" : "hidden"
           }`}
         >
-          <EditProductView
+          <UpdateStockView
             product={currentProduct}
+            setReloadComponent={(e) => {
+              setReloadComponent(e);
+            }}
             closeModal={() => {
               setEditProductClicked(!editProductClicked);
               setOverlayClicked(!overlayClicked);

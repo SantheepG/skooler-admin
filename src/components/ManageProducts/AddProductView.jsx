@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Toaster, toast } from "react-hot-toast";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const AddProductView = ({ closeModal }) => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
@@ -23,6 +25,23 @@ const AddProductView = ({ closeModal }) => {
     subcategory_id: 0,
   });
 
+  const resetStates = () => {
+    setSelectedCategory(0);
+    setSelectedSubcategory(0);
+    setAddProductDetails({
+      name: "",
+      description: "",
+      stock: 0,
+      size: null,
+      color: null,
+      price: 0,
+      discount: 0,
+      discounted_price: 0,
+      images: null,
+      category_id: 0,
+      subcategory_id: 0,
+    });
+  };
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -65,7 +84,7 @@ const AddProductView = ({ closeModal }) => {
         `http://127.0.0.1:8000/api/categories/${selectedValue}`
       );
 
-      setSubcategories(response.data);
+      setSubcategories(response.data.subcategory);
       setSubcategoriesDisabled(false);
     } catch (error) {
       console.log("Error fetching subcategories:", error);
@@ -84,11 +103,12 @@ const AddProductView = ({ closeModal }) => {
   const addProduct = async () => {
     try {
       if (
-        AddProductDetails.last_name !== "" &&
+        AddProductDetails.name !== "" &&
         AddProductDetails.description !== "" &&
         AddProductDetails.price !== 0 &&
-        AddProductDetails.category_id !== 0 &&
-        AddProductDetails.subcategory_id !== 0
+        AddProductDetails.stock !== 0 &&
+        selectedCategory !== 0
+        //AddProductDetails.subcategory_id !== 0
       ) {
         const response = await axios.post(
           "http://127.0.0.1:8000/api/addproduct",
@@ -99,8 +119,18 @@ const AddProductView = ({ closeModal }) => {
             size: AddProductDetails.size,
             color: AddProductDetails.color,
             price: parseFloat(AddProductDetails.price),
-            discount: parseFloat(AddProductDetails.discount),
-            discounted_price: parseFloat(AddProductDetails.discounted_price),
+            discount:
+              AddProductDetails.discount === 0
+                ? null
+                : parseFloat(AddProductDetails.discount),
+            discounted_price:
+              AddProductDetails.discount === 0
+                ? null
+                : parseFloat(
+                    AddProductDetails.price -
+                      AddProductDetails.price *
+                        (AddProductDetails.discount / 100)
+                  ),
             images: AddProductDetails.images,
             category_id: selectedCategory,
             subcategory_id: selectedSubcategory,
@@ -114,13 +144,11 @@ const AddProductView = ({ closeModal }) => {
 
         if (response.status === 201) {
           console.log("Product added");
-          toast.success("Product added", {
-            duration: 1200,
-            position: "top-center",
-            //icon: "❌",
-          });
+
+          toast.success("Product added");
 
           const timerId = setTimeout(() => {
+            resetStates();
             closeModal();
           }, 1600);
 
@@ -131,21 +159,13 @@ const AddProductView = ({ closeModal }) => {
       } else {
         console.error("Required fields are empty");
         console.log(AddProductDetails);
-        toast.error("Required fields are empty", {
-          duration: 1200,
-          position: "top-center",
-          //icon: "❌",
-        });
+        toast.error("Required fields are empty");
       }
     } catch (error) {
       console.error(error.message);
       console.log(AddProductDetails);
       //console.log(addAdminData);
-      toast.error("Invalid inputs. Please check", {
-        duration: 1500,
-        position: "top-center",
-        //icon: "❌",
-      });
+      toast.error("Invalid inputs. Please check");
     }
   };
 
@@ -157,7 +177,9 @@ const AddProductView = ({ closeModal }) => {
         aria-hidden="true"
         class="ml-96 h-56 overflow-y-auto overflow-x-hidden top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full"
       >
-        <Toaster className="notifier" />
+        <div className="fixed">
+          <ToastContainer />
+        </div>
         <div class="relative p-4 w-full max-w-3xl h-full md:h-auto">
           <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
@@ -169,6 +191,7 @@ const AddProductView = ({ closeModal }) => {
                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                 data-modal-toggle="createProductModal"
                 onClick={() => {
+                  resetStates();
                   closeModal();
                 }}
               >
@@ -204,7 +227,6 @@ const AddProductView = ({ closeModal }) => {
                     id="name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     required=""
-                    value={AddProductDetails.name}
                     onChange={(e) =>
                       setAddProductDetails({
                         ...AddProductDetails,
@@ -223,7 +245,6 @@ const AddProductView = ({ closeModal }) => {
                   <select
                     id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    value={selectedCategory}
                     onChange={handleCategoryChange}
                   >
                     <option value="" disabled selected>
@@ -278,7 +299,6 @@ const AddProductView = ({ closeModal }) => {
                     id="price"
                     min={0}
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    value={AddProductDetails.price}
                     onChange={(e) =>
                       setAddProductDetails({
                         ...AddProductDetails,
@@ -301,7 +321,6 @@ const AddProductView = ({ closeModal }) => {
                       id="weight"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       min={0}
-                      value={AddProductDetails.discount}
                       onChange={(e) =>
                         setAddProductDetails({
                           ...AddProductDetails,
@@ -322,7 +341,6 @@ const AddProductView = ({ closeModal }) => {
                       name="length"
                       id="length"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      value={AddProductDetails.color}
                       onChange={(e) =>
                         setAddProductDetails({
                           ...AddProductDetails,
@@ -344,7 +362,6 @@ const AddProductView = ({ closeModal }) => {
                       id="breadth"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       min={0}
-                      value={AddProductDetails.size}
                       onChange={(e) =>
                         setAddProductDetails({
                           ...AddProductDetails,
@@ -366,7 +383,6 @@ const AddProductView = ({ closeModal }) => {
                       id="width"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       min={0}
-                      value={AddProductDetails.stock}
                       onChange={(e) =>
                         setAddProductDetails({
                           ...AddProductDetails,
@@ -388,7 +404,6 @@ const AddProductView = ({ closeModal }) => {
                     rows="4"
                     class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Write product description here"
-                    value={AddProductDetails.description}
                     onChange={(e) =>
                       setAddProductDetails({
                         ...AddProductDetails,
@@ -481,6 +496,7 @@ const AddProductView = ({ closeModal }) => {
                   type="button"
                   class="w-full justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                   onClick={() => {
+                    resetStates();
                     closeModal();
                   }}
                 >

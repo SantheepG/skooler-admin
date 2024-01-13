@@ -1,55 +1,43 @@
 import React, { useState } from "react";
 
-const ProductRow = ({
-  product,
-  previewProduct,
-  editProduct,
-  deleteProduct,
-  updateStock,
-}) => {
+const EventRow = ({ event, previewEvent, editEvent, deleteEvent }) => {
   const [viewEditDropdown, setViewEditDropdown] = useState(false);
   return (
     <React.Fragment>
       <td class="px-5 p-4">
-        <div class="flex items-center text-gray-600">{product.products_id}</div>
+        <div class="flex items-center text-gray-600">{event.id}</div>
       </td>
       <th
         scope="row"
         class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
-        <div class="flex items-center mr-3">
-          <img
-            src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-front-image.png"
-            alt="iMac Front Image"
-            class="h-8 w-auto mr-3"
-          />
-          {product.name}
-        </div>
+        <img
+          src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZXZlbnR8ZW58MHx8MHx8fDA%3D"
+          alt="iMac Front Image"
+          class="h-8 w-auto mr-3"
+        />
+        <div class="flex items-center mr-3">{event.event_name}</div>
       </th>
       <td class="px-6 py-3">
-        <div class="flex items-center">{product.price}</div>
+        <div class="flex items-center">{event.event_info}</div>
       </td>
-      <td class="px-10 py-3 ">
-        <div class="flex items-center">{product.discount}%</div>
+      <td class="px-8 py-3">
+        <div class="w-36 flex items-center overflow-hidden whitespace-nowrap">
+          {event.venue}
+        </div>
+      </td>
+      <td class="px-4 py-3">
+        <div class="flex items-center">{event.event_datetime}</div>
+      </td>
+      <td class="px-8 py-3 ">
+        <div class="flex items-center">{event.payment}</div>
       </td>
 
       <td class="px-4 py-3">
-        <div class="flex items-center">{product.category_id}</div>
-      </td>
-      <td class="px-4 py-3">
-        <div class="flex items-center">{product.subcategory_id}</div>
-      </td>
-      <td class="px-6 py-3">
-        {product.stock < 5 ? (
-          <div class="flex items-center font-semibold text-red-600">
-            {product.stock}
-          </div>
-        ) : (
-          <div class="flex items-center">{product.stock}</div>
-        )}
+        <div class="flex items-center">{event.payment_deadline}</div>
       </td>
 
-      <td class="px-6 py-4">
+      <td class="px-8 py-4">
         <a
           href="#"
           class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -79,7 +67,7 @@ const ProductRow = ({
               data-te-dropdown-item-ref
               onClick={() => {
                 setViewEditDropdown(false);
-                previewProduct();
+                previewEvent();
               }}
             >
               Preview
@@ -92,23 +80,10 @@ const ProductRow = ({
               data-te-dropdown-item-ref
               onClick={() => {
                 setViewEditDropdown(false);
-                editProduct();
+                editEvent();
               }}
             >
               Edit
-            </a>
-          </li>
-          <li>
-            <a
-              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-red-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-red-600"
-              href="#"
-              data-te-dropdown-item-ref
-              onClick={() => {
-                setViewEditDropdown(false);
-                updateStock();
-              }}
-            >
-              Update stock
             </a>
           </li>
           <li>
@@ -118,7 +93,7 @@ const ProductRow = ({
               data-te-dropdown-item-ref
               onClick={() => {
                 setViewEditDropdown(false);
-                deleteProduct();
+                deleteEvent();
               }}
             >
               Delete
@@ -129,4 +104,4 @@ const ProductRow = ({
     </React.Fragment>
   );
 };
-export default ProductRow;
+export default EventRow;

@@ -3,7 +3,9 @@ import ProductRow from "./ProductRow";
 import ProductPreview from "./ProductPreview";
 import EditProductView from "./EditProductView";
 import AddProductView from "./AddProductView";
-import { Toaster, toast } from "react-hot-toast";
+import UpdateStockView from "../ManageStock/UpdateStockView";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 const ManageProducts = () => {
@@ -16,6 +18,7 @@ const ManageProducts = () => {
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentProduct, setCurrentProduct] = useState([]);
   const [reloadComponent, setReloadComponent] = useState(false);
+  const [updateStockClicked, setUpdateStockClicked] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,11 +43,7 @@ const ManageProducts = () => {
       );
       if (response) {
         console.log("Successfully deleted");
-        toast.success("Successfully deleted", {
-          duration: 1200,
-          position: "top-center",
-          //icon: "❌",
-        });
+        toast.success("Successfully deleted");
 
         const timerId = setTimeout(() => {
           setReloadComponent(true);
@@ -53,11 +52,7 @@ const ManageProducts = () => {
         return () => clearTimeout(timerId);
       } else {
         console.log("Something went wrong");
-        toast.error("Something went wrong", {
-          duration: 1200,
-          position: "top-center",
-          //icon: "❌",
-        });
+        toast.error("Something went wrong");
       }
     } catch (error) {
       console.log(error);
@@ -65,9 +60,11 @@ const ManageProducts = () => {
   };
   return (
     <React.Fragment>
-      <div className="relative m-5">
-        <Toaster className="notifier" />
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
+      <div className="relative m-5 mb-15 ">
+        <div className="fixed">
+          <ToastContainer />
+        </div>
+        <div class="relative shadow-md sm:rounded-lg admin-table">
           <div
             class={`flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
               overlayClicked ? "opacity-40" : ""
@@ -97,10 +94,11 @@ const ManageProducts = () => {
               <input
                 type="text"
                 id="table-search-users"
-                class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search for products"
               />
             </div>
+
             <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
               <button
                 type="button"
@@ -114,27 +112,12 @@ const ManageProducts = () => {
               >
                 Add product
               </button>
-              <button
-                id="filterDropdownButton"
-                data-dropdown-toggle="filterDropdown"
-                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                type="button"
-              >
-                Filter
-                <svg
-                  class="-mr-1 ml-1.5 w-5 h-5"
-                  fill="currentColor"
-                  viewbox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  />
-                </svg>
-              </button>
+              <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <option value="" disabled selected>
+                  Filter
+                </option>
+                <option>Filter</option>
+              </select>
             </div>
           </div>
           <table
@@ -150,27 +133,20 @@ const ManageProducts = () => {
                 <th scope="col" class="p-4">
                   Product
                 </th>
-                <th scope="col" class="p-4">
+                <th scope="col" class="p-2">
                   Price
                 </th>
-                <th scope="col" class="p-4 px-6">
+                <th scope="col" class="p-2">
                   Discount
                 </th>
-                <th scope="col" class="p-4">
+                <th scope="col" class="p-2">
                   Category
                 </th>
-                <th scope="col" class="p-4">
+                <th scope="col" class="p-2">
                   Subcategory
                 </th>
-                <th scope="col" class="p-4">
+                <th scope="col" class="p-2">
                   Stock
-                </th>
-
-                <th scope="col" class="p-4">
-                  Rating
-                </th>
-                <th scope="col" class="p-4">
-                  Sales
                 </th>
 
                 <th scope="col" class="p-4">
@@ -178,12 +154,18 @@ const ManageProducts = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="">
               {products.map((product, index) => (
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr class="bg-white border-b  dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <ProductRow
                     key={index}
                     product={product}
+                    updateStock={() => {
+                      setOverlayClicked(!overlayClicked);
+                      setUpdateStockClicked(!updateStockClicked);
+                      setCurrentProductIndex(index);
+                      setCurrentProduct(products[index]);
+                    }}
                     previewProduct={() => {
                       setOverlayClicked(!overlayClicked);
                       setpreviewProductClicked(!previewProductClicked);
@@ -252,6 +234,26 @@ const ManageProducts = () => {
             product={currentProduct}
             closeModal={() => {
               setEditProductClicked(!editProductClicked);
+              setOverlayClicked(!overlayClicked);
+              setReloadComponent(true);
+            }}
+          />
+        </div>
+        <div
+          id="updateProductModal"
+          tabindex="-1"
+          aria-hidden="true"
+          className={`flex ml-10 fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full ${
+            updateStockClicked ? "" : "hidden"
+          }`}
+        >
+          <UpdateStockView
+            product={currentProduct}
+            setReloadComponent={(e) => {
+              setReloadComponent(e);
+            }}
+            closeModal={() => {
+              setUpdateStockClicked(!updateStockClicked);
               setOverlayClicked(!overlayClicked);
             }}
           />

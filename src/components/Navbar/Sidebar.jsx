@@ -152,14 +152,11 @@ const Sidebar = () => {
                 }`}
                 onClick={() => handleItemClick("complaintsClicked")}
               >
-                <span className="sidebar-icons lock-sign">
+                <span className="sidebar-icons">
                   <BiErrorCircle />
                 </span>
                 <span>
                   <em>Manage complaints</em>
-                </span>
-                <span class="">
-                  <BiLock />
                 </span>
               </a>
             </li>

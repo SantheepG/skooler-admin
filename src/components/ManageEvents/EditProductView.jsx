@@ -1,61 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const EditProductView = ({ closeModal, product }) => {
-  const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState("");
-  const [subcategoriesDisabled, setSubcategoriesDisabled] = useState(true);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/api/categories"
-        );
-        if (response && response.data) {
-          const { category, subcategory } = response.data;
-          setCategories(category);
-          setSubcategories(subcategory);
-        }
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  const handleCategoryChange = async (event) => {
-    const selectedValue = event.target.value;
-    setSelectedCategory(selectedValue);
-    setSelectedSubcategory("");
-
-    if (selectedValue === "") {
-      setSubcategoriesDisabled(true);
-      setSubcategories([]);
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/categories/${selectedValue}`
-      );
-      const subcategoriesWithData = response.data.map((subcategory) => ({
-        value: subcategory.subcategory_id,
-        label: subcategory.name,
-      }));
-      setSubcategories(subcategoriesWithData);
-      setSubcategoriesDisabled(false);
-    } catch (error) {
-      console.log("Error fetching subcategories:", error);
-    }
-  };
-
-  const updateProductDetails = () => {};
-
+const EditProductView = ({ closeModal }) => {
   return (
     <React.Fragment>
       <div class="relative w-full max-w-5xl max-h-full">
@@ -63,16 +9,13 @@ const EditProductView = ({ closeModal, product }) => {
           <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
               Edit Product
-              <div className="text-xs text-gray-500">
-                Product ID : {product.products_id}
-              </div>
+              <div className="text-xs text-gray-500">Product ID : ffg</div>
             </h3>
 
             <div>
               <button
                 type="submit"
                 class="text-white mr-5 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-white-300 font-xs rounded-lg text-xs px-5 py-1.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                onClick={updateProductDetails}
               >
                 Update
               </button>
@@ -116,7 +59,7 @@ const EditProductView = ({ closeModal, product }) => {
                     name="name"
                     id="name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder={product.name}
+                    placeholder="dd"
                     required=""
                   />
                 </div>
@@ -133,7 +76,7 @@ const EditProductView = ({ closeModal, product }) => {
                         id="description"
                         rows="4"
                         class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
-                        placeholder={product.description}
+                        placeholder="dfd"
                       ></textarea>
                     </div>
                   </div>
@@ -304,21 +247,11 @@ const EditProductView = ({ closeModal, product }) => {
                   <select
                     id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
                   >
                     <option value="" disabled selected>
                       Choose Category
                     </option>
-
-                    {categories.map((category) => (
-                      <option
-                        key={category.category_id}
-                        value={category.category_id}
-                      >
-                        {category.name}
-                      </option>
-                    ))}
+                    <option>category.name</option>
                   </select>
                 </div>
                 <div>
@@ -335,11 +268,8 @@ const EditProductView = ({ closeModal, product }) => {
                     <option value="" disabled selected>
                       Choose Subcategory
                     </option>
-                    {subcategories.map((subcategory) => (
-                      <option key={subcategory.value} value={subcategory.value}>
-                        {subcategory.label}
-                      </option>
-                    ))}
+
+                    <option>subcategory.label</option>
                   </select>
                 </div>
                 <div>
@@ -354,7 +284,7 @@ const EditProductView = ({ closeModal, product }) => {
                     name="item-weight"
                     id="item-weight"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder={product.price}
+                    placeholder="fd"
                     required=""
                   />
                 </div>
@@ -370,7 +300,7 @@ const EditProductView = ({ closeModal, product }) => {
                     name="length"
                     id="lenght"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder={product.discount}
+                    placeholder="{product.discount}"
                     required=""
                   />
                 </div>
@@ -386,7 +316,7 @@ const EditProductView = ({ closeModal, product }) => {
                     name="breadth"
                     id="breadth"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder={product.color}
+                    placeholder="{product.color}"
                     required=""
                   />
                 </div>
@@ -402,7 +332,7 @@ const EditProductView = ({ closeModal, product }) => {
                     name="width"
                     id="width"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder={product.size}
+                    placeholder="{product.size}"
                     required=""
                   />
                 </div>
