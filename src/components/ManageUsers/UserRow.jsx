@@ -6,18 +6,6 @@ const UserRow = ({ userData, toggleActiveStatus, ViewOverlayHandler }) => {
 
   return (
     <React.Fragment>
-      <td class="w-4 p-4">
-        <div class="flex items-center">
-          <input
-            id="checkbox-table-search-1"
-            type="checkbox"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
-          <label for="checkbox-table-search-1" class="sr-only">
-            checkbox
-          </label>
-        </div>
-      </td>
       <th
         scope="row"
         class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
@@ -95,6 +83,15 @@ const UserRow = ({ userData, toggleActiveStatus, ViewOverlayHandler }) => {
               }}
             >
               Inactive
+            </a>
+          </li>
+          <li>
+            <a
+              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-red-700 hover:bg-red-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              href="#"
+              data-te-dropdown-item-ref
+            >
+              Delete
             </a>
           </li>
         </ul>

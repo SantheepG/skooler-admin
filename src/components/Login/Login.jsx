@@ -14,7 +14,7 @@ const Login = () => {
     try {
       if (formData.mobile_no !== "" && formData.password !== "") {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/adminlogin",
+          "http://127.0.0.1:8000/api/login/a",
           {
             mobile_no: formData.mobile_no,
             password: formData.password,

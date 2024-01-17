@@ -1,6 +1,6 @@
 import React from "react";
 
-const ComplaintRow = () => {
+const ComplaintRow = ({ complaint }) => {
   return (
     <React.Fragment>
       <tr class="border-b dark:border-gray-700">
@@ -8,16 +8,20 @@ const ComplaintRow = () => {
           scope="row"
           class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          Apple iMac 27&#34;
+          {complaint.complaint_id}
         </th>
-        <td class="px-4 py-3">PC</td>
-        <td class="px-4 py-3">Apple</td>
+        <td class="px-4 py-3">{complaint.user_id}</td>
+        <td class="px-4 py-3">{complaint.product_id}</td>
         <td class="px-4 py-3 max-w-[12rem] truncate">
-          What is a product description? A product description describes a
-          product.
+          {complaint.description}
         </td>
-        <td class="px-4 py-3">$2999</td>
-        <td class="px-4 py-3 flex items-center justify-end">
+        <td class="px-4 py-3">
+          <div className="flex">
+            <div class="h-2.5 w-2.5 rounded-full bg-orange-500 mt-1 mr-2"></div>
+            <div>{complaint.status}</div>
+          </div>
+        </td>
+        <td class="px-2 py-3 flex items-center justify-start">
           <button
             id="apple-imac-27-dropdown-button"
             data-dropdown-toggle="apple-imac-27-dropdown"

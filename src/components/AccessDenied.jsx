@@ -27,7 +27,7 @@ const AccessDenied = () => {
                 />
               </svg>
               <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                Acces denied. Contact master admin for more details.
+                Access denied. Contact master admin for more details.
               </h3>
             </div>
           </div>

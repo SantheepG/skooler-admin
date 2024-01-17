@@ -219,7 +219,7 @@ const AddProductView = ({ closeModal }) => {
                     for="name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Product Name
+                    Product Name *
                   </label>
                   <input
                     type="text"
@@ -240,7 +240,7 @@ const AddProductView = ({ closeModal }) => {
                     for="category"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Category
+                    Category *
                   </label>
                   <select
                     id="category"
@@ -291,7 +291,7 @@ const AddProductView = ({ closeModal }) => {
                     for="price"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Price
+                    Price *
                   </label>
                   <input
                     type="number"
@@ -375,7 +375,7 @@ const AddProductView = ({ closeModal }) => {
                       for="width"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Stock qty
+                      Stock qty *
                     </label>
                     <input
                       type="number"
@@ -397,7 +397,7 @@ const AddProductView = ({ closeModal }) => {
                     for="description"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Description
+                    Description *
                   </label>
                   <textarea
                     id="description"

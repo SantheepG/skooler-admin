@@ -11,49 +11,85 @@ import ManageOrders from "./ManageOrders/ManageOrders";
 import ManageStock from "./ManageStock/ManageStock";
 import ManageComplaints from "./ManageComplaints/ManageComplaints";
 import ManageEvents from "./ManageEvents/ManageEvents";
-
+import { useNavigate } from "react-router-dom";
 const Main = () => {
-  const [adminData, setAdminData] = useState({
-    name: "",
-    student_id: "",
-    mobile_no: "",
-    email: "",
-    password: "",
-  });
-
+  const navigate = useNavigate();
+  const [adminData, setAdminData] = useState([]);
+  const [roles, setRoles] = useState("");
   useEffect(() => {
-    const storedUserData = JSON.parse(localStorage.getItem("admin"));
-    if (storedUserData) {
-      setAdminData(storedUserData);
+    const storedAdminData = JSON.parse(localStorage.getItem("admin"));
+    if (storedAdminData) {
+      setAdminData(storedAdminData);
+      const jsonData = JSON.parse(storedAdminData.roles);
+      const adminRoles = Object.keys(jsonData).filter(
+        (key) => jsonData[key] === true
+      );
+      setRoles(adminRoles);
+    } else {
+      navigate("/");
     }
   }, []);
 
+  console.log(roles);
+  //const hasDashboard = yourArray.includes('Dashboard');
   const state = useSelector((state) => state);
 
   let componentToRender;
 
   if (state.dashboardClicked) {
-    componentToRender = <Dashboard />;
+    if (roles.includes("Dashboard")) {
+      componentToRender = <Dashboard bool={true} />;
+    } else {
+      componentToRender = <Dashboard bool={false} />;
+    }
   } else if (state.usersClicked) {
-    componentToRender = <ManageUsers />;
+    if (roles.includes("ManageUsers")) {
+      componentToRender = <ManageUsers bool={true} />;
+    } else {
+      componentToRender = <ManageUsers bool={false} />;
+    }
   } else if (state.adminsClicked) {
-    componentToRender = <ManageAdmins />;
+    if (roles.includes("ManageAdmins")) {
+      componentToRender = <ManageAdmins bool={true} />;
+    } else {
+      componentToRender = <ManageAdmins bool={false} />;
+    }
   } else if (state.productsClicked) {
-    componentToRender = <ManageProducts />;
+    if (roles.includes("ManageProducts")) {
+      componentToRender = <ManageProducts bool={true} />;
+    } else {
+      componentToRender = <ManageProducts bool={false} />;
+    }
   } else if (state.ordersClicked) {
-    componentToRender = <ManageOrders />;
+    if (roles.includes("ManageOrders")) {
+      componentToRender = <ManageOrders bool={true} />;
+    } else {
+      componentToRender = <ManageOrders bool={false} />;
+    }
   } else if (state.stockClicked) {
-    componentToRender = <ManageStock />;
+    if (roles.includes("ManageStock")) {
+      componentToRender = <ManageStock bool={true} />;
+    } else {
+      componentToRender = <ManageStock bool={false} />;
+    }
   } else if (state.complaintsClicked) {
-    componentToRender = <ManageComplaints />;
+    if (roles.includes("ManageComplaints")) {
+      componentToRender = <ManageComplaints bool={true} />;
+    } else {
+      componentToRender = <ManageComplaints bool={false} />;
+    }
   } else if (state.eventsClicked) {
-    componentToRender = <ManageEvents />;
+    if (roles.includes("ManageEvents")) {
+      componentToRender = <ManageEvents bool={true} />;
+    } else {
+      componentToRender = <ManageEvents bool={false} />;
+    }
   }
 
   return (
     <React.Fragment>
       <div class="s-layout">
-        <Sidebar />
+        <Sidebar roles={roles} />
         <main class="s-layout__content">
           <div>
             <Navbar />
