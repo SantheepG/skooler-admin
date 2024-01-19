@@ -3,18 +3,17 @@ import axios from "axios";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const AddProductView = ({ closeModal }) => {
-  const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(0);
+const AddProductView = ({ products, category, subcategory, closeModal }) => {
+  const [filteredSubcategories, setFilteredSubcategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedCategoryID, setSelectedCategoryID] = useState(0);
-  const [selectedSubcategory, setSelectedSubcategory] = useState(0);
+  const [selectedSubcategory, setSelectedSubcategory] = useState([]);
   const [selectedSubcategoryID, setSelectedSubcategoryID] = useState(0);
   const [subcategoriesDisabled, setSubcategoriesDisabled] = useState(true);
   const [AddProductDetails, setAddProductDetails] = useState({
     name: "",
     description: "",
-    stock: 0,
+    stock: null,
     size: null,
     color: null,
     price: 0,
@@ -42,56 +41,35 @@ const AddProductView = ({ closeModal }) => {
       subcategory_id: 0,
     });
   };
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/api/categories"
-        );
-        if (response && response.data) {
-          const { category, subcategory } = response.data;
-          setCategories(category);
-          setSubcategories(subcategory);
-        }
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
 
-    fetchCategories();
-  }, []);
+  const handleCategoryChange = (event) => {
+    //setAllProducts(fetchedProducts);
+    setFilteredSubcategories([]);
 
-  const handleCategoryChange = async (event) => {
-    const selectedValue = event.target.value;
-    setSelectedCategory(selectedValue);
-    console.log(selectedValue);
-    setSelectedSubcategory("");
-
+    const selectedCat = category.filter(
+      (item) => item.category_id === parseInt(event.target.value)
+    );
     setAddProductDetails({
       ...AddProductDetails,
-      category_id: selectedValue,
+      category_id: parseInt(event.target.value),
     });
+    setSelectedCategory(selectedCat[0]);
+    setSelectedCategoryID(selectedCat[0].category_id);
 
-    if (selectedValue === "") {
+    const filteredData = subcategory.filter(
+      (item) => item.category_id === parseInt(selectedCat[0].category_id)
+    );
+
+    if (filteredData.length === 0) {
       setSubcategoriesDisabled(true);
-      setSubcategories([]);
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/categories/${selectedValue}`
-      );
-
-      setSubcategories(response.data.subcategory);
-      setSubcategoriesDisabled(false);
-    } catch (error) {
-      console.log("Error fetching subcategories:", error);
+      setFilteredSubcategories([]);
+    } else {
+      setFilteredSubcategories(filteredData);
     }
   };
-  const handleSubCategoryChange = async (event) => {
-    const selectedValue = event.target.value;
+
+  const handleSubCategoryChange = (event) => {
+    const selectedValue = parseInt(event.target.value);
     setSelectedSubcategory(selectedValue);
     console.log(selectedValue);
     setAddProductDetails({
@@ -100,66 +78,82 @@ const AddProductView = ({ closeModal }) => {
     });
     //setSelectedSubcategory("");
   };
+
   const addProduct = async () => {
     try {
       if (
         AddProductDetails.name !== "" &&
         AddProductDetails.description !== "" &&
         AddProductDetails.price !== 0 &&
-        AddProductDetails.stock !== 0 &&
+        AddProductDetails.stock !== null &&
         selectedCategory !== 0
         //AddProductDetails.subcategory_id !== 0
       ) {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/addproduct",
-          {
-            name: AddProductDetails.name,
-            description: AddProductDetails.description,
-            stock: parseFloat(AddProductDetails.stock),
-            size: AddProductDetails.size,
-            color: AddProductDetails.color,
-            price: parseFloat(AddProductDetails.price),
-            discount:
-              AddProductDetails.discount === 0
-                ? null
-                : parseFloat(AddProductDetails.discount),
-            discounted_price:
-              AddProductDetails.discount === 0
-                ? null
-                : parseFloat(
-                    AddProductDetails.price -
-                      AddProductDetails.price *
-                        (AddProductDetails.discount / 100)
-                  ),
-            images: AddProductDetails.images,
-            category_id: selectedCategory,
-            subcategory_id: selectedSubcategory,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+        const filterProducts = products.filter((item) =>
+          item.name.toLowerCase() === AddProductDetails.name.toLowerCase() &&
+          (item.size === AddProductDetails.size) === ""
+            ? null
+            : AddProductDetails.size &&
+              (item.color === AddProductDetails.color) === ""
+            ? null
+            : AddProductDetails.color
         );
 
-        if (response.status === 201) {
-          console.log("Product added");
+        if (filterProducts.length === 0) {
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/addproduct",
+            {
+              name: AddProductDetails.name,
+              description: AddProductDetails.description,
+              stock: parseInt(AddProductDetails.stock),
+              size:
+                AddProductDetails.size === "" ? null : AddProductDetails.size,
+              color:
+                AddProductDetails.color === "" ? null : AddProductDetails.color,
+              price: parseFloat(AddProductDetails.price),
+              discount:
+                AddProductDetails.discount === 0
+                  ? null
+                  : parseFloat(AddProductDetails.discount),
+              discounted_price:
+                AddProductDetails.discount === 0
+                  ? null
+                  : parseFloat(
+                      AddProductDetails.price -
+                        AddProductDetails.price *
+                          (AddProductDetails.discount / 100)
+                    ),
+              images: AddProductDetails.images,
+              category_id: parseInt(selectedCategoryID),
+              subcategory_id: parseInt(selectedSubcategory),
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
-          toast.success("Product added");
+          if (response.status === 201) {
+            console.log("Product added");
 
-          const timerId = setTimeout(() => {
+            toast.success("Product added");
             resetStates();
-            closeModal();
-          }, 1600);
+            const timerId = setTimeout(() => {
+              closeModal();
+            }, 1600);
 
-          setAddProductDetails([]);
+            setAddProductDetails([]);
 
-          return () => clearTimeout(timerId);
+            return () => clearTimeout(timerId);
+          }
+        } else {
+          console.error("Required fields are empty");
+          console.log(AddProductDetails);
+          toast.error("Required fields are empty");
         }
       } else {
-        console.error("Required fields are empty");
-        console.log(AddProductDetails);
-        toast.error("Required fields are empty");
+        toast.error("Product already exists.");
       }
     } catch (error) {
       console.error(error.message);
@@ -245,18 +239,15 @@ const AddProductView = ({ closeModal }) => {
                   <select
                     id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    onChange={handleCategoryChange}
+                    onChange={(e) => handleCategoryChange(e)}
                   >
                     <option value="" disabled selected>
                       Choose Category
                     </option>
 
-                    {categories.map((category) => (
-                      <option
-                        key={category.category_id}
-                        value={category.category_id}
-                      >
-                        {category.name}
+                    {category.map((cat) => (
+                      <option key={cat.category_id} value={cat.category_id}>
+                        {cat.name}
                       </option>
                     ))}
                   </select>
@@ -271,12 +262,12 @@ const AddProductView = ({ closeModal }) => {
                   <select
                     id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    onChange={handleSubCategoryChange}
+                    onChange={(e) => handleSubCategoryChange(e)}
                   >
                     <option value="" disabled selected>
                       Choose Subcategory
                     </option>
-                    {subcategories.map((subcategory) => (
+                    {filteredSubcategories.map((subcategory) => (
                       <option
                         key={subcategory.subcategory_id}
                         value={subcategory.subcategory_id}
@@ -302,7 +293,7 @@ const AddProductView = ({ closeModal }) => {
                     onChange={(e) =>
                       setAddProductDetails({
                         ...AddProductDetails,
-                        price: e.target.value,
+                        price: parseFloat(e.target.value),
                       })
                     }
                   />
@@ -324,7 +315,7 @@ const AddProductView = ({ closeModal }) => {
                       onChange={(e) =>
                         setAddProductDetails({
                           ...AddProductDetails,
-                          discount: e.target.value,
+                          discount: parseFloat(e.target.value),
                         })
                       }
                     />
@@ -357,7 +348,7 @@ const AddProductView = ({ closeModal }) => {
                       Size
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="breadth"
                       id="breadth"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -386,7 +377,7 @@ const AddProductView = ({ closeModal }) => {
                       onChange={(e) =>
                         setAddProductDetails({
                           ...AddProductDetails,
-                          stock: e.target.value,
+                          stock: parseInt(e.target.value),
                         })
                       }
                     />

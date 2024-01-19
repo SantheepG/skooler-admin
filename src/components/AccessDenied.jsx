@@ -3,12 +3,8 @@ import React, { useState } from "react";
 const AccessDenied = () => {
   return (
     <React.Fragment>
-      <div
-        id="popup-modal"
-        tabindex="-1"
-        class="relative ml-80 mt-10 pt-20 pl-10"
-      >
-        <div class="relative p-4 w-full max-w-md max-h-full">
+      <div className="w-full h-full flex items-center justify-center">
+        <div class="relative p-4 w-full my-20 max-w-md max-h-full">
           <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="p-4 md:p-5 text-center">
               <svg

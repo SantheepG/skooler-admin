@@ -110,7 +110,6 @@ const ManageAdmins = ({ bool }) => {
         ManageStock: false,
         ManageComplaints: false,
       },
-      profile_pic: null,
     });
   };
 
@@ -146,6 +145,7 @@ const ManageAdmins = ({ bool }) => {
             password: addAdminData.password,
             roles: JSON.stringify(addAdminData.roles),
             profile_pic: null,
+            is_active: true,
           },
           {
             headers: {

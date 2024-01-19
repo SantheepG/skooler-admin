@@ -142,9 +142,9 @@ const ProductPreview = ({ closeModal, product }) => {
                     Colors
                   </dt>
                   <dd class="flex items-center space-x-2 font-light text-gray-500 dark:text-gray-400">
-                    <div
-                      class={`flex-shrink-0 w-6 h-6 bg-${product.color} rounded-full`}
-                    ></div>
+                    <dd class="text-gray-500 dark:text-gray-400">
+                      {product.color}
+                    </dd>
                   </dd>
                 </div>
               </dl>

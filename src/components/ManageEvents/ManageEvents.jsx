@@ -136,14 +136,14 @@ const ManageEvents = ({ bool }) => {
                   <th scope="col" class="p-4 px-8">
                     Venue
                   </th>
+                  <th scope="col" class="p-4 px-8">
+                    Capacity
+                  </th>
                   <th scope="col" class="p-4">
-                    date & time
+                    Reserved slots
                   </th>
                   <th scope="col" class="p-4 px-6">
-                    Payment
-                  </th>
-                  <th scope="col" class="p-4">
-                    Payment deadline
+                    Price
                   </th>
 
                   <th scope="col" class="p-4">

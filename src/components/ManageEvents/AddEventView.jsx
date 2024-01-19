@@ -26,6 +26,7 @@ const AddEventView = ({ closeModal }) => {
     event_info: "",
     venue: "",
     payment: 0,
+    capacity: 0,
     event_datetime: ``,
     payment_deadline: "",
   });
@@ -231,26 +232,49 @@ const AddEventView = ({ closeModal }) => {
                       }
                     />
                   </div>
-                  <div>
-                    <label
-                      for="category"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Payment
-                    </label>
-                    <input
-                      type="number"
-                      name="name"
-                      id="name"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      required=""
-                      onChange={(e) =>
-                        setAddEventData({
-                          ...addEventData,
-                          payment: e.target.value,
-                        })
-                      }
-                    />
+                  <div className="flex">
+                    <div className="w-1/2 mx-2">
+                      <label
+                        for="payment"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Payment
+                      </label>
+                      <input
+                        type="number"
+                        name="payment"
+                        id="payment"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        required=""
+                        onChange={(e) =>
+                          setAddEventData({
+                            ...addEventData,
+                            payment: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="w-1/2 mx-2">
+                      <label
+                        for="category"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Capacity
+                      </label>
+                      <input
+                        type="number"
+                        name="capacity"
+                        id="capacity"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        required=""
+                        onChange={(e) =>
+                          setAddEventData({
+                            ...addEventData,
+                            capacity: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
                   </div>
 
                   <div class="grid gap-4 sm:col-span-2 md:gap-6 sm:grid-cols-4">

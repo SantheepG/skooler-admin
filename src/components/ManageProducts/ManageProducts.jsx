@@ -8,24 +8,36 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import AccessDenied from "../AccessDenied";
+import { FaPlus } from "react-icons/fa6";
+import AddCatView from "./AddCatView";
+import AddSubCatView from "./AddSubCatView";
 const ManageProducts = ({ bool }) => {
-  const [products, setProducts] = useState([]);
+  const [fetchedProducts, setFetchedProducts] = useState([]);
+  const [productsToview, setProductsToView] = useState([]);
   const [overlayClicked, setOverlayClicked] = useState(false);
   const [addProductClicked, setAddProductClicked] = useState(false);
   const [editProductClicked, setEditProductClicked] = useState(false);
   const [previewProductClicked, setpreviewProductClicked] = useState(false);
   const [deleteProductClicked, setdeleteProductClicked] = useState(false);
+  const [addCatViewClicked, setAddCatViewClicked] = useState(false);
+  const [addSubCatViewClicked, setAddSubCatViewClicked] = useState(false);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentProduct, setCurrentProduct] = useState([]);
   const [reloadComponent, setReloadComponent] = useState(false);
   const [updateStockClicked, setUpdateStockClicked] = useState(false);
+
+  const [SearchProducts, setSearchProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/products");
         if (response) {
-          setProducts(response.data.products);
+          setFetchedProducts(response.data.products);
+          setProductsToView(response.data.products);
           setReloadComponent(false);
         }
       } catch (error) {
@@ -33,8 +45,69 @@ const ManageProducts = ({ bool }) => {
         setReloadComponent(false);
       }
     };
+
     fetchProducts();
   }, [reloadComponent]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/categories"
+        );
+        if (response && response.data) {
+          const { category, subcategory } = response.data;
+          setCategories(category);
+          setSubcategories(subcategory);
+        }
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCategories();
+  }, [reloadComponent]);
+
+  const searchProduct = (event) => {
+    event.preventDefault();
+    const inputValue = event.target.value.toLowerCase();
+
+    if (inputValue === "") {
+      setProductsToView(fetchedProducts);
+    } else {
+      let matchedProducts = fetchedProducts.filter(
+        (item) =>
+          item.name.toLowerCase().includes(inputValue) ||
+          item.products_id === parseInt(inputValue)
+      );
+      setProductsToView(matchedProducts);
+    }
+  };
+
+  const filterProduct = (event) => {
+    event.preventDefault();
+    const inputValue = event.target.value.toLowerCase();
+
+    if (event.target.value === "All") {
+      setProductsToView(fetchedProducts);
+    } else if (event.target.value === "Out of stock") {
+      let matchedProducts = fetchedProducts.filter((item) => item.stock === 0);
+      setProductsToView(matchedProducts);
+    } else if (event.target.value === "Newly added") {
+      //descending order of created_at
+      let sortedProducts = [...fetchedProducts].sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+      setProductsToView(sortedProducts);
+    } else if (event.target.value === "Old") {
+      //ascending order of created_at
+      let sortedProducts = [...fetchedProducts].sort(
+        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+      );
+      setProductsToView(sortedProducts);
+    }
+  };
 
   const deleteProduct = async (id) => {
     try {
@@ -97,6 +170,7 @@ const ManageProducts = ({ bool }) => {
                   id="table-search-users"
                   class="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search for products"
+                  onChange={(e) => searchProduct(e)}
                 />
               </div>
 
@@ -113,11 +187,50 @@ const ManageProducts = ({ bool }) => {
                 >
                   Add product
                 </button>
-                <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                  <option value="" disabled selected>
-                    Filter
+                <div class="flex mt-4 md:mt-6">
+                  <a
+                    href="#"
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
+                    onClick={() => {
+                      setAddCatViewClicked(!addCatViewClicked);
+                      setOverlayClicked(!overlayClicked);
+                    }}
+                  >
+                    <span className="mr-2">
+                      <FaPlus />
+                    </span>
+                    <span>Category</span>
+                  </a>
+                  <a
+                    href="#"
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
+                    onClick={() => {
+                      setAddSubCatViewClicked(!addSubCatViewClicked);
+                      setOverlayClicked(!overlayClicked);
+                    }}
+                  >
+                    <span className="mr-2">
+                      <FaPlus />
+                    </span>
+                    <span>Subcategory</span>
+                  </a>
+                </div>
+                <select
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  onChange={(e) => filterProduct(e)}
+                >
+                  <option name={"All"} value={"All"}>
+                    All
                   </option>
-                  <option>Filter</option>
+                  <option name={"Newly added"} value={"Newly added"}>
+                    Newly added
+                  </option>
+                  <option name={"Out of stock"} value={"Out of stock"}>
+                    Out of stock
+                  </option>
+                  <option name={"Old"} value={"Old"}>
+                    Earliest
+                  </option>
                 </select>
               </div>
             </div>
@@ -156,34 +269,36 @@ const ManageProducts = ({ bool }) => {
                 </tr>
               </thead>
               <tbody className="">
-                {products.map((product, index) => (
+                {productsToview.map((product, index) => (
                   <tr class="bg-white border-b  dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <ProductRow
                       key={index}
                       product={product}
+                      categories={categories}
+                      subcategories={subcategories}
                       updateStock={() => {
                         setOverlayClicked(!overlayClicked);
                         setUpdateStockClicked(!updateStockClicked);
                         setCurrentProductIndex(index);
-                        setCurrentProduct(products[index]);
+                        setCurrentProduct(productsToview[index]);
                       }}
                       previewProduct={() => {
                         setOverlayClicked(!overlayClicked);
                         setpreviewProductClicked(!previewProductClicked);
                         setCurrentProductIndex(index);
-                        setCurrentProduct(products[index]);
+                        setCurrentProduct(productsToview[index]);
                       }}
                       editProduct={() => {
                         setOverlayClicked(!overlayClicked);
                         setEditProductClicked(!editProductClicked);
                         setCurrentProductIndex(index);
-                        setCurrentProduct(products[index]);
+                        setCurrentProduct(productsToview[index]);
                       }}
                       deleteProduct={() => {
                         setOverlayClicked(!overlayClicked);
                         setdeleteProductClicked(!deleteProductClicked);
                         setCurrentProductIndex(index);
-                        setCurrentProduct(products[index]);
+                        setCurrentProduct(productsToview[index]);
                       }}
                     />
                   </tr>
@@ -216,6 +331,9 @@ const ManageProducts = ({ bool }) => {
             }`}
           >
             <AddProductView
+              products={productsToview}
+              category={categories}
+              subcategory={subcategories}
               closeModal={() => {
                 setAddProductClicked(!addProductClicked);
                 setOverlayClicked(!overlayClicked);
@@ -255,6 +373,45 @@ const ManageProducts = ({ bool }) => {
               }}
               closeModal={() => {
                 setUpdateStockClicked(!updateStockClicked);
+                setOverlayClicked(!overlayClicked);
+              }}
+            />
+          </div>
+          <div
+            id="AddCategoryModal"
+            tabindex="-1"
+            aria-hidden="true"
+            className={`flex ml-10 fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full ${
+              addCatViewClicked ? "" : "hidden"
+            }`}
+          >
+            <AddCatView
+              categories={categories}
+              setReloadComponent={(e) => {
+                setReloadComponent(e);
+              }}
+              closeModal={() => {
+                setAddCatViewClicked(!addCatViewClicked);
+                setOverlayClicked(!overlayClicked);
+              }}
+            />
+          </div>
+          <div
+            id="AddSubCategoryModal"
+            tabindex="-1"
+            aria-hidden="true"
+            className={`flex ml-10 fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full ${
+              addSubCatViewClicked ? "" : "hidden"
+            }`}
+          >
+            <AddSubCatView
+              category={categories}
+              subcategory={subcategories}
+              setReloadComponent={(e) => {
+                setReloadComponent(e);
+              }}
+              closeModal={() => {
+                setAddSubCatViewClicked(!addSubCatViewClicked);
                 setOverlayClicked(!overlayClicked);
               }}
             />

@@ -69,10 +69,9 @@
  
  .s-sidebar__nav {
     position: fixed;
+   overflow-y: auto;
     
-    top: 0;
-    left: -15em;
-    overflow: hidden;
+    overflow-y: auto;
     transition: all .3s ease-in;
     width: 15em;
     height: 100%;
@@ -89,7 +88,7 @@
  
  .s-sidebar__nav ul {
     position: absolute;
-    top: 4em;
+    
     left: 0;
     margin: 0;
     padding: 0;
@@ -100,9 +99,9 @@
  .sidebar-icons{
     position: absolute
     ;
-    top: 18px;
+    top: 30%;
     font-size: 1.7em;
-    left: 25px; 
+    left: 7%; 
     color: rgb(231, 146, 48);
  }
 

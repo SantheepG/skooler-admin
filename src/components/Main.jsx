@@ -16,6 +16,7 @@ const Main = () => {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState([]);
   const [roles, setRoles] = useState("");
+  const [toggleSidebar, setToggleBar] = useState(false);
   useEffect(() => {
     const storedAdminData = JSON.parse(localStorage.getItem("admin"));
     if (storedAdminData) {
@@ -38,7 +39,9 @@ const Main = () => {
 
   if (state.dashboardClicked) {
     if (roles.includes("Dashboard")) {
-      componentToRender = <Dashboard bool={true} />;
+      componentToRender = (
+        <Dashboard bool={true} roles={roles} admin={adminData} />
+      );
     } else {
       componentToRender = <Dashboard bool={false} />;
     }
@@ -88,15 +91,14 @@ const Main = () => {
 
   return (
     <React.Fragment>
-      <div class="s-layout">
-        <Sidebar roles={roles} />
-        <main class="s-layout__content">
-          <div>
-            <Navbar />
-          </div>
-          <div>{componentToRender}</div>
-        </main>
+      <Navbar toggle={() => setToggleBar(!toggleSidebar)} />
+      <Sidebar roles={roles} toggle={toggleSidebar} />
+      <div class="p-2 sm:ml-64">
+        <div class="border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+          {componentToRender}
+        </div>
       </div>
+      <div></div>
     </React.Fragment>
   );
 };

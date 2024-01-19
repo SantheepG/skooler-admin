@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
-
+import Nav from "./Nav";
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -28,9 +28,17 @@ const Login = () => {
         if (response.status === 200) {
           console.log(response.data);
           //toast.success("Login success");
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("admin", JSON.stringify(response.data.admin));
-          navigate("/admin");
+          if (response.data.admin.is_active === 1) {
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("admin", JSON.stringify(response.data.admin));
+            navigate("/admin");
+          } else {
+            toast.error("Your account is disabled. Please contact support", {
+              duration: 2500,
+              position: "top-center",
+              //icon: "❌",
+            });
+          }
         }
       } else {
         console.error("Required fields are empty");
@@ -52,9 +60,14 @@ const Login = () => {
 
   return (
     <React.Fragment>
-      <div class="h-screen py-20 p-4 md:p-20 lg:p-32">
+      <div className="fixed w-full">
+        <nav>
+          <Nav />
+        </nav>
+      </div>
+      <div class="h-screen py-20 p-4 md:p-20 lg:p-32 ">
         <Toaster className="notifier" />
-        <div class="max-w-sm bg-white rounded-lg overflow-hidden shadow-lg mx-auto box-with-shadow">
+        <div class="max-w-sm sm:mt-10 bg-white rounded-lg overflow-hidden shadow-lg mx-auto box-with-shadow">
           <div class="p-6">
             <h2 class="text-xl font-bold text-gray-800 mb-2">Admin Login</h2>
             <p class="text-gray-700 mb-6">Please Login in to your account</p>
@@ -106,14 +119,14 @@ const Login = () => {
               </div>
               <div class="flex items-center justify-between">
                 <button
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  class="bg-gray-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   type="button"
                   onClick={handleLogin}
                 >
                   Log In
                 </button>
                 <a
-                  class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                  class="inline-block align-baseline font-bold text-sm text-blue-800 hover:text-blue-800"
                   href="#"
                 >
                   Forgot Password?

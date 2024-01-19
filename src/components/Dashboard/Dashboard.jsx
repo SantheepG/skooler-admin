@@ -1,7 +1,7 @@
 import React from "react";
 import "./Dashboard.css";
 import AccessDenied from "../AccessDenied";
-const Dashboard = ({ bool }) => {
+const Dashboard = ({ bool, roles, admin }) => {
   return (
     <React.Fragment>
       {bool ? (
@@ -202,18 +202,39 @@ const Dashboard = ({ bool }) => {
                     src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
                     alt="Bonnie image"
                   />
-                  <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                    Admin name
+                  <h5 class="text-xl font-medium text-gray-900 dark:text-white">
+                    {admin.first_name} {admin.last_name}
                   </h5>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
-                    Admin roles
+                  <span class="text-xs text-gray-400 dark:text-gray-400 mb-2 ">
+                    {admin.mobile_no} / {admin.email}
                   </span>
+
+                  <span className="text-xs mx-6 text-gray-500 dark:text-gray-400 flex flex-wrap overflow-auto items-center justify-center">
+                    {" "}
+                    {roles.length !== 0
+                      ? roles.map((role, index) => (
+                          <span
+                            key={index}
+                            className="w-1/7 px-1 ml-1 mt-1 border border-gray-300 rounded text-gray-400 whitespace-nowrap overflow-hidden overflow-ellipsis"
+                          >
+                            {role}
+                          </span>
+                        ))
+                      : null}
+                  </span>
+
                   <div class="flex mt-4 md:mt-6">
                     <a
                       href="#"
                       class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
                     >
-                      Update image
+                      Update
+                    </a>
+                    <a
+                      href="#"
+                      class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
+                    >
+                      Reset Password
                     </a>
                   </div>
                 </div>

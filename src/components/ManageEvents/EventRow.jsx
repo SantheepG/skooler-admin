@@ -20,6 +20,9 @@ const EventRow = ({ event, previewEvent, editEvent, deleteEvent }) => {
       </th>
       <td class="px-6 py-3">
         <div class="flex items-center">{event.event_info}</div>
+        <div class="flex items-center text-gray-400 text-xs">
+          Date : {event.event_datetime}
+        </div>
       </td>
       <td class="px-8 py-3">
         <div class="w-36 flex items-center overflow-hidden whitespace-nowrap">
@@ -27,14 +30,13 @@ const EventRow = ({ event, previewEvent, editEvent, deleteEvent }) => {
         </div>
       </td>
       <td class="px-4 py-3">
-        <div class="flex items-center">{event.event_datetime}</div>
+        <div class="flex items-center">{event.capacity}</div>
+      </td>
+      <td class="px-4 py-3">
+        <div class="flex items-center">{event.reserved_slots}</div>
       </td>
       <td class="px-8 py-3 ">
         <div class="flex items-center">{event.payment}</div>
-      </td>
-
-      <td class="px-4 py-3">
-        <div class="flex items-center">{event.payment_deadline}</div>
       </td>
 
       <td class="px-8 py-4">

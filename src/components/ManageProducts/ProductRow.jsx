@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const ProductRow = ({
   product,
@@ -6,8 +6,25 @@ const ProductRow = ({
   editProduct,
   deleteProduct,
   updateStock,
+  categories,
+  subcategories,
 }) => {
   const [viewEditDropdown, setViewEditDropdown] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
+  const [subcategoryName, setSubCategoryName] = useState("");
+
+  useEffect(() => {
+    if (product) {
+      const cat = categories.filter(
+        (item) => item.category_id === product.category_id
+      );
+      setCategoryName(cat[0].name);
+      const subcat = subcategories.filter(
+        (item) => item.subcategory_id === product.subcategory_id
+      );
+      setSubCategoryName(subcat[0].name);
+    }
+  }, []);
   return (
     <React.Fragment>
       <td class="px-5 p-4">
@@ -15,7 +32,7 @@ const ProductRow = ({
       </td>
       <th
         scope="row"
-        class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+        class=" px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
         <div class="flex items-center mr-3">
           <img
@@ -24,6 +41,10 @@ const ProductRow = ({
             class="h-8 w-auto mr-3"
           />
           {product.name}
+        </div>
+        <div className="text-xs text-gray-500">
+          <span>color: {product.color + " "} |</span>
+          <span> size : {product.size + " "}</span>
         </div>
       </th>
       <td class="px-6 py-3">
@@ -34,10 +55,10 @@ const ProductRow = ({
       </td>
 
       <td class="px-4 py-3">
-        <div class="flex items-center">{product.category_id}</div>
+        <div class="flex items-center">{categoryName}</div>
       </td>
       <td class="px-4 py-3">
-        <div class="flex items-center">{product.subcategory_id}</div>
+        <div class="flex items-center">{subcategoryName}</div>
       </td>
       <td class="px-6 py-3">
         {product.stock < 5 ? (
