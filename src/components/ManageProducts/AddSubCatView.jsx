@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
+import { AddSubcategory } from "../../api/ProductApi";
 
 const AddSubCatView = ({
   closeModal,
@@ -12,24 +13,24 @@ const AddSubCatView = ({
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedCategoryID, setSelectedCategoryID] = useState(0);
-  const [selectedSubcategory, setSelectedSubcategory] = useState([]);
   const [addSubCatData, setAddSubCatData] = useState({
     category_id: null,
     name: "",
   });
-  const handleCategoryChange = (event) => {
-    //setAllProducts(fetchedProducts);
-    setFilteredSubcategories([]);
 
+  const handleCategoryChange = (event) => {
+    setFilteredSubcategories([]);
+    console.log(category);
     const selectedCat = category.filter(
-      (item) => item.category_id === parseInt(event.target.value)
+      (item) => item.id === parseInt(event.target.value)
     );
+    console.log(selectedCat);
     setAddSubCatData({
       ...addSubCatData,
       category_id: parseInt(event.target.value),
     });
     setSelectedCategory(selectedCat[0]);
-    setSelectedCategoryID(selectedCat[0].category_id);
+    setSelectedCategoryID(selectedCat[0].id);
 
     const filteredData = subcategory.filter(
       (item) => item.category_id === parseInt(selectedCat[0].category_id)
@@ -47,47 +48,35 @@ const AddSubCatView = ({
       const nameCheck = filteredSubcategories.filter(
         (item) => item.name.toLowerCase() === subCatName.toLowerCase()
       );
-      console.log("name check:", nameCheck);
       if (nameCheck.length === 0) {
         try {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/api/subcategory/add",
-            {
-              category_id: selectedCategoryID,
-              name: subCatName,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          let data = {
+            category_id: selectedCategoryID,
+            name: subCatName,
+          };
+          const response = await AddSubcategory(data);
           if (response.status === 201) {
-            console.log("Subcategory added");
-            setSubCatName("");
-            toast.success("Subcategory added");
-            const timerId = setTimeout(() => {
-              closeModal();
-              setReloadComponent();
-            }, 1600);
+            toast.success("Added", {
+              duration: 1000,
+              position: "right-center",
+              //icon: "❌",
+            });
 
-            return () => clearTimeout(timerId);
+            setTimeout(() => {
+              closeModal();
+              setReloadComponent(true);
+            }, 1200);
           } else {
-            console.error("Something went wrong");
             toast.error("Required field is empty");
-            closeModal();
-            setReloadComponent();
           }
         } catch (error) {
           console.log(error);
+          toast.error("Something went wrong");
         }
       } else {
-        console.error("Subcategory with the same name exists");
-        console.log(nameCheck);
         toast.error("Subcategory with the same name exists");
       }
     } else {
-      console.error("Required field is empty");
       toast.error("Required field is empty");
     }
   };
@@ -148,7 +137,7 @@ const AddSubCatView = ({
                 </option>
 
                 {category.map((cat) => (
-                  <option key={cat.category_id} value={cat.category_id}>
+                  <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>
                 ))}

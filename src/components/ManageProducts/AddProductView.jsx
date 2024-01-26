@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { IoIosAddCircleOutline } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
+import { AddProducts } from "../../api/ProductApi";
 import "react-toastify/dist/ReactToastify.css";
-const AddProductView = ({ products, category, subcategory, closeModal }) => {
+const AddProductView = ({
+  products,
+  category,
+  subcategory,
+  closeModal,
+  reload,
+}) => {
+  const [viewSubcategory, setViewSubcategory] = useState(false);
+  const [viewDiscount, setViewDiscount] = useState(false);
+  const [viewColor, setViewColor] = useState(false);
+  const [viewSize, setViewSize] = useState(false);
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedCategoryID, setSelectedCategoryID] = useState(0);
@@ -47,17 +58,17 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
     setFilteredSubcategories([]);
 
     const selectedCat = category.filter(
-      (item) => item.category_id === parseInt(event.target.value)
+      (item) => item.id === parseInt(event.target.value)
     );
     setAddProductDetails({
       ...AddProductDetails,
       category_id: parseInt(event.target.value),
     });
     setSelectedCategory(selectedCat[0]);
-    setSelectedCategoryID(selectedCat[0].category_id);
+    setSelectedCategoryID(selectedCat[0].id);
 
     const filteredData = subcategory.filter(
-      (item) => item.category_id === parseInt(selectedCat[0].category_id)
+      (item) => item.category_id === parseInt(selectedCat[0].id)
     );
 
     if (filteredData.length === 0) {
@@ -86,80 +97,73 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
         AddProductDetails.description !== "" &&
         AddProductDetails.price !== 0 &&
         AddProductDetails.stock !== null &&
-        selectedCategory !== 0
-        //AddProductDetails.subcategory_id !== 0
+        selectedCategory.length !== 0
       ) {
-        const filterProducts = products.filter((item) =>
-          item.name.toLowerCase() === AddProductDetails.name.toLowerCase() &&
-          (item.size === AddProductDetails.size) === ""
-            ? null
-            : AddProductDetails.size &&
-              (item.color === AddProductDetails.color) === ""
-            ? null
-            : AddProductDetails.color
+        const filterProducts = products.filter(
+          (item) =>
+            item.name.toLowerCase() === AddProductDetails.name.toLowerCase() &&
+            item.size === AddProductDetails.size &&
+            item.color === AddProductDetails.color
         );
 
         if (filterProducts.length === 0) {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/api/addproduct",
-            {
-              name: AddProductDetails.name,
-              description: AddProductDetails.description,
-              stock: parseInt(AddProductDetails.stock),
-              size:
-                AddProductDetails.size === "" ? null : AddProductDetails.size,
-              color:
-                AddProductDetails.color === "" ? null : AddProductDetails.color,
-              price: parseFloat(AddProductDetails.price),
-              discount:
-                AddProductDetails.discount === 0
-                  ? null
-                  : parseFloat(AddProductDetails.discount),
-              discounted_price:
-                AddProductDetails.discount === 0
-                  ? null
-                  : parseFloat(
-                      AddProductDetails.price -
-                        AddProductDetails.price *
-                          (AddProductDetails.discount / 100)
-                    ),
-              images: AddProductDetails.images,
-              category_id: parseInt(selectedCategoryID),
-              subcategory_id: parseInt(selectedSubcategory),
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          let data = {
+            name: AddProductDetails.name,
+            description: AddProductDetails.description,
+            stock: parseInt(AddProductDetails.stock),
+            size: AddProductDetails.size === "" ? null : AddProductDetails.size,
+            color:
+              AddProductDetails.color === "" ? null : AddProductDetails.color,
+            price: parseFloat(AddProductDetails.price),
+            discount:
+              AddProductDetails.discount === 0
+                ? null
+                : parseFloat(AddProductDetails.discount),
+            discounted_price:
+              AddProductDetails.discount === 0
+                ? null
+                : parseFloat(
+                    AddProductDetails.price -
+                      AddProductDetails.price *
+                        (AddProductDetails.discount / 100)
+                  ),
+            images: AddProductDetails.images,
+            category_id: parseInt(selectedCategoryID),
+            subcategory_id: parseInt(selectedSubcategory),
+          };
+
+          const response = await AddProducts(data);
 
           if (response.status === 201) {
-            console.log("Product added");
-
-            toast.success("Product added");
-            resetStates();
-            const timerId = setTimeout(() => {
+            toast.success("Added", {
+              position: toast.POSITION.BOTTOM_RIGHT,
+              autoClose: 1200,
+            });
+            setTimeout(() => {
               closeModal();
-            }, 1600);
-
-            setAddProductDetails([]);
-
-            return () => clearTimeout(timerId);
+              reload();
+            }, 1500);
+          } else {
+            toast.error("Something went wrong", {
+              position: toast.POSITION.BOTTOM_RIGHT,
+            });
           }
         } else {
-          console.error("Required fields are empty");
-          console.log(AddProductDetails);
-          toast.error("Required fields are empty");
+          toast.error("Product already exists", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
         }
       } else {
-        toast.error("Product already exists.");
+        console.error(AddProductDetails, selectedCategory);
+
+        toast.error("Required fields are empty", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
       }
     } catch (error) {
-      console.error(error.message);
-      console.log(AddProductDetails);
-      //console.log(addAdminData);
-      toast.error("Invalid inputs. Please check");
+      toast.error("Invalid inputs. Please check", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
     }
   };
 
@@ -213,7 +217,7 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
                     for="name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Product Name *
+                    Product Name <span className="text-red-600">*</span>
                   </label>
                   <input
                     type="text"
@@ -234,7 +238,7 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
                     for="category"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Category *
+                    Category <span className="text-red-600">*</span>
                   </label>
                   <select
                     id="category"
@@ -246,33 +250,8 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
                     </option>
 
                     {category.map((cat) => (
-                      <option key={cat.category_id} value={cat.category_id}>
+                      <option key={cat.id} value={cat.id}>
                         {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label
-                    for="brand"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Subcategory
-                  </label>
-                  <select
-                    id="category"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    onChange={(e) => handleSubCategoryChange(e)}
-                  >
-                    <option value="" disabled selected>
-                      Choose Subcategory
-                    </option>
-                    {filteredSubcategories.map((subcategory) => (
-                      <option
-                        key={subcategory.subcategory_id}
-                        value={subcategory.subcategory_id}
-                      >
-                        {subcategory.name}
                       </option>
                     ))}
                   </select>
@@ -282,7 +261,7 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
                     for="price"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Price *
+                    Price <span className="text-red-600">*</span>
                   </label>
                   <input
                     type="number"
@@ -298,75 +277,49 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
                     }
                   />
                 </div>
+                <div>
+                  <div className="flex">
+                    <label
+                      for="brand"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Subcategory{" "}
+                    </label>
+                    <span
+                      className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                      onClick={() => setViewSubcategory(!viewSubcategory)}
+                    >
+                      <IoIosAddCircleOutline />
+                    </span>
+                  </div>
+
+                  <div className="border rounded-lg">
+                    {viewSubcategory && (
+                      <select
+                        id="category"
+                        className="bg-gray-50 Slidedown border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        onChange={(e) => handleSubCategoryChange(e)}
+                      >
+                        <option value="" disabled selected>
+                          Choose Subcategory
+                        </option>
+                        {filteredSubcategories.map((subcategory) => (
+                          <option key={subcategory.id} value={subcategory.id}>
+                            {subcategory.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+
                 <div class="grid gap-4 sm:col-span-2 md:gap-6 sm:grid-cols-4">
-                  <div>
-                    <label
-                      for="weight"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Discount %
-                    </label>
-                    <input
-                      type="number"
-                      name="weight"
-                      id="weight"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      min={0}
-                      onChange={(e) =>
-                        setAddProductDetails({
-                          ...AddProductDetails,
-                          discount: parseFloat(e.target.value),
-                        })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <label
-                      for="length"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Color
-                    </label>
-                    <input
-                      type="text"
-                      name="length"
-                      id="length"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      onChange={(e) =>
-                        setAddProductDetails({
-                          ...AddProductDetails,
-                          color: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <label
-                      for="breadth"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Size
-                    </label>
-                    <input
-                      type="text"
-                      name="breadth"
-                      id="breadth"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      min={0}
-                      onChange={(e) =>
-                        setAddProductDetails({
-                          ...AddProductDetails,
-                          size: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
                   <div>
                     <label
                       for="width"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Stock qty *
+                      Stock qty <span className="text-red-600">*</span>
                     </label>
                     <input
                       type="number"
@@ -382,13 +335,113 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
                       }
                     />
                   </div>
+                  <div>
+                    <div className="flex">
+                      <label
+                        for="weight"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        onClick={() => setViewDiscount(!viewDiscount)}
+                      >
+                        Discount %
+                      </label>
+                      <span
+                        className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                        onClick={() => setViewDiscount(!viewDiscount)}
+                      >
+                        <IoIosAddCircleOutline />
+                      </span>
+                    </div>
+
+                    <div className="border rounded-lg">
+                      {viewDiscount && (
+                        <input
+                          type="number"
+                          name="weight"
+                          id="weight"
+                          class="Slidedown bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          min={0}
+                          onChange={(e) =>
+                            setAddProductDetails({
+                              ...AddProductDetails,
+                              discount: parseFloat(e.target.value),
+                            })
+                          }
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex">
+                      <label
+                        for="length"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Color
+                      </label>
+                      <span
+                        className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                        onClick={() => setViewColor(!viewColor)}
+                      >
+                        <IoIosAddCircleOutline />
+                      </span>
+                    </div>
+                    <div className="border rounded-lg">
+                      {viewColor && (
+                        <input
+                          type="text"
+                          name="length"
+                          id="length"
+                          class="bg-gray-50 border Slidedown border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          onChange={(e) =>
+                            setAddProductDetails({
+                              ...AddProductDetails,
+                              color: e.target.value,
+                            })
+                          }
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex">
+                      <label
+                        for="breadth"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Size
+                      </label>
+                      <span
+                        className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                        onClick={() => setViewSize(!viewSize)}
+                      >
+                        <IoIosAddCircleOutline />
+                      </span>
+                    </div>
+                    <div className="border rounded-lg">
+                      {viewSize && (
+                        <input
+                          type="text"
+                          name="breadth"
+                          id="breadth"
+                          class="bg-gray-50 Slidedown border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          min={0}
+                          onChange={(e) =>
+                            setAddProductDetails({
+                              ...AddProductDetails,
+                              size: e.target.value,
+                            })
+                          }
+                        />
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div class="sm:col-span-2">
                   <label
                     for="description"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Description *
+                    Description <span className="text-red-600">*</span>
                   </label>
                   <textarea
                     id="description"
@@ -404,38 +457,7 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
                   ></textarea>
                 </div>
               </div>
-              <div class="mb-4 space-y-4 sm:flex sm:space-y-0">
-                <div class="flex items-center mr-4">
-                  <input
-                    id="inline-checkbox"
-                    type="checkbox"
-                    value=""
-                    name="sellingType"
-                    class="w-4 h-4 bg-gray-100 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label
-                    for="inline-checkbox"
-                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >
-                    Pickup only
-                  </label>
-                </div>
-                <div class="flex items-center mr-4">
-                  <input
-                    id="inline-2-checkbox"
-                    type="checkbox"
-                    value=""
-                    name="sellingType"
-                    class="w-4 h-4 bg-gray-100 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label
-                    for="inline-2-checkbox"
-                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >
-                    Both pickup and delivery
-                  </label>
-                </div>
-              </div>
+              <div class="mb-4 space-y-4 sm:flex sm:space-y-0"></div>
               <div class="mb-4">
                 <span class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Product Images
@@ -443,7 +465,7 @@ const AddProductView = ({ products, category, subcategory, closeModal }) => {
                 <div class="flex justify-center items-center w-full">
                   <label
                     for="dropzone-file"
-                    class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                    class="flex flex-col justify-center items-center w-full h-48 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                   >
                     <div class="flex flex-col justify-center items-center pt-5 pb-6">
                       <svg

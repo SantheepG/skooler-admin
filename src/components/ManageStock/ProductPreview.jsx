@@ -10,7 +10,7 @@ const ProductPreview = ({ closeModal, product }) => {
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Product details
                 <div className="text-xs text-gray-500">
-                  Product ID : {product.products_id}
+                  Product ID : {product.id}
                 </div>
               </h3>
 

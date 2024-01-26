@@ -67,7 +67,7 @@ const Login = () => {
       </div>
       <div class="h-screen py-20 p-4 md:p-20 lg:p-32 ">
         <Toaster className="notifier" />
-        <div class="max-w-sm sm:mt-10 bg-white rounded-lg overflow-hidden shadow-lg mx-auto box-with-shadow">
+        <div class="max-w-sm mt-12 lg:mt-8 bg-white rounded-lg overflow-hidden shadow-lg mx-auto box-with-shadow">
           <div class="p-6">
             <h2 class="text-xl font-bold text-gray-800 mb-2">Admin Login</h2>
             <p class="text-gray-700 mb-6">Please Login in to your account</p>

@@ -4,7 +4,9 @@
     transition: all 0.3s ease;
 }
 
-
+.Slidedown{
+    animation: viewContent 0.2s ease-in-out forwards;
+}
 
 @keyframes viewContent {
     0% {
@@ -17,3 +19,5 @@
         
     }
   }
+
+  

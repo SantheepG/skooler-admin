@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Toaster, toast } from "react-hot-toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-const AddEventView = ({ closeModal }) => {
+import { IoIosAddCircleOutline } from "react-icons/io";
+const AddEventView = ({ closeModal, reload }) => {
   const [startDate, setStartDate] = useState(new Date());
-
+  const [viewPayment, setViewPayment] = useState(false);
+  const [viewDate, setViewDate] = useState(false);
+  const [viewTime, setViewTime] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateStr, setSelectedDateStr] = useState("");
   const [selectedDeadline, setSelectedDeadline] = useState("");
@@ -90,13 +93,12 @@ const AddEventView = ({ closeModal }) => {
       if (
         addEventData.event_name !== "" &&
         addEventData.event_info !== "" &&
+        addEventData.venue !== "" &&
         addEventData.payment !== null &&
+        addEventData.capacity !== null &&
         selectedDateStr !== "" &&
-        deadlineDateStr !== "" &&
         hours.hour1 !== "" &&
-        hours.hour2 !== "" &&
-        mins.mins1 !== "" &&
-        mins.mins2 !== ""
+        mins.mins1 !== ""
       ) {
         const response = await axios.post(
           "http://127.0.0.1:8000/api/event/add",
@@ -104,9 +106,13 @@ const AddEventView = ({ closeModal }) => {
             event_name: addEventData.event_name,
             event_info: addEventData.event_info,
             venue: addEventData.venue,
+            capacity: addEventData.capacity,
             payment: parseFloat(addEventData.payment),
             event_datetime: `${selectedDateStr} ${hours.hour1}:${mins.mins1}:00`,
-            payment_deadline: `${deadlineDateStr} ${hours.hour2}:${mins.mins2}:00`,
+            payment_deadline:
+              deadlineDateStr !== "" && hours.hour2 !== "" && mins.mins2 !== ""
+                ? `${deadlineDateStr} ${hours.hour2}:${mins.mins2}:00`
+                : null,
           },
           {
             headers: {
@@ -117,53 +123,29 @@ const AddEventView = ({ closeModal }) => {
 
         if (response.status === 201) {
           console.log("Event added");
-          setAddEventData({
-            event_name: "",
-            event_info: "",
-            payment: 0,
-            event_datetime: ``,
-            payment_deadline: "",
+          toast.success("Added", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 1200,
           });
-          setDeadlineDateStr("");
-          setSelectedDateStr("");
-          setHours({
-            hour1: "",
-            hour2: "",
-          });
-          setMins({
-            mins1: "",
-            mins22: "",
-          });
-
-          toast.success("Event added", {
-            duration: 1200,
-            position: "top-center",
-            //icon: "❌",
-          });
-
-          const timerId = setTimeout(() => {
+          setTimeout(() => {
             closeModal();
-          }, 1600);
-
-          return () => clearTimeout(timerId);
+            reload();
+          }, 1500);
+        } else {
+          toast.error("Something went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
         }
       } else {
-        console.error("Required fields are empty");
-        console.log(addEventData);
         toast.error("Required fields are empty", {
-          duration: 1200,
-          position: "top-center",
-          //icon: "❌",
+          position: toast.POSITION.BOTTOM_RIGHT,
         });
       }
     } catch (error) {
       console.error(error.message);
       console.log(addEventData);
-      //console.log(addAdminData);
       toast.error("Invalid inputs. Please check", {
-        duration: 1500,
-        position: "top-center",
-        //icon: "❌",
+        position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
   };
@@ -179,7 +161,7 @@ const AddEventView = ({ closeModal }) => {
         <div class="relative p-4 w-full max-w-3xl h-full md:h-auto">
           <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-              <Toaster className="notifier" />
+              <ToastContainer />
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                 Add Event
               </h3>
@@ -216,7 +198,8 @@ const AddEventView = ({ closeModal }) => {
                       for="name"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Event Name
+                      Event Name{" "}
+                      <span className="required text-red-500"> *</span>
                     </label>
                     <input
                       type="text"
@@ -235,38 +218,18 @@ const AddEventView = ({ closeModal }) => {
                   <div className="flex">
                     <div className="w-1/2 mx-2">
                       <label
-                        for="payment"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Payment
-                      </label>
-                      <input
-                        type="number"
-                        name="payment"
-                        id="payment"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        required=""
-                        onChange={(e) =>
-                          setAddEventData({
-                            ...addEventData,
-                            payment: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="w-1/2 mx-2">
-                      <label
                         for="category"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
                         Capacity
+                        <span className="required text-red-500"> *</span>
                       </label>
                       <input
                         type="number"
                         name="capacity"
                         id="capacity"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        required=""
+                        min={0}
                         onChange={(e) =>
                           setAddEventData({
                             ...addEventData,
@@ -274,6 +237,40 @@ const AddEventView = ({ closeModal }) => {
                           })
                         }
                       />
+                    </div>
+                    <div className="w-1/2 mx-2">
+                      <div className="flex">
+                        <label
+                          for="payment"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          Payment{" "}
+                        </label>
+
+                        <span
+                          className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                          onClick={() => setViewPayment(!viewPayment)}
+                        >
+                          <IoIosAddCircleOutline />
+                        </span>
+                      </div>
+                      <div className="border rounded-lg">
+                        {viewPayment && (
+                          <input
+                            type="number"
+                            name="payment"
+                            id="payment"
+                            class="bg-gray-50 Slidedown border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            min={0}
+                            onChange={(e) =>
+                              setAddEventData({
+                                ...addEventData,
+                                payment: e.target.value,
+                              })
+                            }
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -283,7 +280,7 @@ const AddEventView = ({ closeModal }) => {
                         for="weight"
                         class="block mb-2  text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Date
+                        Date <span className="required text-red-500"> *</span>
                       </label>
                       <DatePicker
                         selected={selectedDate}
@@ -298,7 +295,7 @@ const AddEventView = ({ closeModal }) => {
                         for="length"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Time
+                        Time<span className="required text-red-500"> *</span>
                       </label>
                       <div className="flex w-full">
                         <input
@@ -325,45 +322,69 @@ const AddEventView = ({ closeModal }) => {
                       </div>
                     </div>
                     <div className="">
-                      <label
-                        for="weight"
-                        class="block mb-2  text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Deadline date
-                      </label>
-                      <DatePicker
-                        selected={selectedDeadline}
-                        className="w-44 rounded border border-gray-300"
-                        onChange={(date) => {
-                          setSelectedDeadline(date);
-                        }}
-                      />
+                      <div className="flex">
+                        <label
+                          for="weight"
+                          class="block mb-2  text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          Deadline date
+                        </label>
+                        <span
+                          className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                          onClick={() => setViewDate(!viewDate)}
+                        >
+                          <IoIosAddCircleOutline />
+                        </span>
+                      </div>
+                      <div className="border rounded-lg">
+                        {viewDate && (
+                          <DatePicker
+                            selected={selectedDeadline}
+                            className="w-44 rounded Slidedown border border-gray-300"
+                            onChange={(date) => {
+                              setSelectedDeadline(date);
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
                     <div className="ml-2">
-                      <label
-                        for="length"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Time
-                      </label>
-                      <div className="flex w-full">
-                        <input
-                          type="number"
-                          name="hour2"
-                          id="hour2"
-                          value={hours.hour2}
-                          onChange={(e) => handleHourChange(e, "hour2")}
-                          class="mr-1 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        />
-                        <div className="text-3xl"> : </div>
-                        <input
-                          type="number"
-                          name="mins2"
-                          id="mins2"
-                          value={mins.mins2}
-                          onChange={(e) => handleMinChange(e, "mins2")}
-                          class="ml-1 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        />
+                      <div className="flex">
+                        <label
+                          for="length"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          Time
+                        </label>
+                        <span
+                          className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                          onClick={() => setViewTime(!viewTime)}
+                        >
+                          <IoIosAddCircleOutline />
+                        </span>
+                      </div>
+                      <div className="border-t rounded-lg">
+                        {viewTime && (
+                          <div className="flex Slidedown w-full">
+                            <input
+                              type="number"
+                              name="hour2"
+                              id="hour2"
+                              value={hours.hour2}
+                              onChange={(e) => handleHourChange(e, "hour2")}
+                              class="mr-1 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            />
+                            <div className="text-3xl"> : </div>
+                            <input
+                              type="number"
+                              name="mins2"
+                              id="mins2"
+                              value={mins.mins2}
+                              onChange={(e) => handleMinChange(e, "mins2")}
+                              class="ml-1 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -373,6 +394,7 @@ const AddEventView = ({ closeModal }) => {
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Event description
+                      <span className="required text-red-500"> *</span>
                     </label>
                     <textarea
                       id="description"
@@ -392,7 +414,7 @@ const AddEventView = ({ closeModal }) => {
                       for="description"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Venue
+                      Venue<span className="required text-red-500"> *</span>
                     </label>
                     <textarea
                       id="venue"
@@ -416,7 +438,7 @@ const AddEventView = ({ closeModal }) => {
                   <div class="flex justify-center items-center w-full">
                     <label
                       for="dropzone-file"
-                      class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                      class="flex flex-col justify-center items-center w-full h-32 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                     >
                       <div class="flex flex-col justify-center items-center pt-5 pb-6">
                         <svg

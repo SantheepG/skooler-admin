@@ -46,7 +46,7 @@ const DeleteView = () => {
                 />
               </svg>
               <p class="mb-4 text-gray-500 dark:text-gray-300">
-                Are you sure you want to delete this item?
+                Are you sure you want to delete this order?
               </p>
               <div class="flex justify-center items-center space-x-4">
                 <button

@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import defaultImg from "../../assets/default-avatar.png";
 
 const AdminRow = ({
   adminData,
+  openDropdown,
+  toggleDropdown,
   toggleAdminStatus,
   ViewAdminOverlayHandler,
+  viewDeleteAdmin,
 }) => {
   const [viewEditDropdown, setViewEditDropdown] = useState(false);
   const rolesString = adminData.roles;
@@ -14,13 +17,20 @@ const AdminRow = ({
     Object.entries(rolesObject).filter(([key, value]) => value === true)
   );
 
-  console.log(selectedRoles);
+  useEffect(() => {
+    if (openDropdown === adminData.id) {
+      setViewEditDropdown(true);
+    } else {
+      setViewEditDropdown(false);
+    }
+  }, [openDropdown]);
 
   return (
     <React.Fragment>
+      <th className="px-8">{adminData.id}</th>
       <th
         scope="row"
-        class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+        class="flex items-center  py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
         <img src={defaultImg} alt="img" className="user-img" />
         <div class="ps-3">
@@ -71,10 +81,9 @@ const AdminRow = ({
         >
           edit
         </a>
-        <a
-          href="#"
+        <button
           class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-          onClick={() => setViewEditDropdown(!viewEditDropdown)}
+          onClick={toggleDropdown}
         >
           <svg
             class="w-5 h-5 inline"
@@ -85,50 +94,54 @@ const AdminRow = ({
           >
             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
           </svg>
-        </a>
-        <ul
-          className={`absolute z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
-            viewEditDropdown ? "" : "hidden"
-          }`}
-          aria-labelledby="dropdownMenuButton1"
-          data-te-dropdown-menu-ref
-        >
-          <li>
-            <a
-              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href="#"
-              data-te-dropdown-item-ref
-              onClick={() => {
-                toggleAdminStatus(adminData.id, 1);
-                setViewEditDropdown(false);
-              }}
-            >
-              Active
-            </a>
-          </li>
-          <li>
-            <a
-              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href="#"
-              data-te-dropdown-item-ref
-              onClick={() => {
-                toggleAdminStatus(adminData.id, 0);
-                setViewEditDropdown(false);
-              }}
-            >
-              Inactive
-            </a>
-          </li>
-          <li>
-            <a
-              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-red-700 hover:bg-red-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href="#"
-              data-te-dropdown-item-ref
-            >
-              Delete
-            </a>
-          </li>
-        </ul>
+        </button>
+        {viewEditDropdown && (
+          <ul
+            className={`absolute z-[1000] -mx-10 -mt-16 float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block`}
+            aria-labelledby="dropdownMenuButton1"
+            data-te-dropdown-menu-ref
+          >
+            <li>
+              <a
+                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                href="#"
+                data-te-dropdown-item-ref
+                onClick={() => {
+                  toggleAdminStatus(adminData.id, 1);
+                  setViewEditDropdown(false);
+                }}
+              >
+                Active
+              </a>
+            </li>
+            <li>
+              <a
+                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                href="#"
+                data-te-dropdown-item-ref
+                onClick={() => {
+                  toggleAdminStatus(adminData.id, 0);
+                  setViewEditDropdown(false);
+                }}
+              >
+                Inactive
+              </a>
+            </li>
+            <li>
+              <a
+                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-red-700 hover:bg-red-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                href="#"
+                data-te-dropdown-item-ref
+                onClick={() => {
+                  viewDeleteAdmin();
+                  setViewEditDropdown(!viewEditDropdown);
+                }}
+              >
+                Delete
+              </a>
+            </li>
+          </ul>
+        )}
       </td>
     </React.Fragment>
   );

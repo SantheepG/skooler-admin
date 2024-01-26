@@ -5,9 +5,14 @@ import UpdateStockView from "./UpdateStockView";
 import AccessDenied from "../AccessDenied";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
-
+import {
+  DeleteProduct,
+  FetchCategories,
+  FetchProducts,
+} from "../../api/ProductApi";
 const ManageStock = ({ bool }) => {
-  const [products, setProducts] = useState([]);
+  const [fetchedProducts, setFetchedProducts] = useState([]);
+  const [productsToview, setProductsToView] = useState([]);
   const [overlayClicked, setOverlayClicked] = useState(false);
   const [addProductClicked, setAddProductClicked] = useState(false);
   const [editProductClicked, setEditProductClicked] = useState(false);
@@ -16,8 +21,32 @@ const ManageStock = ({ bool }) => {
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentProduct, setCurrentProduct] = useState([]);
   const [reloadComponent, setReloadComponent] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  const toggleDropdown = (adminId) => {
+    setOpenDropdown((prevOpenDropdown) =>
+      prevOpenDropdown === adminId ? null : adminId
+    );
+  };
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await FetchCategories();
+        if (response && response.data) {
+          const { category, subcategory } = response.data;
+          setCategories(category);
+          setSubcategories(subcategory);
+        }
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCategories();
     const fetchProducts = async () => {
       if (bool) {
         try {
@@ -25,7 +54,8 @@ const ManageStock = ({ bool }) => {
             "http://127.0.0.1:8000/api/products"
           );
           if (response) {
-            setProducts(response.data.products);
+            setFetchedProducts(response.data.products);
+            setProductsToView(response.data.products);
             setReloadComponent(false);
           }
         } catch (error) {
@@ -101,11 +131,48 @@ const ManageStock = ({ bool }) => {
       console.log(error);
     }
   };
+  const searchProduct = (event) => {
+    event.preventDefault();
+    const inputValue = event.target.value.toLowerCase();
 
+    if (inputValue === "") {
+      setProductsToView(fetchedProducts);
+    } else {
+      let matchedProducts = fetchedProducts.filter(
+        (item) =>
+          item.name.toLowerCase().includes(inputValue) ||
+          item.id === parseInt(inputValue)
+      );
+      setProductsToView(matchedProducts);
+    }
+  };
+
+  const filterProduct = (event) => {
+    event.preventDefault();
+
+    if (event.target.value === "All") {
+      setProductsToView(fetchedProducts);
+    } else if (event.target.value === "Out of stock") {
+      let matchedProducts = fetchedProducts.filter((item) => item.stock === 0);
+      setProductsToView(matchedProducts);
+    } else if (event.target.value === "Newly added") {
+      //descending order of created_at
+      let sortedProducts = [...fetchedProducts].sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+      setProductsToView(sortedProducts);
+    } else if (event.target.value === "Old") {
+      //ascending order of created_at
+      let sortedProducts = [...fetchedProducts].sort(
+        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+      );
+      setProductsToView(sortedProducts);
+    }
+  };
   return (
     <React.Fragment>
       {bool ? (
-        <div className="relative m-5">
+        <div className="viewContent relative m-5">
           <Toaster className="notifier" />
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
             <div
@@ -139,14 +206,26 @@ const ManageStock = ({ bool }) => {
                   id="table-search-users"
                   class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search for products"
+                  onChange={(e) => searchProduct(e)}
                 />
               </div>
               <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                  <option value="" disabled selected>
-                    Filter
+                <select
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  onChange={(e) => filterProduct(e)}
+                >
+                  <option name={"All"} value={"All"}>
+                    All
                   </option>
-                  <option>Filter</option>
+                  <option name={"Newly added"} value={"Newly added"}>
+                    Newly added
+                  </option>
+                  <option name={"Out of stock"} value={"Out of stock"}>
+                    Out of stock
+                  </option>
+                  <option name={"Old"} value={"Old"}>
+                    Earliest
+                  </option>
                 </select>
               </div>
             </div>
@@ -158,7 +237,7 @@ const ManageStock = ({ bool }) => {
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" class="p-4 p">
-                    Product ID
+                    #ID
                   </th>
                   <th scope="col" class="p-4">
                     Product
@@ -179,28 +258,32 @@ const ManageStock = ({ bool }) => {
                 </tr>
               </thead>
               <tbody>
-                {products.map((product, index) => (
+                {productsToview.map((product, index) => (
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <ProductRow
                       key={index}
                       product={product}
+                      categories={categories}
+                      subcategories={subcategories}
+                      openDropdown={openDropdown}
+                      toggleDropdown={() => toggleDropdown(product.id)}
                       previewProduct={() => {
                         setOverlayClicked(!overlayClicked);
                         setpreviewProductClicked(!previewProductClicked);
                         setCurrentProductIndex(index);
-                        setCurrentProduct(products[index]);
+                        setCurrentProduct(product);
                       }}
                       editProduct={() => {
                         setOverlayClicked(!overlayClicked);
                         setEditProductClicked(!editProductClicked);
                         setCurrentProductIndex(index);
-                        setCurrentProduct(products[index]);
+                        setCurrentProduct(product);
                       }}
                       deleteProduct={() => {
                         setOverlayClicked(!overlayClicked);
                         setdeleteProductClicked(!deleteProductClicked);
                         setCurrentProductIndex(index);
-                        setCurrentProduct(products[index]);
+                        setCurrentProduct(product);
                       }}
                     />
                   </tr>

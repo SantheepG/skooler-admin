@@ -1,18 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import defaultImg from "../../assets/default-avatar.png";
-const UserRow = ({ userData, toggleActiveStatus, ViewOverlayHandler }) => {
+const UserRow = ({
+  userData,
+  openDropdown,
+  toggleDropdown,
+  toggleActiveStatus,
+  ViewOverlayHandler,
+}) => {
   const [viewUserDetails, setViewUserDetails] = useState(false);
   const [viewEditDropdown, setViewEditDropdown] = useState(false);
 
+  useEffect(() => {
+    if (openDropdown === userData.id) {
+      setViewEditDropdown(true);
+    } else {
+      setViewEditDropdown(false);
+    }
+  }, [openDropdown]);
+
   return (
     <React.Fragment>
+      <th className="px-10">{userData.id}</th>
       <th
         scope="row"
         class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
       >
         <img src={defaultImg} alt="img" className="user-img" />
         <div class="ps-3">
-          <div class="text-base font-semibold">{userData.name}</div>
+          <div class="text-base font-semibold">
+            {userData.first_name + " "}
+            {userData.last_name !== null && userData.last_name}
+          </div>
           <div class="font-normal text-gray-500">{userData.email}</div>
         </div>
       </th>
@@ -44,57 +62,66 @@ const UserRow = ({ userData, toggleActiveStatus, ViewOverlayHandler }) => {
         >
           view
         </a>
-        <a
+        <button
           href="#"
           class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-          onClick={() => setViewEditDropdown(!viewEditDropdown)}
+          onClick={toggleDropdown}
         >
-          edit
-        </a>
-        <ul
-          className={`fixed z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
-            viewEditDropdown ? "" : "hidden"
-          }`}
-          aria-labelledby="dropdownMenuButton1"
-          data-te-dropdown-menu-ref
-        >
-          <li>
-            <a
-              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href="#"
-              data-te-dropdown-item-ref
-              onClick={() => {
-                toggleActiveStatus(userData.id, 1);
+          <svg
+            class="w-5 h-5 inline"
+            aria-hidden="true"
+            fill="currentColor"
+            viewbox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+          </svg>
+        </button>
 
-                setViewEditDropdown(false);
-              }}
-            >
-              Active
-            </a>
-          </li>
-          <li>
-            <a
-              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href="#"
-              data-te-dropdown-item-ref
-              onClick={() => {
-                toggleActiveStatus(userData.id, 0);
-                setViewEditDropdown(false);
-              }}
-            >
-              Inactive
-            </a>
-          </li>
-          <li>
-            <a
-              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-red-700 hover:bg-red-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href="#"
-              data-te-dropdown-item-ref
-            >
-              Delete
-            </a>
-          </li>
-        </ul>
+        {viewEditDropdown && (
+          <ul
+            className={`fixed z-[1000] float-left -mt-14 -ml-10 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block`}
+            aria-labelledby="dropdownMenuButton1"
+            data-te-dropdown-menu-ref
+          >
+            <li>
+              <a
+                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                href="#"
+                data-te-dropdown-item-ref
+                onClick={() => {
+                  toggleActiveStatus(userData.id, 1);
+
+                  setViewEditDropdown(false);
+                }}
+              >
+                Active
+              </a>
+            </li>
+            <li>
+              <a
+                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                href="#"
+                data-te-dropdown-item-ref
+                onClick={() => {
+                  toggleActiveStatus(userData.id, 0);
+                  setViewEditDropdown(false);
+                }}
+              >
+                Inactive
+              </a>
+            </li>
+            <li>
+              <a
+                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-red-700 hover:bg-red-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                href="#"
+                data-te-dropdown-item-ref
+              >
+                Delete
+              </a>
+            </li>
+          </ul>
+        )}
       </td>
     </React.Fragment>
   );

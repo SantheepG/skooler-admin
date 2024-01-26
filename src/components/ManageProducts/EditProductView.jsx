@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const EditProductView = ({ closeModal, product }) => {
+const EditProductView = ({ closeModal, product, reload }) => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [subcategoriesDisabled, setSubcategoriesDisabled] = useState(true);
@@ -21,6 +22,11 @@ const EditProductView = ({ closeModal, product }) => {
     category_id: 0,
     subcategory_id: 0,
   });
+
+  useEffect(() => {
+    console.log(product);
+    setUpdateDetails(product);
+  }, [product]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -43,54 +49,31 @@ const EditProductView = ({ closeModal, product }) => {
   }, []);
 
   const handleCategoryChange = async (event) => {
-    const selectedValue = event.target.value;
+    const selectedValue = parseInt(event.target.value);
+    setUpdateDetails({
+      ...updateDetails,
+      category_id: selectedValue,
+    });
     setSelectedCategory(selectedValue);
-    setSelectedSubcategory("");
 
     if (selectedValue === "") {
       setSubcategoriesDisabled(true);
-      setSubcategories([]);
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/categories/${selectedValue}`
+      setSelectedSubcategories([]);
+    } else {
+      let subcats = subcategories.filter(
+        (item) => item.category_id === selectedValue
       );
 
-      setSubcategories(response.data.subcategory);
-      setSubcategoriesDisabled(false);
-    } catch (error) {
-      console.log("Error fetching subcategories:", error);
+      setSelectedSubcategories(subcats);
     }
   };
 
   const handleSubCategoryChange = async (event) => {
-    const selectedValue = event.target.value;
+    const selectedValue = parseInt(event.target.value);
     setSelectedSubcategory(selectedValue);
-    console.log(selectedValue);
     setUpdateDetails({
       ...updateDetails,
       subcategory_id: selectedValue,
-    });
-    //setSelectedSubcategory("");
-  };
-
-  const resetStates = () => {
-    setSelectedCategory(0);
-    setSelectedSubcategory(0);
-    setUpdateDetails({
-      name: "",
-      description: "",
-      stock: 0,
-      size: null,
-      color: null,
-      price: 0,
-      discount: 0,
-      discounted_price: 0,
-      images: null,
-      category_id: null,
-      subcategory_id: null,
     });
   };
 
@@ -106,7 +89,7 @@ const EditProductView = ({ closeModal, product }) => {
         const response = await axios.put(
           "http://127.0.0.1:8000/api/product/update",
           {
-            products_id: product.products_id,
+            id: product.id,
             name: updateDetails.name,
             description: updateDetails.description,
             stock: parseFloat(updateDetails.stock),
@@ -125,8 +108,8 @@ const EditProductView = ({ closeModal, product }) => {
                       updateDetails.price * (updateDetails.discount / 100)
                   ),
             images: updateDetails.images,
-            category_id: selectedCategory,
-            subcategory_id: selectedSubcategory,
+            category_id: updateDetails.category_id,
+            subcategory_id: updateDetails.subcategory_id,
           },
           {
             headers: {
@@ -136,29 +119,25 @@ const EditProductView = ({ closeModal, product }) => {
         );
 
         if (response.status === 200) {
-          console.log("Details updated");
-
-          toast.success("Details updated");
-
-          const timerId = setTimeout(() => {
-            resetStates();
+          toast.success("Details updated", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 1200,
+          });
+          setTimeout(() => {
             closeModal();
-          }, 1600);
-
-          setUpdateDetails([]);
-
-          return () => clearTimeout(timerId);
+            reload();
+          }, 1500);
         }
       } else {
-        console.error("Required fields are empty");
-        console.log(updateDetails);
-        toast.error("Required fields are empty");
+        toast.error("Required fields are empty", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
       }
     } catch (error) {
-      console.error(error.message);
-      console.log(updateDetails);
-      //console.log(addAdminData);
-      toast.error("Invalid inputs. Please check");
+      console.error(error);
+      toast.error("Invalid inputs. Please check", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
     }
   };
 
@@ -174,7 +153,7 @@ const EditProductView = ({ closeModal, product }) => {
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Edit Product
                 <div className="text-xs text-gray-500">
-                  Product ID : #{product.products_id}
+                  Product ID : #{product.id}
                 </div>
               </h3>
 
@@ -228,7 +207,7 @@ const EditProductView = ({ closeModal, product }) => {
                       name="name"
                       id="name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={product.name}
+                      value={updateDetails.name}
                       required=""
                       onChange={(e) =>
                         setUpdateDetails({
@@ -251,7 +230,7 @@ const EditProductView = ({ closeModal, product }) => {
                           id="description"
                           rows="4"
                           class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
-                          placeholder={product.description}
+                          value={updateDetails.description}
                           onChange={(e) =>
                             setUpdateDetails({
                               ...updateDetails,
@@ -437,8 +416,9 @@ const EditProductView = ({ closeModal, product }) => {
 
                       {categories.map((category) => (
                         <option
-                          key={category.category_id}
-                          value={category.category_id}
+                          key={category.id}
+                          value={category.id}
+                          selected={updateDetails.category_id === category.id}
                         >
                           {category.name}
                         </option>
@@ -460,14 +440,18 @@ const EditProductView = ({ closeModal, product }) => {
                       <option value="" disabled selected>
                         Choose Subcategory
                       </option>
-                      {subcategories.map((subcategory) => (
-                        <option
-                          key={subcategory.subcategory_id}
-                          value={subcategory.subcategory_id}
-                        >
-                          {subcategory.name}
-                        </option>
-                      ))}
+                      {selectedSubcategories.length !== 0 &&
+                        selectedSubcategories.map((subcategory) => (
+                          <option
+                            key={subcategory.id}
+                            value={subcategory.id}
+                            selected={
+                              updateDetails.subcategory_id === subcategory.id
+                            }
+                          >
+                            {subcategory.name}
+                          </option>
+                        ))}
                     </select>
                   </div>
                   <div>
@@ -482,7 +466,7 @@ const EditProductView = ({ closeModal, product }) => {
                       name="item-weight"
                       id="item-weight"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={product.price}
+                      value={updateDetails.price}
                       required=""
                       onChange={(e) =>
                         setUpdateDetails({
@@ -504,7 +488,7 @@ const EditProductView = ({ closeModal, product }) => {
                       name="item-stock"
                       id="item-stock"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={product.stock}
+                      value={updateDetails.stock}
                       required=""
                       min={0}
                       onChange={(e) =>
@@ -527,7 +511,7 @@ const EditProductView = ({ closeModal, product }) => {
                       name="length"
                       id="lenght"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={product.discount}
+                      value={updateDetails.discount}
                       required=""
                       min={0}
                       onChange={(e) =>
@@ -550,7 +534,7 @@ const EditProductView = ({ closeModal, product }) => {
                       name="breadth"
                       id="breadth"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={product.color}
+                      value={updateDetails.color}
                       required=""
                       onChange={(e) =>
                         setUpdateDetails({
@@ -572,7 +556,7 @@ const EditProductView = ({ closeModal, product }) => {
                       name="width"
                       id="width"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={product.size}
+                      value={updateDetails.size}
                       required=""
                       onChange={(e) =>
                         setUpdateDetails({

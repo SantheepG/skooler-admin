@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
+import { AddCategory } from "../../api/ProductApi";
 
 const AddCatView = ({ closeModal, categories, setReloadComponent }) => {
   const [category, setCategory] = useState("");
@@ -8,36 +9,24 @@ const AddCatView = ({ closeModal, categories, setReloadComponent }) => {
   const addCategory = async () => {
     console.log(categories);
     if (category !== "") {
-      console.log(category);
       const nameCheck = categories.filter(
         (item) => item.name.toLowerCase() === category.toLowerCase()
       );
-      console.log("name check:", nameCheck);
       if (nameCheck.length === 0) {
         try {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/api/category/add",
-            {
-              name: category,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          const response = await AddCategory(category);
           if (response.status === 201) {
-            console.log("Category added");
-            setCategory("");
-            toast.success("Category added");
-            const timerId = setTimeout(() => {
+            toast.success("Added", {
+              duration: 1200,
+              position: "right-center",
+              //icon: "❌",
+            });
+
+            setTimeout(() => {
               closeModal();
               setReloadComponent();
-            }, 1600);
-
-            return () => clearTimeout(timerId);
+            }, 1500);
           } else {
-            console.error("Something went wrong");
             toast.error("Required field is empty");
             closeModal();
             setReloadComponent();
@@ -46,12 +35,9 @@ const AddCatView = ({ closeModal, categories, setReloadComponent }) => {
           console.log(error);
         }
       } else {
-        console.error("Category with the same name exists");
-        console.log(nameCheck);
         toast.error("Category with the same name exists");
       }
     } else {
-      console.error("Required field is empty");
       toast.error("Required field is empty");
     }
   };

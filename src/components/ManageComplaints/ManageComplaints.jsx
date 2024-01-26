@@ -5,8 +5,10 @@ import ComplaintView from "./ComplaintView";
 import ComplaintRow from "./ComplaintRow";
 import AccessDenied from "../AccessDenied";
 const ManageComplaints = ({ bool }) => {
-  const [complaints, setComplaints] = useState([]);
+  const [fetchedComplaints, setFetchedComplaints] = useState([]);
+  const [complaintsToView, setComplaintsToView] = useState([]);
   const [overlayClicked, setOverlayClicked] = useState(false);
+  const [currentComplaint, setCurrentComplaint] = useState("");
   const [reloadComponent, setReloadComponent] = useState(false);
 
   useEffect(() => {
@@ -16,7 +18,9 @@ const ManageComplaints = ({ bool }) => {
           "http://127.0.0.1:8000/api/complaints"
         );
         if (response && response.data) {
-          setComplaints(response.data.complaints);
+          setFetchedComplaints(response.data.complaints);
+          setComplaintsToView(response.data.complaints);
+          setReloadComponent(false);
         }
       } catch (error) {
         console.log(error);
@@ -26,10 +30,56 @@ const ManageComplaints = ({ bool }) => {
     fetchComplaints();
   }, [reloadComponent]);
 
+  const searchHandler = (event) => {
+    event.preventDefault();
+    const inputValue = event.target.value.toLowerCase();
+
+    if (inputValue === "") {
+      setComplaintsToView(fetchedComplaints);
+    } else {
+      let matchedComplaints = fetchedComplaints.filter(
+        (item) =>
+          item.user_id === parseInt(inputValue) ||
+          item.id === parseInt(inputValue)
+      );
+      setComplaintsToView(matchedComplaints);
+    }
+  };
+
+  const filterHandler = (event) => {
+    event.preventDefault();
+
+    if (event.target.value === "All") {
+      setComplaintsToView(fetchedComplaints);
+    } else if (event.target.value === "Pending") {
+      let matchedComplaints = fetchedComplaints.filter(
+        (item) => item.status === "Pending"
+      );
+      setComplaintsToView(matchedComplaints);
+    } else if (event.target.value === "Resolved") {
+      let matchedComplaints = fetchedComplaints.filter(
+        (item) => item.status === "Resolved"
+      );
+      setComplaintsToView(matchedComplaints);
+    } else if (event.target.value === "Recent") {
+      //descending order of created_at
+      let sortedComplaints = [...fetchedComplaints].sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+      setComplaintsToView(sortedComplaints);
+    } else if (event.target.value === "Earliest") {
+      //ascending order of created_at
+      let sortedComplaints = [...fetchedComplaints].sort(
+        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+      );
+      setComplaintsToView(sortedComplaints);
+    }
+  };
+
   return (
     <React.Fragment>
       {bool ? (
-        <div className="relative m-5">
+        <div className="viewContent relative m-5">
           <Toaster className="notifier" />
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
             <div
@@ -61,17 +111,25 @@ const ManageComplaints = ({ bool }) => {
                 <input
                   type="text"
                   id="table-search-users"
-                  class="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search for complaints"
+                  onChange={searchHandler}
                 />
               </div>
 
               <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <select
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  onChange={filterHandler}
+                >
                   <option value="" disabled selected>
                     Filter
                   </option>
-                  <option>Filter</option>
+                  <option value="All">All</option>
+                  <option value="Recent">Recent</option>
+                  <option value="Earliest">Earliest</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Resolved">Resolved</option>
                 </select>
               </div>
             </div>
@@ -83,13 +141,13 @@ const ManageComplaints = ({ bool }) => {
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" class="p-4 p">
-                    Complaint ID
+                    # ID
                   </th>
                   <th scope="col" class="p-4">
                     User ID
                   </th>
                   <th scope="col" class="p-4">
-                    Product ID
+                    Product
                   </th>
                   <th scope="col" class="p-4 ">
                     Description
@@ -104,12 +162,40 @@ const ManageComplaints = ({ bool }) => {
                 </tr>
               </thead>
               <tbody>
-                {complaints.map((complaint, index) => (
-                  <ComplaintRow key={index} complaint={complaint} />
-                ))}
+                {complaintsToView.length !== 0 ? (
+                  complaintsToView.map((complaint, index) => (
+                    <ComplaintRow
+                      key={index}
+                      reload={() => setReloadComponent(true)}
+                      complaint={complaint}
+                      overlayClicked={() => {
+                        setOverlayClicked(!overlayClicked);
+                        setCurrentComplaint(complaint);
+                      }}
+                    />
+                  ))
+                ) : (
+                  <div className="p-10">Nothing available</div>
+                )}
               </tbody>
             </table>
           </div>
+          {overlayClicked && (
+            <div
+              id="EditComplaintModal"
+              tabindex="-1"
+              aria-hidden="true"
+              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+            >
+              <ComplaintView
+                complaint={currentComplaint}
+                reload={() => setReloadComponent(true)}
+                closeModal={() => {
+                  setOverlayClicked(!overlayClicked);
+                }}
+              />
+            </div>
+          )}
         </div>
       ) : (
         <AccessDenied />

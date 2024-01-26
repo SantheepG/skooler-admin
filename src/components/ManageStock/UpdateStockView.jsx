@@ -1,35 +1,34 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Toaster, toast } from "react-hot-toast";
+import { ToastContainer, toast, css } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const UpdateStockView = ({ closeModal, product, setReloadComponent }) => {
-  const [stockChange, setStockChange] = useState(0);
+  const [stock, setStock] = useState(0);
 
+  useEffect(() => {
+    setStock(product.stock);
+  }, [product]);
   const updateStock = async (stockChange) => {
     try {
       if (stockChange !== product.stock) {
         const response = await axios.put(
-          `http://127.0.0.1:8000/api/stock/${product.products_id}/${stockChange}`
+          `http://127.0.0.1:8000/api/stock/${product.id}/${stockChange}`
         );
         if (response) {
-          console.log("stock updated");
-          toast.success("Stock updated", {
-            duration: 1200,
-            position: "top-center",
-            //icon: "❌",
+          toast.success("Updated", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 1000,
           });
-          const timerId = setTimeout(() => {
-            setReloadComponent(true);
+          setTimeout(() => {
             closeModal();
-          }, 1300);
-
-          return () => clearTimeout(timerId);
+            setReloadComponent(true);
+          }, 1200);
         } else {
-          console.log("Something went wrong");
           toast.error("Something went wrong", {
-            duration: 1200,
-            position: "top-center",
-            //icon: "❌",
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 1000,
           });
         }
       }
@@ -40,8 +39,7 @@ const UpdateStockView = ({ closeModal, product, setReloadComponent }) => {
   return (
     <React.Fragment>
       <div class="relative w-full max-w-xs max-h-full">
-        <Toaster className="notifier" />
-
+        <ToastContainer />
         <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -94,8 +92,9 @@ const UpdateStockView = ({ closeModal, product, setReloadComponent }) => {
                     name="item-weight"
                     id="item-weight"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder={product.stock}
-                    onChange={(e) => setStockChange(e.target.value)}
+                    value={stock}
+                    min={0}
+                    onChange={(e) => setStock(e.target.value)}
                   />
                 </div>
               </div>
@@ -103,7 +102,7 @@ const UpdateStockView = ({ closeModal, product, setReloadComponent }) => {
             <button
               type="button"
               class="text-white mt-10 w-full bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-white-300 font-xs rounded-lg text-xs px-5 py-1.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              onClick={() => updateStock(stockChange)}
+              onClick={() => updateStock(parseInt(stock))}
             >
               Update
             </button>

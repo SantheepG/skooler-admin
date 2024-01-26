@@ -6,12 +6,17 @@ import UserDetailsView from "./UserDetailsView";
 import { Toaster, toast } from "react-hot-toast";
 import AccessDenied from "../AccessDenied";
 const ManageUsers = ({ bool }) => {
-  const [users, setUsers] = useState([]);
+  const [fetchedUsers, setFetchedUsers] = useState([]);
+  const [usersToView, setUsersToView] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
   const [viewUserDetails, setViewUserDetails] = useState(false);
-  const [viewStatusChange, setViewStatusChange] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
 
+  const toggleDropdown = (userId) => {
+    setOpenDropdown((prevOpenDropdown) =>
+      prevOpenDropdown === userId ? null : userId
+    );
+  };
   const ViewOverlayHandler = (user) => {
     setViewUserDetails(!viewUserDetails);
     setCurrentUser(user);
@@ -29,7 +34,8 @@ const ManageUsers = ({ bool }) => {
         }
       );
       if (response.status === 200) {
-        setUsers(response.data.users);
+        setFetchedUsers(response.data.users);
+        setUsersToView(response.data.users);
         console.log("Status changed");
         toast.success("Status changed", {
           duration: 1200,
@@ -57,7 +63,8 @@ const ManageUsers = ({ bool }) => {
           "http://127.0.0.1:8000/api/fetchusers"
         );
         //setEvents(response.data.events);
-        setUsers(response.data.users);
+        setFetchedUsers(response.data.users);
+        setUsersToView(response.data.users);
         console.log(response.data.users);
       } catch (error) {
         console.error("Fetch error: ", error);
@@ -66,10 +73,26 @@ const ManageUsers = ({ bool }) => {
     fetchUsers();
   }, []);
 
+  const handleSearch = (event) => {
+    event.preventDefault();
+    const inputValue = event.target.value.toLowerCase();
+    if (inputValue === "") {
+      setUsersToView(fetchedUsers);
+    } else {
+      let matchedUsers = fetchedUsers.filter(
+        (item) =>
+          item.first_name.toLowerCase().includes(inputValue) ||
+          item.mobile_no.toLowerCase().includes(inputValue) ||
+          item.id === parseInt(inputValue)
+      );
+      setUsersToView(matchedUsers);
+    }
+  };
+
   return (
     <React.Fragment>
       {bool ? (
-        <div className="relative m-5">
+        <div className="viewContent relative m-5">
           <Toaster className="notifier" />
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
             <div class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
@@ -97,8 +120,9 @@ const ManageUsers = ({ bool }) => {
                 <input
                   type="text"
                   id="table-search-users"
-                  class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search for users"
+                  onChange={handleSearch}
                 />
               </div>
             </div>
@@ -110,7 +134,10 @@ const ManageUsers = ({ bool }) => {
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" class="px-6 py-3">
-                    Name
+                    #ID
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    User
                   </th>
                   <th scope="col" class="px-6 py-3">
                     Mobile number
@@ -124,19 +151,21 @@ const ManageUsers = ({ bool }) => {
                 </tr>
               </thead>
               <tbody>
-                {users.length !== 0 ? (
-                  users.map((user) => (
+                {usersToView.length !== 0 ? (
+                  usersToView.map((user) => (
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                       <UserRow
                         key={user._id}
                         userData={user}
+                        openDropdown={openDropdown}
+                        toggleDropdown={() => toggleDropdown(user.id)}
                         toggleActiveStatus={toggleActiveStatus}
                         ViewOverlayHandler={ViewOverlayHandler}
                       />
                     </tr>
                   ))
                 ) : (
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <tr class="h-16 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td colSpan="number of columns" className="text-center">
                       No users here
                     </td>
@@ -144,20 +173,19 @@ const ManageUsers = ({ bool }) => {
                 )}
               </tbody>
             </table>
-
-            <div
-              id="editUserModal"
-              tabindex="-1"
-              aria-hidden="true"
-              className={`flex ml-10 fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full ${
-                viewUserDetails ? "" : "hidden"
-              }`}
-            >
-              <UserDetailsView
-                ViewOverlayHandler={ViewOverlayHandler}
-                user={currentUser}
-              />
-            </div>
+            {viewUserDetails && (
+              <div
+                id="editUserModal"
+                tabindex="-1"
+                aria-hidden="true"
+                className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}
+              >
+                <UserDetailsView
+                  ViewOverlayHandler={ViewOverlayHandler}
+                  user={currentUser}
+                />
+              </div>
+            )}
           </div>
         </div>
       ) : (

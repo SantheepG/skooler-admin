@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Toaster, toast } from "react-hot-toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-const EditEventView = ({ closeModal, event }) => {
+const EditEventView = ({ closeModal, event, reload }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateStr, setSelectedDateStr] = useState("");
   const [selectedDeadline, setSelectedDeadline] = useState("");
@@ -18,14 +19,10 @@ const EditEventView = ({ closeModal, event }) => {
     mins2: "",
   });
 
-  const [addEventData, setAddEventData] = useState({
-    event_name: "",
-    event_info: "",
-    venue: "",
-    payment: 0,
-    event_datetime: ``,
-    payment_deadline: "",
-  });
+  const [updateEventData, setUpdateEventData] = useState({});
+  useEffect(() => {
+    setUpdateEventData(event);
+  }, [event]);
 
   const handleHourChange = (e, inputName) => {
     const inputHour = parseInt(e.target.value, 10);
@@ -84,9 +81,9 @@ const EditEventView = ({ closeModal, event }) => {
   const updateEvent = async () => {
     try {
       if (
-        addEventData.event_name !== "" &&
-        addEventData.event_info !== "" &&
-        addEventData.payment !== null &&
+        updateEventData.event_name !== "" &&
+        updateEventData.event_info !== "" &&
+        updateEventData.payment !== null &&
         selectedDateStr !== "" &&
         deadlineDateStr !== "" &&
         hours.hour1 !== "" &&
@@ -96,15 +93,7 @@ const EditEventView = ({ closeModal, event }) => {
       ) {
         const response = await axios.put(
           "http://127.0.0.1:8000/api/event/update",
-          {
-            id: event.id,
-            event_name: addEventData.event_name,
-            event_info: addEventData.event_info,
-            venue: addEventData.venue,
-            payment: parseFloat(addEventData.payment),
-            event_datetime: `${selectedDateStr} ${hours.hour1}:${mins.mins1}:00`,
-            payment_deadline: `${deadlineDateStr} ${hours.hour2}:${mins.mins2}:00`,
-          },
+          updateEventData,
           {
             headers: {
               "Content-Type": "application/json",
@@ -113,54 +102,24 @@ const EditEventView = ({ closeModal, event }) => {
         );
 
         if (response.status === 200) {
-          console.log("Event added");
-          setAddEventData({
-            event_name: "",
-            event_info: "",
-            payment: 0,
-            event_datetime: ``,
-            payment_deadline: "",
+          toast.success("Updated", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 1200,
           });
-          setDeadlineDateStr("");
-          setSelectedDateStr("");
-          setHours({
-            hour1: "",
-            hour2: "",
-          });
-          setMins({
-            mins1: "",
-            mins22: "",
-          });
-
-          toast.success("Event updated", {
-            duration: 1200,
-            position: "top-center",
-            //icon: "❌",
-          });
-
-          const timerId = setTimeout(() => {
+          setTimeout(() => {
             closeModal();
-          }, 1600);
-
-          return () => clearTimeout(timerId);
+            reload();
+          }, 1500);
         }
       } else {
-        console.error("Required fields are empty");
-        console.log(addEventData);
         toast.error("Required fields are empty", {
-          duration: 1200,
-          position: "top-center",
-          //icon: "❌",
+          position: toast.POSITION.BOTTOM_RIGHT,
         });
       }
     } catch (error) {
-      console.error(error.message);
-      console.log(addEventData);
-      //console.log(addAdminData);
+      console.error(error);
       toast.error("Invalid inputs. Please check", {
-        duration: 1500,
-        position: "top-center",
-        //icon: "❌",
+        position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
   };
@@ -170,7 +129,7 @@ const EditEventView = ({ closeModal, event }) => {
       {event ? (
         <div class="relative w-full max-w-5xl max-h-full">
           <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <Toaster className="notifier" />
+            <ToastContainer />
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Edit Event
@@ -229,11 +188,11 @@ const EditEventView = ({ closeModal, event }) => {
                       name="name"
                       id="name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={event.event_name}
+                      value={updateEventData.event_name}
                       required=""
                       onChange={(e) =>
-                        setAddEventData({
-                          ...addEventData,
+                        setUpdateEventData({
+                          ...updateEventData,
                           event_name: e.target.value,
                         })
                       }
@@ -252,11 +211,11 @@ const EditEventView = ({ closeModal, event }) => {
                           id="description"
                           rows="4"
                           class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
-                          placeholder={event.event_info}
+                          value={updateEventData.event_info}
                           required=""
                           onChange={(e) =>
-                            setAddEventData({
-                              ...addEventData,
+                            setUpdateEventData({
+                              ...updateEventData,
                               event_info: e.target.value,
                             })
                           }
@@ -276,11 +235,11 @@ const EditEventView = ({ closeModal, event }) => {
                       name="venue"
                       id="venue"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={event.venue}
+                      value={updateEventData.venue}
                       required=""
                       onChange={(e) =>
-                        setAddEventData({
-                          ...addEventData,
+                        setUpdateEventData({
+                          ...updateEventData,
                           venue: e.target.value,
                         })
                       }
@@ -390,11 +349,32 @@ const EditEventView = ({ closeModal, event }) => {
                       name="payment"
                       id="payment"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder={event.payment}
+                      value={updateEventData.payment}
                       onChange={(e) =>
-                        setAddEventData({
-                          ...addEventData,
+                        setUpdateEventData({
+                          ...updateEventData,
                           payment: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="event-brand"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Capacity
+                    </label>
+                    <input
+                      type="number"
+                      name="capacity"
+                      id="payment"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      value={updateEventData.capacity}
+                      onChange={(e) =>
+                        setUpdateEventData({
+                          ...updateEventData,
+                          capacity: e.target.value,
                         })
                       }
                     />
