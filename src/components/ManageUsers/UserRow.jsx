@@ -80,7 +80,7 @@ const UserRow = ({
 
         {viewEditDropdown && (
           <ul
-            className={`fixed z-[1000] float-left -mt-14 -ml-10 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block`}
+            className={`fixed z-[1000] float-left -mt-12 -ml-10 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block`}
             aria-labelledby="dropdownMenuButton1"
             data-te-dropdown-menu-ref
           >
@@ -109,15 +109,6 @@ const UserRow = ({
                 }}
               >
                 Inactive
-              </a>
-            </li>
-            <li>
-              <a
-                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-red-700 hover:bg-red-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                href="#"
-                data-te-dropdown-item-ref
-              >
-                Delete
               </a>
             </li>
           </ul>

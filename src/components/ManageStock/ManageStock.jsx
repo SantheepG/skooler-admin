@@ -14,7 +14,6 @@ const ManageStock = ({ bool }) => {
   const [fetchedProducts, setFetchedProducts] = useState([]);
   const [productsToview, setProductsToView] = useState([]);
   const [overlayClicked, setOverlayClicked] = useState(false);
-  const [addProductClicked, setAddProductClicked] = useState(false);
   const [editProductClicked, setEditProductClicked] = useState(false);
   const [previewProductClicked, setpreviewProductClicked] = useState(false);
   const [deleteProductClicked, setdeleteProductClicked] = useState(false);
@@ -50,9 +49,7 @@ const ManageStock = ({ bool }) => {
     const fetchProducts = async () => {
       if (bool) {
         try {
-          const response = await axios.get(
-            "http://127.0.0.1:8000/api/products"
-          );
+          const response = await FetchProducts();
           if (response) {
             setFetchedProducts(response.data.products);
             setProductsToView(response.data.products);
@@ -69,9 +66,7 @@ const ManageStock = ({ bool }) => {
 
   const deleteProduct = async (id) => {
     try {
-      const response = await axios.delete(
-        `http://127.0.0.1:8000/api/deleteproduct/${id}`
-      );
+      const response = await DeleteProduct(id);
       if (response) {
         console.log("Successfully deleted");
         toast.success("Successfully deleted", {
@@ -98,39 +93,6 @@ const ManageStock = ({ bool }) => {
     }
   };
 
-  const updateStock = async (stockChange, id) => {
-    try {
-      if (stockChange !== currentProduct.stock) {
-        const response = await axios.post("", {
-          product_id: id,
-          stockChange,
-          stockUpdate: stockChange,
-        });
-        if (response) {
-          console.log("stock updated");
-          toast.success("Stock updated", {
-            duration: 1200,
-            position: "top-center",
-            //icon: "❌",
-          });
-          const timerId = setTimeout(() => {
-            setReloadComponent(true);
-          }, 1600);
-
-          return () => clearTimeout(timerId);
-        } else {
-          console.log("Something went wrong");
-          toast.error("Something went wrong", {
-            duration: 1200,
-            position: "top-center",
-            //icon: "❌",
-          });
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const searchProduct = (event) => {
     event.preventDefault();
     const inputValue = event.target.value.toLowerCase();

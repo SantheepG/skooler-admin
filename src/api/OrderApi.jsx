@@ -1,8 +1,9 @@
 import axios from "axios";
+import { base_URL } from "../App";
 
 export const FetchOrders = async () => {
   try {
-    const response = await axios.get("http://127.0.0.1:8000/api/admin/orders");
+    const response = await axios.get(`${base_URL}/admin/orders`);
     return response;
   } catch (error) {
     return error;
@@ -11,15 +12,11 @@ export const FetchOrders = async () => {
 
 export const UpdateOrder = async (data) => {
   try {
-    const response = await axios.put(
-      "http://127.0.0.1:8000/api/admin/order/update",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.put(`${base_URL}/admin/order/update`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -28,9 +25,7 @@ export const UpdateOrder = async (data) => {
 
 export const deleteOrder = async (id) => {
   try {
-    const response = await axios.delete(
-      `http://127.0.0.1:8000/api/admin/order/delete/${id}`
-    );
+    const response = await axios.delete(`${base_URL}/admin/order/delete/${id}`);
     return response;
   } catch (error) {
     console.log(error);

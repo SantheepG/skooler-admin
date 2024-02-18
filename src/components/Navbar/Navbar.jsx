@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-
+import { base_URL2 } from "../../App";
+import { Logout } from "../../api/AuthAPI";
 const Navbar = ({ toggle }) => {
+  const [school, setSchool] = useState("");
+  const [ui, setUI] = useState("");
   const dispatch = useDispatch();
   const [userClicked, setUserClicked] = useState(false);
   const [notificationsClicked, setNotificationsClicked] = useState(false);
   const [mobNavClicked, setMobNavClicked] = useState(false);
   const navigate = useNavigate();
+  const [adminName, setAdminName] = useState("");
+  const [adminEmail, setEmailAdmin] = useState("");
   const [adminData, setAdminData] = useState({
     name: "",
     student_id: "",
@@ -18,27 +22,31 @@ const Navbar = ({ toggle }) => {
   });
 
   useEffect(() => {
-    const storedUserData = JSON.parse(localStorage.getItem("user"));
-    if (storedUserData) {
-      setAdminData(storedUserData);
+    const storedUIData = JSON.parse(localStorage.getItem("ui"));
+    const storedSchoolData = JSON.parse(localStorage.getItem("school"));
+    if (storedUIData) {
+      setUI(storedUIData);
+    }
+    if (storedSchoolData) {
+      setSchool(storedSchoolData);
+    }
+    const storedAdminData = JSON.parse(localStorage.getItem("admin"));
+    if (storedAdminData) {
+      setAdminData(storedAdminData);
+      setAdminName(
+        `${storedAdminData.first_name} ${storedAdminData.last_name}`
+      );
+      setEmailAdmin(storedAdminData.email);
     }
   }, []);
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/logout/a",
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await Logout();
       if (response.status === 200) {
         console.log("logged out");
         localStorage.clear();
-        //window.location.reload();
+        window.location.reload();
         navigate("/");
       }
     } catch (error) {
@@ -48,7 +56,7 @@ const Navbar = ({ toggle }) => {
 
   return (
     <React.Fragment>
-      <nav class="fixed top-0 z-50 w-full bg-gray-800">
+      <nav class="fixed shadow-md top-0 z-50 w-full bg-white">
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center justify-start rtl:justify-end">
@@ -75,11 +83,14 @@ const Navbar = ({ toggle }) => {
                   ></path>
                 </svg>
               </button>
-              <a href="#" class="flex ms-10 md:me-24">
-                <span class="self-center text-xl text-white font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                  School logo
-                </span>
-              </a>
+              <div className="ml-10 w-12 h-12">
+                <img
+                  src={`${base_URL2}/super/getlogo/${school.logo_id}`}
+                  alt="School logo"
+                  className="max-w-100"
+                />
+              </div>
+              <span className="m-3 text-gray-600">{school.name}</span>
             </div>
             <div class="flex items-center">
               <div class="flex items-center -ms-16">
@@ -103,7 +114,7 @@ const Navbar = ({ toggle }) => {
                   </button>
                 </div>
                 <div
-                  className={`right-0 z-10 mt-24 mr-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
+                  className={`right-0 z-10 mt-40 mr-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
                     userClicked ? "absolute" : "hidden"
                   }`}
                   role="menu"
@@ -111,6 +122,14 @@ const Navbar = ({ toggle }) => {
                   aria-labelledby="user-menu-button"
                   tabindex="-1"
                 >
+                  <div class="py-3 px-4">
+                    <span class="block text-sm font-semibold text-gray-900 dark:text-white">
+                      {adminName}
+                    </span>
+                    <span class="block text-sm text-gray-500 truncate dark:text-gray-400">
+                      {adminEmail}
+                    </span>
+                  </div>
                   <a
                     href="#"
                     class="block px-4 py-2 text-sm text-gray-700"

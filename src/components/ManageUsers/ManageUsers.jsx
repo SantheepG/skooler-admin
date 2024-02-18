@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import defaultImg from "../../assets/default-avatar.png";
-import axios from "axios";
 import UserRow from "./UserRow";
 import UserDetailsView from "./UserDetailsView";
 import { Toaster, toast } from "react-hot-toast";
 import AccessDenied from "../AccessDenied";
+import { ChangeStatus, FetchUsers } from "../../api/UserApi";
 const ManageUsers = ({ bool }) => {
   const [fetchedUsers, setFetchedUsers] = useState([]);
   const [usersToView, setUsersToView] = useState([]);
@@ -24,15 +23,7 @@ const ManageUsers = ({ bool }) => {
 
   const toggleActiveStatus = async (id, isActive) => {
     try {
-      const response = await axios.put(
-        "http://127.0.0.1:8000/api/changeuserstatus",
-        { id: id, isActive: isActive },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await ChangeStatus({ id: id, isActive: isActive });
       if (response.status === 200) {
         setFetchedUsers(response.data.users);
         setUsersToView(response.data.users);
@@ -59,9 +50,7 @@ const ManageUsers = ({ bool }) => {
     //
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/api/fetchusers"
-        );
+        const response = await FetchUsers();
         //setEvents(response.data.events);
         setFetchedUsers(response.data.users);
         setUsersToView(response.data.users);

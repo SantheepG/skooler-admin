@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IoIosAddCircleOutline } from "react-icons/io";
+import { AddEvent } from "../../api/EventApi";
 const AddEventView = ({ closeModal, reload }) => {
-  const [startDate, setStartDate] = useState(new Date());
   const [viewPayment, setViewPayment] = useState(false);
   const [viewDate, setViewDate] = useState(false);
   const [viewTime, setViewTime] = useState(false);
@@ -100,26 +99,18 @@ const AddEventView = ({ closeModal, reload }) => {
         hours.hour1 !== "" &&
         mins.mins1 !== ""
       ) {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/event/add",
-          {
-            event_name: addEventData.event_name,
-            event_info: addEventData.event_info,
-            venue: addEventData.venue,
-            capacity: addEventData.capacity,
-            payment: parseFloat(addEventData.payment),
-            event_datetime: `${selectedDateStr} ${hours.hour1}:${mins.mins1}:00`,
-            payment_deadline:
-              deadlineDateStr !== "" && hours.hour2 !== "" && mins.mins2 !== ""
-                ? `${deadlineDateStr} ${hours.hour2}:${mins.mins2}:00`
-                : null,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await AddEvent({
+          event_name: addEventData.event_name,
+          event_info: addEventData.event_info,
+          venue: addEventData.venue,
+          capacity: addEventData.capacity,
+          payment: parseFloat(addEventData.payment),
+          event_datetime: `${selectedDateStr} ${hours.hour1}:${mins.mins1}:00`,
+          payment_deadline:
+            deadlineDateStr !== "" && hours.hour2 !== "" && mins.mins2 !== ""
+              ? `${deadlineDateStr} ${hours.hour2}:${mins.mins2}:00`
+              : null,
+        });
 
         if (response.status === 201) {
           console.log("Event added");

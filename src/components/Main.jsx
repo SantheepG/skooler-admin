@@ -12,6 +12,7 @@ import ManageStock from "./ManageStock/ManageStock";
 import ManageComplaints from "./ManageComplaints/ManageComplaints";
 import ManageEvents from "./ManageEvents/ManageEvents";
 import { useNavigate } from "react-router-dom";
+
 const Main = () => {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState([]);

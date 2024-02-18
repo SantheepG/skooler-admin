@@ -1,9 +1,18 @@
 import axios from "axios";
+import { base_URL } from "../App";
 
+export const FetchComplaints = async () => {
+  try {
+    const response = await axios.get(`${base_URL}/complaints`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 export const FetchUserContact = async (id) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/user/complaint/contact/${id}`
+      `${base_URL}/user/complaint/contact/${id}`
     );
     return response;
   } catch (error) {
@@ -14,7 +23,7 @@ export const FetchUserContact = async (id) => {
 export const UpdateStatus = async (id, status) => {
   try {
     const response = await axios.put(
-      "http://127.0.0.1:8000/api/admin/complaint/update",
+      `${base_URL}/admin/complaint/update`,
       { id: id, status: status },
       {
         headers: {

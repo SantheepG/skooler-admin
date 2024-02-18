@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import ComplaintView from "./ComplaintView";
 import ComplaintRow from "./ComplaintRow";
 import AccessDenied from "../AccessDenied";
+import { FetchComplaints } from "../../api/ComplaintApi";
 const ManageComplaints = ({ bool }) => {
   const [fetchedComplaints, setFetchedComplaints] = useState([]);
   const [complaintsToView, setComplaintsToView] = useState([]);
@@ -14,9 +14,7 @@ const ManageComplaints = ({ bool }) => {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/api/complaints"
-        );
+        const response = await FetchComplaints();
         if (response && response.data) {
           setFetchedComplaints(response.data.complaints);
           setComplaintsToView(response.data.complaints);

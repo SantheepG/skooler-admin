@@ -7,6 +7,7 @@ import EditEventView from "./EditEventView";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AccessDenied from "../AccessDenied";
+import { DeleteEvent, FetchEvents } from "../../api/EventApi";
 const ManageEvents = ({ bool }) => {
   const [fetchedEvents, setFetchedEvents] = useState([]);
   const [eventsToView, setEventsToView] = useState([]);
@@ -29,7 +30,7 @@ const ManageEvents = ({ bool }) => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/events");
+        const response = await FetchEvents();
         if (response && response.data) {
           setFetchedEvents(response.data.events);
           setEventsToView(response.data.events);
@@ -45,9 +46,7 @@ const ManageEvents = ({ bool }) => {
 
   const deleteEvent = async (id) => {
     try {
-      const response = await axios.delete(
-        `http://127.0.0.1:8000/api/events/${id}/delete`
-      );
+      const response = await DeleteEvent(id);
       if (response) {
         toast.success("Successfully deleted", {
           position: toast.POSITION.BOTTOM_RIGHT,

@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { UpdateEvent } from "../../api/EventApi";
 const EditEventView = ({ closeModal, event, reload }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateStr, setSelectedDateStr] = useState("");
@@ -91,15 +92,7 @@ const EditEventView = ({ closeModal, event, reload }) => {
         mins.mins1 !== "" &&
         mins.mins2 !== ""
       ) {
-        const response = await axios.put(
-          "http://127.0.0.1:8000/api/event/update",
-          updateEventData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await UpdateEvent(updateEventData);
 
         if (response.status === 200) {
           toast.success("Updated", {

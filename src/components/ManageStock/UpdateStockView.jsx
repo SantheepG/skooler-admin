@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { ToastContainer, toast, css } from "react-toastify";
-
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { UpdateStock } from "../../api/ProductApi";
 
 const UpdateStockView = ({ closeModal, product, setReloadComponent }) => {
   const [stock, setStock] = useState(0);
@@ -13,9 +12,7 @@ const UpdateStockView = ({ closeModal, product, setReloadComponent }) => {
   const updateStock = async (stockChange) => {
     try {
       if (stockChange !== product.stock) {
-        const response = await axios.put(
-          `http://127.0.0.1:8000/api/stock/${product.id}/${stockChange}`
-        );
+        const response = await UpdateStock(product.id, stockChange);
         if (response) {
           toast.success("Updated", {
             position: toast.POSITION.BOTTOM_RIGHT,

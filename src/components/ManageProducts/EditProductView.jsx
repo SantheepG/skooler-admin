@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FetchCategories, UpdateProduct } from "../../api/ProductApi";
 const EditProductView = ({ closeModal, product, reload }) => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
@@ -31,9 +31,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/api/categories"
-        );
+        const response = await FetchCategories();
         if (response && response.data) {
           const { category, subcategory } = response.data;
           setCategories(category);
@@ -86,37 +84,29 @@ const EditProductView = ({ closeModal, product, reload }) => {
         selectedCategory !== 0
         //AddProductDetails.subcategory_id !== 0
       ) {
-        const response = await axios.put(
-          "http://127.0.0.1:8000/api/product/update",
-          {
-            id: product.id,
-            name: updateDetails.name,
-            description: updateDetails.description,
-            stock: parseFloat(updateDetails.stock),
-            size: updateDetails.size,
-            color: updateDetails.color,
-            price: parseFloat(updateDetails.price),
-            discount:
-              updateDetails.discount === 0
-                ? null
-                : parseFloat(updateDetails.discount),
-            discounted_price:
-              updateDetails.discount === 0
-                ? null
-                : parseFloat(
-                    updateDetails.price -
-                      updateDetails.price * (updateDetails.discount / 100)
-                  ),
-            images: updateDetails.images,
-            category_id: updateDetails.category_id,
-            subcategory_id: updateDetails.subcategory_id,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await UpdateProduct({
+          id: product.id,
+          name: updateDetails.name,
+          description: updateDetails.description,
+          stock: parseFloat(updateDetails.stock),
+          size: updateDetails.size,
+          color: updateDetails.color,
+          price: parseFloat(updateDetails.price),
+          discount:
+            updateDetails.discount === 0
+              ? null
+              : parseFloat(updateDetails.discount),
+          discounted_price:
+            updateDetails.discount === 0
+              ? null
+              : parseFloat(
+                  updateDetails.price -
+                    updateDetails.price * (updateDetails.discount / 100)
+                ),
+          images: updateDetails.images,
+          category_id: updateDetails.category_id,
+          subcategory_id: updateDetails.subcategory_id,
+        });
 
         if (response.status === 200) {
           toast.success("Details updated", {

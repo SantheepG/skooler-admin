@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { AddCategory } from "../../api/ProductApi";
 
@@ -7,7 +6,6 @@ const AddCatView = ({ closeModal, categories, setReloadComponent }) => {
   const [category, setCategory] = useState("");
 
   const addCategory = async () => {
-    console.log(categories);
     if (category !== "") {
       const nameCheck = categories.filter(
         (item) => item.name.toLowerCase() === category.toLowerCase()

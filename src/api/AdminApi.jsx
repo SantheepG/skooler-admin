@@ -1,8 +1,8 @@
 import axios from "axios";
-
+import { base_URL } from "../App";
 export const FetchAdmins = async () => {
   try {
-    const response = await axios.get("http://127.0.0.1:8000/api/fetchadmins");
+    const response = await axios.get(`${base_URL}/fetchadmins`);
 
     return response;
   } catch (error) {
@@ -29,9 +29,7 @@ export const AddAdmin = async (data) => {
 
 export const DeleteAdmin = async (id) => {
   try {
-    const response = await axios.delete(
-      `http://127.0.0.1:8000/api/admin/delete/${id}`
-    );
+    const response = await axios.delete(`${base_URL}/admin/delete/${id}`);
     return response;
   } catch (error) {
     console.error("Fetch error: ", error);
@@ -41,7 +39,7 @@ export const DeleteAdmin = async (id) => {
 export const ChangeStatus = async (id, isActive) => {
   try {
     const response = await axios.put(
-      "http://127.0.0.1:8000/api/changeadminstatus",
+      `${base_URL}/changeadminstatus`,
       { id: id, isActive: isActive },
       {
         headers: {
@@ -58,7 +56,7 @@ export const ChangeStatus = async (id, isActive) => {
 export const UpdateRoles = async (id, roles) => {
   try {
     const response = await axios.put(
-      "http://127.0.0.1:8000/api/admin/roles/update",
+      `${base_URL}/admin/roles/update`,
       {
         id: id,
         roles: roles,
