@@ -52,9 +52,11 @@ const ManageUsers = ({ bool }) => {
       try {
         const response = await FetchUsers();
         //setEvents(response.data.events);
-        setFetchedUsers(response.data.users);
-        setUsersToView(response.data.users);
-        console.log(response.data.users);
+        if (response.status === 200) {
+          setFetchedUsers(response.data.users);
+          setUsersToView(response.data.users);
+          console.log(response.data.users);
+        }
       } catch (error) {
         console.error("Fetch error: ", error);
       }
@@ -140,7 +142,7 @@ const ManageUsers = ({ bool }) => {
                 </tr>
               </thead>
               <tbody>
-                {usersToView.length !== 0 ? (
+                {usersToView !== undefined && usersToView.length !== 0 ? (
                   usersToView.map((user) => (
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                       <UserRow

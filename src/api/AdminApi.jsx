@@ -12,15 +12,11 @@ export const FetchAdmins = async () => {
 
 export const AddAdmin = async (data) => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/api/adminsignup",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(`${base_URL}/adminsignup`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return response;
   } catch (error) {
     console.error(error.message);
@@ -39,7 +35,7 @@ export const DeleteAdmin = async (id) => {
 export const ChangeStatus = async (id, isActive) => {
   try {
     const response = await axios.put(
-      `${base_URL}/changeadminstatus`,
+      `${base_URL}/admin/updatestatus`,
       { id: id, isActive: isActive },
       {
         headers: {

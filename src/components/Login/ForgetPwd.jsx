@@ -8,12 +8,6 @@ const ForgetPwd = ({ Cancel }) => {
         <div class="p-6">
           <h2 class="text-xl font-bold text-gray-800 mb-6">Select an option</h2>
           <form>
-            <div class="flex cursor-pointer mb-1 h-16 hover:bg-gray-100 rounded-lg pt-5 pl-4">
-              <span className="text-lg mt-1">
-                <MdOutlineMarkEmailRead />
-              </span>
-              <span className="ml-2"> Recover through email</span>
-            </div>
             <div class="flex cursor-pointer mb-12 h-16 hover:bg-gray-100 rounded-lg pt-5 pl-4">
               <span className="text-lg mt-1">
                 <ImMobile2 />

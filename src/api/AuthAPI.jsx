@@ -3,7 +3,7 @@ import { base_URL } from "../App";
 
 export const AdminLogin = async (data) => {
   try {
-    const response = await axios.post(`${base_URL}/login/a`, data, {
+    const response = await axios.post(`${base_URL}/login/admin`, data, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -15,7 +15,7 @@ export const AdminLogin = async (data) => {
 };
 export const Logout = async () => {
   try {
-    const response = await axios.post(`${base_URL}/logout/a`, null, {
+    const response = await axios.post(`${base_URL}/logout/admin`, null, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("tkn")}`,
       },

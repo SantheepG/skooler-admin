@@ -46,8 +46,8 @@ const Navbar = ({ toggle }) => {
       if (response.status === 200) {
         console.log("logged out");
         localStorage.clear();
-        window.location.reload();
         navigate("/");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error logging out:", error);
