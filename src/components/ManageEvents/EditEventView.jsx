@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { UpdateEvent } from "../../api/EventApi";
 const EditEventView = ({ closeModal, event, reload }) => {
+  const [updateEventData, setUpdateEventData] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateStr, setSelectedDateStr] = useState("");
   const [selectedDeadline, setSelectedDeadline] = useState("");
   const [deadlineDateStr, setDeadlineDateStr] = useState("");
+  const [capacityChange, setCapacityChange] = useState(0);
   const [hours, setHours] = useState({
     hour1: "",
     hour2: "",
@@ -20,8 +21,8 @@ const EditEventView = ({ closeModal, event, reload }) => {
     mins2: "",
   });
 
-  const [updateEventData, setUpdateEventData] = useState({});
   useEffect(() => {
+    setCapacityChange(event.capacity);
     setUpdateEventData(event);
   }, [event]);
 
@@ -31,7 +32,10 @@ const EditEventView = ({ closeModal, event, reload }) => {
     if (isNaN(inputHour) || inputHour < 0 || inputHour > 23) {
       console.log("Invalid time");
     } else {
-      setHours((prevHours) => ({ ...prevHours, [inputName]: inputHour }));
+      setHours((prevHours) => ({
+        ...prevHours,
+        [inputName]: inputHour.toString().padStart(2, "0"),
+      }));
       console.log(hours);
     }
   };
@@ -42,7 +46,10 @@ const EditEventView = ({ closeModal, event, reload }) => {
     if (isNaN(inputMin) || inputMin < 0 || inputMin > 59) {
       console.log("Invalid time");
     } else {
-      setMins((prevMin) => ({ ...prevMin, [inputName]: inputMin }));
+      setMins((prevMin) => ({
+        ...prevMin,
+        [inputName]: inputMin.toString().padStart(2, "0"),
+      }));
       console.log(mins);
     }
   };
@@ -86,23 +93,35 @@ const EditEventView = ({ closeModal, event, reload }) => {
         updateEventData.event_info !== "" &&
         updateEventData.payment !== null &&
         selectedDateStr !== "" &&
-        deadlineDateStr !== "" &&
         hours.hour1 !== "" &&
-        hours.hour2 !== "" &&
-        mins.mins1 !== "" &&
-        mins.mins2 !== ""
+        mins.mins1 !== ""
       ) {
-        const response = await UpdateEvent(updateEventData);
+        const response = await UpdateEvent({
+          id: event.id,
+          event_name: updateEventData.event_name,
+          event_info: updateEventData.event_info,
+          venue: updateEventData.venue,
+          capacity: capacityChange,
+          payment: parseFloat(updateEventData.payment),
+          event_datetime: `${selectedDateStr} ${hours.hour1}:${mins.mins1}:00`,
+          payment_deadline:
+            deadlineDateStr !== "" && hours.hour2 !== "" && mins.mins2 !== ""
+              ? `${deadlineDateStr} ${hours.hour2}:${mins.mins2}:00`
+              : null,
+        });
 
         if (response.status === 200) {
           toast.success("Updated", {
             position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 1200,
           });
           setTimeout(() => {
             closeModal();
             reload();
           }, 1500);
+        } else {
+          toast.error("Invalid inputs. Please check", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
         }
       } else {
         toast.error("Required fields are empty", {
@@ -363,12 +382,9 @@ const EditEventView = ({ closeModal, event, reload }) => {
                       name="capacity"
                       id="payment"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      value={updateEventData.capacity}
+                      value={capacityChange}
                       onChange={(e) =>
-                        setUpdateEventData({
-                          ...updateEventData,
-                          capacity: e.target.value,
-                        })
+                        setCapacityChange(parseInt(e.target.value))
                       }
                     />
                   </div>

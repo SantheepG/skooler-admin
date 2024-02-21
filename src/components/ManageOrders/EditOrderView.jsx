@@ -25,7 +25,7 @@ const EditOrderView = ({ closeModal, order, reload }) => {
     if (isNaN(inputHour) || inputHour < 0 || inputHour > 23) {
       console.log("Invalid time");
     } else {
-      setHour(inputHour);
+      setHour(inputHour.toString().padStart(2, "0"));
     }
   };
 
@@ -35,7 +35,7 @@ const EditOrderView = ({ closeModal, order, reload }) => {
     if (isNaN(inputMin) || inputMin < 0 || inputMin > 59) {
       console.log("Invalid time");
     } else {
-      setMins(inputMin);
+      setMins(inputMin.toString().padStart(2, "0"));
       console.log(mins);
     }
   };

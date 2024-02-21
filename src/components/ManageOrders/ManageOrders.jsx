@@ -5,7 +5,7 @@ import OrderRow from "./OrderRow";
 import AccessDenied from "../AccessDenied";
 import OrderPreview from "./OrderPreview";
 import EditOrderView from "./EditOrderView";
-import { FetchOrders } from "../../api/OrderApi";
+import { FetchOrders, DeleteOrder } from "../../api/OrderApi";
 const ManageOrders = ({ bool }) => {
   const [overlayClicked, setOverlayClicked] = useState(false);
   const [fetchedOrders, setFetchedOrders] = useState([]);
@@ -88,6 +88,38 @@ const ManageOrders = ({ bool }) => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const response = await DeleteOrder(currentOrder.id);
+      if (response.status === 200) {
+        toast.success("Deleted", {
+          duration: 1200,
+          position: "right-center",
+          //icon: "❌",
+        });
+
+        setTimeout(() => {
+          setReloadComponent(true);
+        }, 1500);
+      } else {
+        toast.error("Something went wrong.", {
+          duration: 2000,
+          position: "right-center",
+          //icon: "❌",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        "Order might have complaints. Delete them before this action",
+        {
+          duration: 2000,
+          position: "right-center",
+          //icon: "❌",
+        }
+      );
+    }
+  };
   return (
     <React.Fragment>
       {bool ? (
@@ -192,6 +224,7 @@ const ManageOrders = ({ bool }) => {
                         setPreviewOrderClicked(!previewOrderClicked);
                       }}
                       deleteOrder={() => {
+                        setCurrentOrder(order);
                         setOverlayClicked(!overlayClicked);
                         setdeleteOrderClicked(!deleteOrderClicked);
                       }}
@@ -296,6 +329,7 @@ const ManageOrders = ({ bool }) => {
                       onClick={() => {
                         setOverlayClicked(!overlayClicked);
                         setdeleteOrderClicked(!deleteOrderClicked);
+                        handleDelete();
                       }}
                     >
                       Yes, I'm sure

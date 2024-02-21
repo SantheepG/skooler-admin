@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import { FetchUserContact, UpdateStatus } from "../../api/ComplaintApi";
+import {
+  DeleteComplaint,
+  FetchUserContact,
+  UpdateStatus,
+} from "../../api/ComplaintApi";
+import { RiDeleteBin5Line } from "react-icons/ri";
 const ComplaintView = ({ complaint, closeModal, reload }) => {
+  const [userID, setUserID] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
@@ -13,6 +19,7 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
       try {
         const response = await FetchUserContact(complaint.user_id);
         if (response) {
+          setUserID(response.data.user_id);
           setFname(response.data.fname);
           setLname(response.data.lname !== null && response.data.lname);
           setEmail(response.data.email);
@@ -30,9 +37,9 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
   const updateStatus = async () => {
     try {
       if (newStatus !== "") {
-        const response = await UpdateStatus(complaint.id, newStatus);
+        const response = await UpdateStatus(userID, complaint.id, newStatus);
         if (response) {
-          console.log(response);
+          console.log(response.data);
           toast.success("Status changed", {
             duration: 1200,
             position: "center",
@@ -62,6 +69,33 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
       console.log(error);
     }
   };
+  const handleDelete = async () => {
+    try {
+      const response = await DeleteComplaint(complaint.id);
+      if (response.status === 200) {
+        console.log(response.data);
+        toast.success("Deleted", {
+          duration: 1200,
+          position: "center",
+          //icon: "❌",
+        });
+
+        setTimeout(() => {
+          closeModal();
+          reload();
+        }, 1500);
+      } else {
+        console.error("");
+        toast.error("Something went wrong", {
+          duration: 1200,
+          position: "center",
+          //icon: "❌",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <React.Fragment>
       {complaint !== null && (
@@ -76,7 +110,13 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
                 </div>
               </h3>
 
-              <div>
+              <div className="flex">
+                <span
+                  className="mt-2 mx-6 hover:text-red-600 cursor-pointer"
+                  onClick={handleDelete}
+                >
+                  <RiDeleteBin5Line />
+                </span>
                 <button
                   type="button"
                   class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"

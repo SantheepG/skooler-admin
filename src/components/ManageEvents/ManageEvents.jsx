@@ -47,7 +47,7 @@ const ManageEvents = ({ bool }) => {
   const deleteEvent = async (id) => {
     try {
       const response = await DeleteEvent(id);
-      if (response) {
+      if (response.status === 200) {
         toast.success("Successfully deleted", {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 1200,

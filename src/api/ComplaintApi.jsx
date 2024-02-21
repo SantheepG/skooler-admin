@@ -20,11 +20,11 @@ export const FetchUserContact = async (id) => {
   }
 };
 
-export const UpdateStatus = async (id, status) => {
+export const UpdateStatus = async (userID, id, status) => {
   try {
     const response = await axios.put(
       `${base_URL}/admin/complaint/update`,
-      { id: id, status: status },
+      { user_id: userID, id: id, status: status },
       {
         headers: {
           "Content-Type": "application/json",
@@ -35,5 +35,14 @@ export const UpdateStatus = async (id, status) => {
     return response;
   } catch (error) {
     console.error("error: ", error);
+  }
+};
+
+export const DeleteComplaint = async (id) => {
+  try {
+    const response = await axios.delete(`${base_URL}/complaint/delete/${id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
   }
 };

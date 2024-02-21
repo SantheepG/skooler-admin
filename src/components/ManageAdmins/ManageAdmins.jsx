@@ -10,7 +10,7 @@ import AccessDenied from "../AccessDenied";
 import AddAdminView from "./AddAdminView";
 import { ChangeStatus, DeleteAdmin, FetchAdmins } from "../../api/AdminApi";
 
-const ManageAdmins = ({ bool }) => {
+const ManageAdmins = ({ adminData, bool }) => {
   const [fetchedAdmins, setFetchedAdmins] = useState([]);
   const [adminsToView, setAdminsToView] = useState([]);
   const [currentRoles, setCurrentRoles] = useState([]);
@@ -64,8 +64,10 @@ const ManageAdmins = ({ bool }) => {
       if (bool) {
         try {
           const response = await FetchAdmins();
-          if (response) {
-            setAdminsToView(response.data.admins);
+          if (response.status === 200) {
+            setAdminsToView(
+              response.data.admins.filter((admin) => admin.id !== adminData.id)
+            );
             setFetchedAdmins(response.data.admins);
           } else {
             console.log(response);

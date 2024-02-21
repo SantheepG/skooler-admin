@@ -54,7 +54,7 @@ const Main = () => {
     }
   } else if (state.adminsClicked) {
     if (roles.includes("ManageAdmins")) {
-      componentToRender = <ManageAdmins bool={true} />;
+      componentToRender = <ManageAdmins adminData={adminData} bool={true} />;
     } else {
       componentToRender = <ManageAdmins bool={false} />;
     }

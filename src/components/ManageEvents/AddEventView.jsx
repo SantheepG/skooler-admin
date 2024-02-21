@@ -39,7 +39,10 @@ const AddEventView = ({ closeModal, reload }) => {
     if (isNaN(inputHour) || inputHour < 0 || inputHour > 23) {
       console.log("Invalid time");
     } else {
-      setHours((prevHours) => ({ ...prevHours, [inputName]: inputHour }));
+      setHours((prevHours) => ({
+        ...prevHours,
+        [inputName]: inputHour.toString().padStart(2, "0"),
+      }));
       console.log(hours);
     }
   };
@@ -50,7 +53,10 @@ const AddEventView = ({ closeModal, reload }) => {
     if (isNaN(inputMin) || inputMin < 0 || inputMin > 59) {
       console.log("Invalid time");
     } else {
-      setMins((prevMin) => ({ ...prevMin, [inputName]: inputMin }));
+      setMins((prevMin) => ({
+        ...prevMin,
+        [inputName]: inputMin.toString().padStart(2, "0"),
+      }));
       console.log(mins);
     }
   };

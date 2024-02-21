@@ -23,7 +23,7 @@ export const UpdateOrder = async (data) => {
   }
 };
 
-export const deleteOrder = async (id) => {
+export const DeleteOrder = async (id) => {
   try {
     const response = await axios.delete(`${base_URL}/admin/order/delete/${id}`);
     return response;
