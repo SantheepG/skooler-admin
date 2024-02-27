@@ -42,31 +42,39 @@ const AddAdminView = ({ closeModal, reload }) => {
         addAdminData.confirmPassword !== ""
       ) {
         if (addAdminData.password === addAdminData.confirmPassword) {
-          let data = {
-            first_name: addAdminData.first_name,
-            last_name: addAdminData.last_name,
-            email: addAdminData.email,
-            mobile_no: addAdminData.mobile_no,
-            password: addAdminData.password,
-            roles: JSON.stringify(addAdminData.roles),
-            profile_pic: null,
-            is_active: true,
-          };
-          const response = await AddAdmin(data);
+          if (addAdminData.password.length >= 8) {
+            let data = {
+              first_name: addAdminData.first_name,
+              last_name: addAdminData.last_name,
+              email: addAdminData.email,
+              mobile_no: addAdminData.mobile_no,
+              password: addAdminData.password,
+              roles: JSON.stringify(addAdminData.roles),
+              profile_pic: null,
+              is_active: true,
+            };
+            const response = await AddAdmin(data);
 
-          if (response.status === 201) {
-            console.log("Created success");
-            toast.success("Admin added", {
-              duration: 1200,
+            if (response.status === 201) {
+              console.log("Created success");
+              toast.success("Admin added", {
+                duration: 1200,
+                position: "center",
+                //icon: "❌",
+              });
+
+              reload();
+
+              setTimeout(() => {
+                closeModal();
+              }, 1500);
+            }
+          } else {
+            toast.error("Password should atleast contain 8 characters", {
+              duration: 2000,
               position: "center",
               //icon: "❌",
             });
-
-            reload();
-
-            setTimeout(() => {
-              closeModal();
-            }, 1500);
           }
         } else {
           console.error("Password didn't match");

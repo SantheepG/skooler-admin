@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./Navbar.css";
-import { BsBlockquoteLeft } from "react-icons/bs";
 import {
   BiGridAlt,
-  BiSolidUser,
-  BiNotepad,
-  BiCalendarCheck,
   BiErrorCircle,
-  BiMessageSquareAdd,
-  BiWrench,
-  BiLogOut,
   BiLock,
-  BiUserCheck,
   BiSolidBarChartAlt2,
 } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,15 +11,25 @@ import { setClicked } from "../../redux/action";
 const Sidebar = ({ roles, toggle }) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  const [menuToggled, setMenuToggled] = useState(false);
-  const [adminData, setAdminData] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [ui, setUI] = useState("");
+  const [school, setSchool] = useState("");
 
   const handleItemClick = (item) => {
     if (!state[item]) {
       dispatch(setClicked(item, true));
     }
   };
+
+  useEffect(() => {
+    const storedUIData = JSON.parse(localStorage.getItem("ui"));
+    const storedSchoolData = JSON.parse(localStorage.getItem("school"));
+    if (storedUIData) {
+      setUI(storedUIData);
+    }
+    if (storedSchoolData) {
+      setSchool(storedSchoolData);
+    }
+  }, []);
 
   return (
     <React.Fragment>
@@ -41,15 +42,17 @@ const Sidebar = ({ roles, toggle }) => {
       >
         <div class="h-full mt-4 px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
           <ul class="space-y-1 font-medium">
-            <span class="self-center mx-16 text-xs font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+            <span class="self-center text-gray-700 mx-16 text-xs font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
               Skooler
             </span>
             <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
 
             <li>
               <a
-                className={`flex items-center cursor-pointer p-2 pt-4 hover:ml-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  state.dashboardClicked ? "bg-gray-100" : ""
+                className={`flex items-center  transition-all duration-300 ease-in-out cursor-pointer p-2 pt-4 hover:ml-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  state.dashboardClicked
+                    ? `bg-gray-100 border-l-4 border-${ui.secondary_clr}`
+                    : ""
                 }`}
                 onClick={() => handleItemClick("dashboardClicked")}
               >
@@ -77,8 +80,10 @@ const Sidebar = ({ roles, toggle }) => {
             </li>
             <li>
               <a
-                className={`flex cursor-pointer items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  state.usersClicked ? "bg-gray-100" : ""
+                className={`flex cursor-pointer transition-all duration-300 ease-in-out items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  state.usersClicked
+                    ? `bg-gray-100 border-l-4 border-${ui.secondary_clr}`
+                    : ""
                 }`}
                 onClick={() => handleItemClick("usersClicked")}
               >
@@ -105,8 +110,10 @@ const Sidebar = ({ roles, toggle }) => {
             </li>
             <li>
               <a
-                className={`flex cursor-pointer hover:ml-4 items-center p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  state.adminsClicked ? "bg-gray-100" : ""
+                className={`flex cursor-pointer transition-all duration-300 ease-in-out hover:ml-4 items-center p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  state.adminsClicked
+                    ? `bg-gray-100 border-l-4 border-${ui.secondary_clr}`
+                    : ""
                 }`}
                 onClick={() => handleItemClick("adminsClicked")}
               >
@@ -139,8 +146,10 @@ const Sidebar = ({ roles, toggle }) => {
             <li>
               <a
                 href="#"
-                className={`flex items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  state.productsClicked ? "bg-gray-100" : ""
+                className={`flex transition-all duration-300 ease-in-out items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  state.productsClicked
+                    ? `bg-gray-100 border-l-4 border-${ui.secondary_clr}`
+                    : ""
                 }`}
                 onClick={() => handleItemClick("productsClicked")}
               >
@@ -170,8 +179,10 @@ const Sidebar = ({ roles, toggle }) => {
             <li>
               <a
                 href="#"
-                className={`flex items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  state.ordersClicked ? "bg-gray-100" : ""
+                className={`flex items-center transition-all duration-300 ease-in-out hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  state.ordersClicked
+                    ? `bg-gray-100 border-l-4 border-${ui.secondary_clr}`
+                    : ""
                 }`}
                 onClick={() => handleItemClick("ordersClicked")}
               >
@@ -201,8 +212,10 @@ const Sidebar = ({ roles, toggle }) => {
             <li>
               <a
                 href="#"
-                className={`flex items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  state.stockClicked ? "bg-gray-100" : ""
+                className={`transition-all duration-300 ease-in-out flex items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  state.stockClicked
+                    ? `bg-gray-100 border-l-4 border-${ui.secondary_clr}`
+                    : ""
                 }`}
                 onClick={() => handleItemClick("stockClicked")}
               >
@@ -224,8 +237,10 @@ const Sidebar = ({ roles, toggle }) => {
             <li>
               <a
                 href="#"
-                className={`flex items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  state.eventsClicked ? "bg-gray-100" : ""
+                className={`flex transition-all duration-300 ease-in-out items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  state.eventsClicked
+                    ? `bg-gray-100 border-l-4 border-${ui.secondary_clr}`
+                    : ""
                 }`}
                 onClick={() => handleItemClick("eventsClicked")}
               >
@@ -247,8 +262,10 @@ const Sidebar = ({ roles, toggle }) => {
             <li>
               <a
                 href="#"
-                className={`flex items-center hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  state.complaintsClicked ? "bg-gray-100" : ""
+                className={`flex items-center transition-all duration-300 ease-in-out hover:ml-4 p-2 pt-4 pb-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  state.complaintsClicked
+                    ? `bg-gray-100 border-l-4 border-${ui.secondary_clr}`
+                    : ""
                 }`}
                 onClick={() => handleItemClick("complaintsClicked")}
               >

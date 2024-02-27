@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDate } from "../../CommonFuncs";
 
 const EventPreview = ({ closeModal, event }) => {
   return (
@@ -43,20 +44,6 @@ const EventPreview = ({ closeModal, event }) => {
               </div>
             </div>
             <div className="p-4 h-96 overflow-y-auto">
-              <div class="grid grid-cols-5 gap-3 mb-4 sm:mb-5">
-                <div class="p-2 w-auto bg-gray-100 rounded-lg dark:bg-gray-700">
-                  <img
-                    src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZXZlbnR8ZW58MHx8MHx8fDA%3D"
-                    alt="iMac Side Image"
-                  />
-                </div>
-                <div class="p-2 w-auto bg-gray-100 rounded-lg dark:bg-gray-700">
-                  <img
-                    src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZXZlbnR8ZW58MHx8MHx8fDA%3D"
-                    alt="iMac Front Image"
-                  />
-                </div>
-              </div>
               <dl class="sm:mb-5">
                 <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
                   Event name - {event.event_name}
@@ -72,8 +59,7 @@ const EventPreview = ({ closeModal, event }) => {
                     Announced on
                   </dt>
                   <dd class="flex items-center text-gray-500 dark:text-gray-400">
-                    event.created_at.slice(0, -17) - event.created_at.slice(-16,
-                    -8)
+                    {event.created_at !== null && formatDate(event.created_at)}
                   </dd>
                 </div>
 
@@ -82,8 +68,7 @@ const EventPreview = ({ closeModal, event }) => {
                     Last updated
                   </dt>
                   <dd class="text-gray-500 dark:text-gray-400">
-                    event.updated_at.slice(0, -17)- event.updated_at.slice(-16,
-                    -8)
+                    {event.updated_at !== null && formatDate(event.updated_at)}
                   </dd>
                 </div>
                 <div class="p-3 bg-gray-100 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
@@ -99,7 +84,8 @@ const EventPreview = ({ closeModal, event }) => {
                     Date & time
                   </dt>
                   <dd class="text-gray-500 dark:text-gray-400">
-                    {event.event_datetime}
+                    {event.event_datetime !== null &&
+                      formatDate(event.event_datetime)}
                   </dd>
                 </div>
                 <div class="p-3 bg-gray-100 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
@@ -107,7 +93,8 @@ const EventPreview = ({ closeModal, event }) => {
                     Payment deadline
                   </dt>
                   <dd class="text-gray-500 dark:text-gray-400">
-                    {event.payment_deadline}
+                    {event.payment_deadline !== null &&
+                      formatDate(event.payment_deadline)}
                   </dd>
                 </div>
                 <div class="p-3 bg-gray-100 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">

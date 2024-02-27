@@ -127,7 +127,7 @@ const ManageOrders = ({ bool }) => {
           <Toaster className="notifier" />
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
             <div
-              class={`flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
+              class={`flex items-center lg:px-6 justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
                 overlayClicked ? "opacity-40" : ""
               }`}
             >

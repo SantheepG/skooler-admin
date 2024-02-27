@@ -9,6 +9,14 @@ export const FetchEvents = async () => {
     return error;
   }
 };
+export const FetchBookings = async () => {
+  try {
+    const response = await axios.get(`${base_URL}/fetch/bookings`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 
 export const GetEvent = async (id) => {
   try {
@@ -45,6 +53,14 @@ export const UpdateEvent = async (data) => {
 export const DeleteEvent = async (id) => {
   try {
     const response = await axios.delete(`${base_URL}/events/${id}/delete`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const DeleteBooking = async (id) => {
+  try {
+    const response = await axios.delete(`${base_URL}/booking/delete/${id}`);
     return response;
   } catch (error) {
     return error;

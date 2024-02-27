@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { formatDate } from "../../CommonFuncs";
 const EventRow = ({
   event,
   previewEvent,
@@ -27,17 +27,17 @@ const EventRow = ({
         scope="row"
         class="flex items-center px-6 py-14 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
-        <img
-          src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZXZlbnR8ZW58MHx8MHx8fDA%3D"
-          alt="iMac Front Image"
-          class="h-8 w-auto mr-3"
-        />
         <div class="flex items-center mr-3">{event.event_name}</div>
       </th>
       <td class="px-6 py-3">
         <div class="flex items-center">{event.event_info}</div>
         <div class="flex items-center text-gray-400 text-xs">
-          Date : {event.event_datetime}
+          Date :{" "}
+          {event.event_datetime !== null && formatDate(event.event_datetime)}
+        </div>
+        <div className="text-gray-400 text-xs py-1.5">
+          Last updated :{" "}
+          {event.updated_at !== null && formatDate(event.updated_at)}
         </div>
       </td>
       <td class="px-8 py-3">

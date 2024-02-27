@@ -5,7 +5,7 @@ import { Toaster, toast } from "react-hot-toast";
 import Nav from "./Nav";
 import ForgetPwd from "./ForgetPwd";
 import { AdminLogin } from "../../api/AuthAPI";
-const Login = () => {
+const Login = ({ ui, school }) => {
   const navigate = useNavigate();
   const [forgetPwdClicked, setForgetPwdClicked] = useState(false);
   const [formData, setFormData] = useState({
@@ -56,13 +56,15 @@ const Login = () => {
     <React.Fragment>
       <div className="fixed w-full">
         <nav>
-          <Nav />
+          <Nav ui={ui} school={school} />
         </nav>
       </div>
-      <div class="h-screen py-20 p-4 md:p-20 lg:p-32 ">
+      <div className={`h-screen py-20 p-4 md:p-20 lg:p-32`}>
         <Toaster className="notifier" />
         {!forgetPwdClicked && (
-          <div class="max-w-sm mt-12 lg:mt-8 bg-white rounded-lg overflow-hidden shadow-lg mx-auto box-with-shadow">
+          <div
+            className={`border-t-8 border-${ui.secondary_clr} max-w-sm mt-12 lg:mt-8 bg-white rounded-lg overflow-hidden shadow-lg mx-auto box-with-shadow`}
+          >
             <div class="p-6">
               <h2 class="text-xl font-bold text-gray-800 mb-2">Admin Login</h2>
               <p class="text-gray-700 mb-6">Please Login in to your account</p>
@@ -114,14 +116,14 @@ const Login = () => {
                 </div>
                 <div class="flex items-center justify-between">
                   <button
-                    class="bg-gray-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class={`border border-${ui.secondary_clr} hover:text-gray-600 hover:shadow font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline`}
                     type="button"
                     onClick={handleLogin}
                   >
                     Log In
                   </button>
                   <a
-                    class="inline-block align-baseline font-bold text-sm text-blue-800 hover:text-blue-800"
+                    class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-blue-800"
                     href="#"
                     onClick={() => setForgetPwdClicked(true)}
                   >

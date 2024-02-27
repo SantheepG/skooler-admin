@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import defaultImg from "../../assets/default-avatar.png";
-
+import { base_URL } from "../../App";
 const AdminRow = ({
   adminData,
   openDropdown,
@@ -32,7 +32,14 @@ const AdminRow = ({
         scope="row"
         class="flex items-center  py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
-        <img src={defaultImg} alt="img" className="user-img" />
+        <img
+          alt="User"
+          className="h-12 w-12"
+          src={`${base_URL}/user/avatar/get/${adminData.id}`}
+          onError={(e) => {
+            e.target.src = defaultImg;
+          }}
+        />
         <div class="ps-3">
           <div class="text-base font-semibold">
             <span>{adminData.first_name} </span>

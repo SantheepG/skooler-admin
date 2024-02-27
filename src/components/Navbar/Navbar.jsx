@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { base_URL2 } from "../../App";
+import { base_URL } from "../../App";
 import { Logout } from "../../api/AuthAPI";
+import defaultImg from "../../assets/default-avatar.png";
 const Navbar = ({ toggle }) => {
   const [school, setSchool] = useState("");
   const [ui, setUI] = useState("");
   const dispatch = useDispatch();
   const [userClicked, setUserClicked] = useState(false);
   const [notificationsClicked, setNotificationsClicked] = useState(false);
-  const [mobNavClicked, setMobNavClicked] = useState(false);
   const navigate = useNavigate();
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setEmailAdmin] = useState("");
@@ -56,7 +57,9 @@ const Navbar = ({ toggle }) => {
 
   return (
     <React.Fragment>
-      <nav class="fixed shadow-md top-0 z-50 w-full bg-white">
+      <nav
+        class={`fixed border-b-2 border-${ui.secondary_clr} shadow-md lg:px-10 top-0 z-50 w-full bg-white`}
+      >
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center justify-start rtl:justify-end">
@@ -90,7 +93,9 @@ const Navbar = ({ toggle }) => {
                   className="max-w-100"
                 />
               </div>
-              <span className="m-3 text-gray-600">{school.name}</span>
+              <span className="m-3 hidden lg:block md:block text-gray-600">
+                {school.name}
+              </span>
             </div>
             <div class="flex items-center">
               <div class="flex items-center -ms-16">
@@ -107,14 +112,14 @@ const Navbar = ({ toggle }) => {
                   >
                     <span class="sr-only">Open user menu</span>
                     <img
+                      alt="admin"
                       class="w-8 h-8 rounded-full"
-                      src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
-                      alt="user photo"
+                      src={defaultImg}
                     />
                   </button>
                 </div>
                 <div
-                  className={`right-0 z-10 mt-40 mr-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
+                  className={`right-0 z-10 Slidedown mt-40 mr-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
                     userClicked ? "absolute" : "hidden"
                   }`}
                   role="menu"

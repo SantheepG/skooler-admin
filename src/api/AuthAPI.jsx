@@ -25,3 +25,30 @@ export const Logout = async () => {
     console.error("Error logging out:", error);
   }
 };
+export const UpdatePwd = async (data) => {
+  try {
+    const response = await axios.put(`${base_URL}/admin/reset/pwd`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("tkn")}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
+};
+
+export const UpdateName = async (data) => {
+  try {
+    const response = await axios.put(`${base_URL}/admin/update/name`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("tkn")}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
+};

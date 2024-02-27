@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { formatDate } from "../../CommonFuncs";
 const ProductRow = ({
   product,
   previewProduct,
@@ -55,6 +55,10 @@ const ProductRow = ({
         <div className="text-xs text-gray-500">
           <span>color: {product.color + " "} |</span>
           <span> size : {product.size + " "}</span>
+        </div>
+        <div className="text-gray-400 text-xs py-3">
+          Last updated :{" "}
+          {product.updated_at !== null && formatDate(product.updated_at)}
         </div>
       </th>
       <td class="px-6 py-3">

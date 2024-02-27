@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { formatDate } from "../../CommonFuncs";
 const OrderRow = ({
   order,
   openDropdown,
@@ -46,6 +46,10 @@ const OrderRow = ({
                 ? getFormattedDate(order.created_at)
                 : null}
             </span>
+          </div>
+          <div className="text-gray-400 text-xs py-3">
+            Last updated :{" "}
+            {order.updated_at !== null && formatDate(order.updated_at)}
           </div>
         </th>
         <td class="px-4 py-3 text-gray-900">{order.user_id}</td>

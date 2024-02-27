@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./ManageAdmins.css";
-import axios from "axios";
-import defaultImg from "../../assets/default-avatar.png";
+
 import AdminRow from "./AdminRow";
 import DeleteView from "./DeleteView";
 import { Toaster, toast } from "react-hot-toast";
@@ -37,8 +35,12 @@ const ManageAdmins = ({ adminData, bool }) => {
     try {
       const response = await ChangeStatus(id, isActive);
       if (response.status === 200) {
-        setFetchedAdmins(response.data.admins);
-        setAdminsToView(response.data.admins);
+        setFetchedAdmins(
+          response.data.admins.filter((admin) => admin.id !== adminData.id)
+        );
+        setAdminsToView(
+          response.data.admins.filter((admin) => admin.id !== adminData.id)
+        );
         console.log("Status changed");
         toast.success("Status changed", {
           duration: 1200,
@@ -68,7 +70,9 @@ const ManageAdmins = ({ adminData, bool }) => {
             setAdminsToView(
               response.data.admins.filter((admin) => admin.id !== adminData.id)
             );
-            setFetchedAdmins(response.data.admins);
+            setFetchedAdmins(
+              response.data.admins.filter((admin) => admin.id !== adminData.id)
+            );
           } else {
             console.log(response);
           }
@@ -126,7 +130,7 @@ const ManageAdmins = ({ adminData, bool }) => {
         <div className="relative m-5 viewContent">
           <Toaster className="notifier" />
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
-            <div class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
+            <div class="flex items-center lg:px-6 justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
               <label for="table-search" class="sr-only">
                 Search
               </label>

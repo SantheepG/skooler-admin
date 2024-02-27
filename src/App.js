@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Main from "./components/Main";
 import Login from "./components/Login/Login";
 import { FetchSchool } from "./api/SchoolApi";
-import Main2 from "./components/Main2";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 export const base_URL = "http://127.0.0.1:8000/api"; //URL for school DB

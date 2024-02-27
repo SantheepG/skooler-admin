@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Main.css";
+
 import { useSelector } from "react-redux";
 import Sidebar from "./Navbar/Sidebar";
 import Navbar from "./Navbar/Navbar";
@@ -13,7 +13,7 @@ import ManageComplaints from "./ManageComplaints/ManageComplaints";
 import ManageEvents from "./ManageEvents/ManageEvents";
 import { useNavigate } from "react-router-dom";
 
-const Main = () => {
+const Main = ({ school, ui }) => {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState([]);
   const [roles, setRoles] = useState("");
@@ -41,61 +41,86 @@ const Main = () => {
   if (state.dashboardClicked) {
     if (roles.includes("Dashboard")) {
       componentToRender = (
-        <Dashboard bool={true} roles={roles} admin={adminData} />
+        <Dashboard
+          bool={true}
+          roles={roles}
+          admin={adminData}
+          ui={ui}
+          school={school}
+        />
       );
     } else {
-      componentToRender = <Dashboard bool={false} />;
+      componentToRender = <Dashboard bool={false} ui={ui} school={school} />;
     }
   } else if (state.usersClicked) {
     if (roles.includes("ManageUsers")) {
-      componentToRender = <ManageUsers bool={true} />;
+      componentToRender = <ManageUsers bool={true} ui={ui} school={school} />;
     } else {
-      componentToRender = <ManageUsers bool={false} />;
+      componentToRender = <ManageUsers bool={false} ui={ui} school={school} />;
     }
   } else if (state.adminsClicked) {
     if (roles.includes("ManageAdmins")) {
-      componentToRender = <ManageAdmins adminData={adminData} bool={true} />;
+      componentToRender = (
+        <ManageAdmins
+          adminData={adminData}
+          bool={true}
+          ui={ui}
+          school={school}
+        />
+      );
     } else {
-      componentToRender = <ManageAdmins bool={false} />;
+      componentToRender = <ManageAdmins bool={false} ui={ui} school={school} />;
     }
   } else if (state.productsClicked) {
     if (roles.includes("ManageProducts")) {
-      componentToRender = <ManageProducts bool={true} />;
+      componentToRender = (
+        <ManageProducts bool={true} ui={ui} school={school} />
+      );
     } else {
-      componentToRender = <ManageProducts bool={false} />;
+      componentToRender = (
+        <ManageProducts bool={false} ui={ui} school={school} />
+      );
     }
   } else if (state.ordersClicked) {
     if (roles.includes("ManageOrders")) {
-      componentToRender = <ManageOrders bool={true} />;
+      componentToRender = <ManageOrders bool={true} ui={ui} school={school} />;
     } else {
       componentToRender = <ManageOrders bool={false} />;
     }
   } else if (state.stockClicked) {
     if (roles.includes("ManageStock")) {
-      componentToRender = <ManageStock bool={true} />;
+      componentToRender = <ManageStock bool={true} ui={ui} school={school} />;
     } else {
-      componentToRender = <ManageStock bool={false} />;
+      componentToRender = <ManageStock bool={false} ui={ui} school={school} />;
     }
   } else if (state.complaintsClicked) {
     if (roles.includes("ManageComplaints")) {
-      componentToRender = <ManageComplaints bool={true} />;
+      componentToRender = (
+        <ManageComplaints bool={true} ui={ui} school={school} />
+      );
     } else {
-      componentToRender = <ManageComplaints bool={false} />;
+      componentToRender = (
+        <ManageComplaints bool={false} ui={ui} school={school} />
+      );
     }
   } else if (state.eventsClicked) {
     if (roles.includes("ManageEvents")) {
-      componentToRender = <ManageEvents bool={true} />;
+      componentToRender = <ManageEvents bool={true} ui={ui} school={school} />;
     } else {
-      componentToRender = <ManageEvents bool={false} />;
+      componentToRender = <ManageEvents bool={false} ui={ui} school={school} />;
     }
   }
 
   return (
     <React.Fragment>
-      <Navbar toggle={() => setToggleBar(!toggleSidebar)} />
-      <Sidebar roles={roles} toggle={toggleSidebar} />
+      <Navbar
+        ui={ui}
+        school={school}
+        toggle={() => setToggleBar(!toggleSidebar)}
+      />
+      <Sidebar roles={roles} toggle={toggleSidebar} ui={ui} />
       <div class="p-2 sm:ml-64">
-        <div class="border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+        <div class="p-6 gray-200 rounded-lg dark:border-gray-700 mt-14">
           {componentToRender}
         </div>
       </div>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ProductRow from "./ProductRow";
-import ProductPreview from "./ProductPreview";
+import ProductPreview from "../ManageProducts/ProductPreview";
 import UpdateStockView from "./UpdateStockView";
 import AccessDenied from "../AccessDenied";
 import { Toaster, toast } from "react-hot-toast";
-import axios from "axios";
+
 import {
   DeleteProduct,
   FetchCategories,
@@ -138,7 +138,7 @@ const ManageStock = ({ bool }) => {
           <Toaster className="notifier" />
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
             <div
-              class={`flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
+              class={`flex items-center lg:px-6 justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
                 overlayClicked ? "opacity-40" : ""
               }`}
             >
@@ -201,7 +201,7 @@ const ManageStock = ({ bool }) => {
                   <th scope="col" class="p-4 p">
                     #ID
                   </th>
-                  <th scope="col" class="p-4">
+                  <th scope="col" class="px-8">
                     Product
                   </th>
                   <th scope="col" class="p-4">
@@ -210,7 +210,7 @@ const ManageStock = ({ bool }) => {
                   <th scope="col" class="p-4">
                     Category
                   </th>
-                  <th scope="col" class="p-4">
+                  <th scope="col" class="p-4 ">
                     Subcategory
                   </th>
 

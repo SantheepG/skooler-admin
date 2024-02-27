@@ -21,7 +21,7 @@ const UpdateStockView = ({ closeModal, product, setReloadComponent }) => {
           setTimeout(() => {
             closeModal();
             setReloadComponent(true);
-          }, 1200);
+          }, 2200);
         } else {
           toast.error("Something went wrong", {
             position: toast.POSITION.BOTTOM_RIGHT,
