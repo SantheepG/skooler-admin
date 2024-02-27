@@ -126,6 +126,41 @@ const ManageEvents = ({ bool }) => {
     }
   };
 
+  const searchBooking = (event) => {
+    event.preventDefault();
+    const inputValue = event.target.value.toLowerCase();
+
+    if (inputValue === "") {
+      setBookingsToView(fetchedBookings);
+    } else {
+      let matchedBookings = fetchedBookings.filter(
+        (item) =>
+          item.event_name.toLowerCase().includes(inputValue) ||
+          item.id === parseInt(inputValue) ||
+          item.user_name === inputValue
+      );
+      setBookingsToView(matchedBookings);
+    }
+  };
+
+  const filterBooking = (event) => {
+    event.preventDefault();
+    if (event.target.value === "All") {
+      setBookingsToView(fetchedBookings);
+    } else if (event.target.value === "Recent") {
+      //descending order of created_at
+      let sortedBookings = [...fetchedBookings].sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+      setBookingsToView(sortedBookings);
+    } else if (event.target.value === "Earliest") {
+      //ascending order of created_at
+      let sortedBookings = [...fetchedBookings].sort(
+        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+      );
+      setBookingsToView(sortedBookings);
+    }
+  };
   const deleteBooking = async () => {
     try {
       const response = await DeleteBooking(currentBooking.id);
@@ -355,7 +390,7 @@ const ManageEvents = ({ bool }) => {
                     id="table-search-users"
                     className="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Search for bookings"
-                    onChange={searchEvent}
+                    onChange={searchBooking}
                   />
                 </div>
                 <div>
@@ -389,7 +424,7 @@ const ManageEvents = ({ bool }) => {
                 <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                   <select
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    onChange={(e) => filterEvent(e)}
+                    onChange={(e) => filterBooking(e)}
                   >
                     <option name={"All"} value={"All"}>
                       All
