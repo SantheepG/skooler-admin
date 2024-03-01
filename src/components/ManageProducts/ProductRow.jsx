@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { formatDate } from "../../CommonFuncs";
+import { s3base_URL } from "../../App";
+
 const ProductRow = ({
   product,
   previewProduct,
@@ -44,11 +46,11 @@ const ProductRow = ({
         scope="row"
         class=" px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
-        <div class="flex items-center mr-3">
+        <div class="flex h-16 w-16 items-center m-1 rounded-full">
           <img
-            src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-front-image.png"
+            src={`${s3base_URL}${product.thumbnail}`}
             alt="iMac Front Image"
-            class="h-8 w-auto mr-3"
+            class="h-14 max-w-14 mr-3"
           />
           {product.name}
         </div>

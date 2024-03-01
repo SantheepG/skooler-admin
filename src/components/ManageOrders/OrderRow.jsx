@@ -60,7 +60,6 @@ const OrderRow = ({
           </div>
         </td>
         <td class="px-4 py-3 max-w-[12rem] truncate text-gray-900">
-          <span>$</span>
           {order.total_price}
           <div className="text-xs text-gray-500 mt-1">
             <span>{order.payment_method}</span>

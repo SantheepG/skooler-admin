@@ -6,7 +6,7 @@ import AccessDenied from "../AccessDenied";
 import OrderPreview from "./OrderPreview";
 import EditOrderView from "./EditOrderView";
 import { FetchOrders, DeleteOrder } from "../../api/OrderApi";
-const ManageOrders = ({ bool }) => {
+const ManageOrders = ({ bool, school }) => {
   const [overlayClicked, setOverlayClicked] = useState(false);
   const [fetchedOrders, setFetchedOrders] = useState([]);
   const [ordersToView, setOrdersToView] = useState([]);
@@ -194,7 +194,7 @@ const ManageOrders = ({ bool }) => {
                     Pick-up / Delivery Info
                   </th>
                   <th scope="col" class="p-4">
-                    Paid
+                    Paid ( {school.currency} )
                   </th>
                   <th scope="col" class="p-4">
                     Status
@@ -245,6 +245,7 @@ const ManageOrders = ({ bool }) => {
             >
               <OrderPreview
                 order={currentOrder}
+                school={school}
                 closeModal={() => {
                   setOverlayClicked(!overlayClicked);
                   setPreviewOrderClicked(!previewOrderClicked);

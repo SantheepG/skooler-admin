@@ -89,3 +89,33 @@ export const UpdateStock = async (id, stockChange) => {
     return error;
   }
 };
+
+export const AddProductImgs = async (formData) => {
+  try {
+    const response = await axios.post(
+      `${base_URL}/product/imgs/add`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const DeleteProductImg = async (data) => {
+  try {
+    const response = await axios.put(`${base_URL}/product/img/delete`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

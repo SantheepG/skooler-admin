@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import defaultImg from "../../assets/default-avatar.png";
-import { base_URL } from "../../App";
 
+import { s3base_URL } from "../../App";
 const UserRow = ({
   userData,
   openDropdown,
@@ -27,14 +27,17 @@ const UserRow = ({
         scope="row"
         class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
       >
-        <img
-          alt="admin"
-          className="h-12 w-12"
-          src={`${base_URL}/user/avatar/get/${userData.id}`}
-          onError={(e) => {
-            e.target.src = defaultImg;
-          }}
-        />
+        <span className="h-12 w-12">
+          <img
+            alt="admin"
+            className="h-12 max-w-12 rounded-full"
+            src={`${s3base_URL}${userData.profile_pic}`}
+            onError={(e) => {
+              e.target.src = defaultImg;
+            }}
+          />
+        </span>
+
         <div class="ps-3">
           <div class="text-base font-semibold">
             {userData.first_name + " "}

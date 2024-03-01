@@ -1,5 +1,6 @@
 import React from "react";
-
+import defaultAvatar from "../../assets/default-avatar.png";
+import { s3base_URL } from "../../App";
 const UserDetailsView = ({ ViewOverlayHandler, user }) => {
   return (
     <React.Fragment>
@@ -7,8 +8,18 @@ const UserDetailsView = ({ ViewOverlayHandler, user }) => {
         <div class="relative w-full max-w-2xl max-h-full">
           <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                User details
+              <div className="h-24 w-24 rounded-full">
+                <img
+                  src={`${s3base_URL}${user.profile_pic}`}
+                  alt="User"
+                  onError={(e) => {
+                    e.target.src = defaultAvatar;
+                  }}
+                  class="h-24 w-auto max-w-36 rounded-full"
+                />
+              </div>
+              <h3 class="text-xl my-6 mx-4 font-semibold text-gray-900 dark:text-white">
+                {user.first_name} {user.last_name}
                 <div className="text-xs text-gray-500">
                   User ID : <span>#{user.id}</span>
                 </div>

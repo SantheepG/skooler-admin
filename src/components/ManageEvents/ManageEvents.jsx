@@ -15,7 +15,7 @@ import {
 } from "../../api/EventApi";
 
 import BookingRow from "./BookingRow";
-const ManageEvents = ({ bool }) => {
+const ManageEvents = ({ bool, school }) => {
   const [fetchedEvents, setFetchedEvents] = useState([]);
   const [fetchedBookings, setFetchedBookings] = useState([]);
   const [eventsToView, setEventsToView] = useState([]);
@@ -310,7 +310,7 @@ const ManageEvents = ({ bool }) => {
                       Reserved
                     </th>
                     <th scope="col" class="p-4 px-6">
-                      Price ($)
+                      Price ( {school.currency} )
                     </th>
 
                     <th scope="col" class="p-4">
@@ -458,7 +458,7 @@ const ManageEvents = ({ bool }) => {
                       Tickets
                     </th>
                     <th scope="col" class="p-4 px-2">
-                      Paid
+                      Paid ( {school.currency} )
                     </th>
 
                     <th scope="col" class="p-4">

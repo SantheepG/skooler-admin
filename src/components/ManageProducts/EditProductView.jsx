@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { s3base_URL } from "../../App";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FetchCategories, UpdateProduct } from "../../api/ProductApi";
+import {
+  DeleteProductImg,
+  FetchCategories,
+  UpdateProduct,
+} from "../../api/ProductApi";
 const EditProductView = ({ closeModal, product, reload }) => {
+  const [imgs, setImgs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
@@ -24,7 +30,9 @@ const EditProductView = ({ closeModal, product, reload }) => {
   });
 
   useEffect(() => {
-    console.log(product);
+    if (product.images) {
+      setImgs(JSON.parse(product.images));
+    }
     setUpdateDetails(product);
   }, [product]);
 
@@ -103,7 +111,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                   updateDetails.price -
                     updateDetails.price * (updateDetails.discount / 100)
                 ),
-          images: updateDetails.images,
+          images: JSON.stringify(imgs),
           category_id: updateDetails.category_id,
           subcategory_id: updateDetails.subcategory_id,
         });
@@ -128,6 +136,33 @@ const EditProductView = ({ closeModal, product, reload }) => {
       toast.error("Invalid inputs. Please check", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
+    }
+  };
+
+  const handleProductImgDelete = async (index) => {
+    try {
+      if (imgs.length > 1) {
+        const response = await DeleteProductImg({
+          id: product.id,
+          path: imgs[index],
+        });
+        if (response.status === 200) {
+          reload();
+          setImgs(JSON.parse(response.data.images));
+          setImgs((prevImages) => prevImages.filter((_, i) => i !== index));
+        } else {
+          console.log(response.message);
+          toast.error("Something went wrong. Please try again", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+        }
+      } else {
+        toast.error("Thumbnail image cannot be deleted.", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -236,106 +271,40 @@ const EditProductView = ({ closeModal, product, reload }) => {
                       Product Images
                     </span>
                     <div class="grid grid-cols-3 gap-4 mb-4">
-                      <div class="relative p-2 bg-gray-100 rounded-lg sm:w-36 sm:h-36 dark:bg-gray-700">
-                        <img
-                          src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-side-image.png"
-                          alt="imac image"
-                        />
-                        <button
-                          type="button"
-                          class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewbox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
+                      {imgs.length !== 0 &&
+                        imgs.map((img, index) => (
+                          <div
+                            key={index}
+                            class="relative rounded-lg sm:w-36 sm:h-36 dark:bg-gray-700"
                           >
-                            <path
-                              fill-rule="evenodd"
-                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                              clip-rule="evenodd"
+                            <img
+                              key={index}
+                              src={`${s3base_URL}${img}`}
+                              alt="product"
+                              className="max-w-36 max-h-36"
                             />
-                          </svg>
-                          <span class="sr-only">Remove image</span>
-                        </button>
-                      </div>
-                      <div class="relative p-2 bg-gray-100 rounded-lg sm:w-36 sm:h-36 dark:bg-gray-700">
-                        <img
-                          src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-front-image.png"
-                          alt="imac image"
-                        />
-                        <button
-                          type="button"
-                          class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewbox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                              clip-rule="evenodd"
-                            />
-                          </svg>
-                          <span class="sr-only">Remove image</span>
-                        </button>
-                      </div>
-                      <div class="relative p-2 bg-gray-100 rounded-lg sm:w-36 sm:h-36 dark:bg-gray-700">
-                        <img
-                          src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-back-image.png"
-                          alt="imac image"
-                        />
-                        <button
-                          type="button"
-                          class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewbox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                              clip-rule="evenodd"
-                            />
-                          </svg>
-                          <span class="sr-only">Remove image</span>
-                        </button>
-                      </div>
-                      <div class="relative p-2 bg-gray-100 rounded-lg sm:w-36 sm:h-36 dark:bg-gray-700">
-                        <img
-                          src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-side-image.png"
-                          alt="imac image"
-                        />
-                        <button
-                          type="button"
-                          class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewbox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                              clip-rule="evenodd"
-                            />
-                          </svg>
-                          <span class="sr-only">Remove image</span>
-                        </button>
-                      </div>
+                            <button
+                              type="button"
+                              class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
+                              onClick={() => handleProductImgDelete(index)}
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="w-5 h-5"
+                                fill="currentColor"
+                                viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                              <span class="sr-only">Remove image</span>
+                            </button>
+                          </div>
+                        ))}
                     </div>
                     <div class="flex items-center justify-center w-full">
                       <label

@@ -1,6 +1,14 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { s3base_URL } from "../../App";
 const ProductPreview = ({ closeModal, product }) => {
+  const [imgs, setImgs] = useState([]);
+
+  useEffect(() => {
+    if (product.images) {
+      setImgs(JSON.parse(product.images));
+    }
+  }, [product]);
+
   return (
     <React.Fragment>
       {product ? (
@@ -44,30 +52,15 @@ const ProductPreview = ({ closeModal, product }) => {
             </div>
             <div className="p-4 h-96 overflow-y-auto">
               <div class="grid grid-cols-5 gap-3 mb-4 sm:mb-5">
-                <div class="p-2 w-auto bg-gray-100 rounded-lg dark:bg-gray-700">
-                  <img
-                    src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-side-image.png"
-                    alt="iMac Side Image"
-                  />
-                </div>
-                <div class="p-2 w-auto bg-gray-100 rounded-lg dark:bg-gray-700">
-                  <img
-                    src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-front-image.png"
-                    alt="iMac Front Image"
-                  />
-                </div>
-                <div class="p-2 w-auto bg-gray-100 rounded-lg dark:bg-gray-700">
-                  <img
-                    src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-back-image.png"
-                    alt="iMac Back Image"
-                  />
-                </div>
-                <div class="p-2 w-auto bg-gray-100 rounded-lg dark:bg-gray-700">
-                  <img
-                    src="https://flowbite.s3.amazonaws.com/blocks/application-ui/products/imac-side-image.png"
-                    alt="iMac Back Image"
-                  />
-                </div>
+                {imgs.length !== 0 &&
+                  imgs.map((img, index) => (
+                    <div
+                      key={index}
+                      class="p-2 w-auto rounded-lg dark:bg-gray-700"
+                    >
+                      <img key={index} src={`${s3base_URL}${img}`} alt="img" />
+                    </div>
+                  ))}
               </div>
               <dl class="sm:mb-5">
                 <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">

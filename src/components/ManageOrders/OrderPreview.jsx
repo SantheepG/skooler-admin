@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
-const OrderPreview = ({ closeModal, order }) => {
+const OrderPreview = ({ closeModal, order, school }) => {
   const [view, setView] = useState(true);
   const [products, setProducts] = useState([]);
 
@@ -22,8 +22,7 @@ const OrderPreview = ({ closeModal, order }) => {
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Order details
                 <div className="text-xs text-gray-500">
-                  Order ID : #{order.reference_id} | Order type :{" "}
-                  {order.order_type}
+                  Order ID : #{order.id} | Order type : {order.order_type}
                 </div>
               </h3>
 
@@ -67,8 +66,8 @@ const OrderPreview = ({ closeModal, order }) => {
                     </dt>
                     <div>
                       <span className="flex">
-                        <span>$</span>
-                        {product.price + " "}
+                        {school.currency + " "}
+                        {product.price}
                       </span>
                       <span>qty : {product.qty}</span>
                     </div>

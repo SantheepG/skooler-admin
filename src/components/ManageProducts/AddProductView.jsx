@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
-import { AddProducts } from "../../api/ProductApi";
+import { AddProductImgs, AddProducts } from "../../api/ProductApi";
 import "react-toastify/dist/ReactToastify.css";
 const AddProductView = ({
   products,
@@ -18,8 +18,10 @@ const AddProductView = ({
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedCategoryID, setSelectedCategoryID] = useState(0);
   const [selectedSubcategory, setSelectedSubcategory] = useState([]);
-  const [selectedSubcategoryID, setSelectedSubcategoryID] = useState(0);
   const [subcategoriesDisabled, setSubcategoriesDisabled] = useState(true);
+  const [images, setImages] = useState([]);
+  const [imgsToUpload, setImgsToUpload] = useState([]);
+  const [addProductClicked, setAddProductClicked] = useState(false);
   const [AddProductDetails, setAddProductDetails] = useState({
     name: "",
     description: "",
@@ -89,7 +91,17 @@ const AddProductView = ({
     //setSelectedSubcategory("");
   };
 
-  const addProduct = async () => {
+  const checkProductAvailability = (productName, productSize, productColor) => {
+    const filterProducts = products.filter(
+      (item) =>
+        item.name.toLowerCase() === productName.toLowerCase() &&
+        item.size === productSize &&
+        item.color.toLowerCase() === productColor.toLowerCase()
+    );
+    return filterProducts.length === 0 ? true : false;
+  };
+  const uploadImgs = async () => {
+    setAddProductClicked(true);
     try {
       if (
         AddProductDetails.name !== "" &&
@@ -98,72 +110,135 @@ const AddProductView = ({
         AddProductDetails.stock !== null &&
         selectedCategory.length !== 0
       ) {
-        const filterProducts = products.filter(
-          (item) =>
-            item.name.toLowerCase() === AddProductDetails.name.toLowerCase() &&
-            item.size === AddProductDetails.size &&
-            item.color === AddProductDetails.color
-        );
-
-        if (filterProducts.length === 0) {
-          let data = {
-            name: AddProductDetails.name,
-            description: AddProductDetails.description,
-            stock: parseInt(AddProductDetails.stock),
-            size: AddProductDetails.size === "" ? null : AddProductDetails.size,
-            color:
-              AddProductDetails.color === "" ? null : AddProductDetails.color,
-            price: parseFloat(AddProductDetails.price),
-            discount:
-              AddProductDetails.discount === 0
-                ? null
-                : parseFloat(AddProductDetails.discount),
-            discounted_price:
-              AddProductDetails.discount === 0
-                ? null
-                : parseFloat(
-                    AddProductDetails.price -
-                      AddProductDetails.price *
-                        (AddProductDetails.discount / 100)
-                  ),
-            images: AddProductDetails.images,
-            category_id: parseInt(selectedCategoryID),
-            subcategory_id: parseInt(selectedSubcategory),
-          };
-
-          const response = await AddProducts(data);
-
-          if (response.status === 201) {
-            toast.success("Added", {
-              position: toast.POSITION.BOTTOM_RIGHT,
-              autoClose: 1200,
+        if (
+          checkProductAvailability(
+            AddProductDetails.name,
+            AddProductDetails.size,
+            AddProductDetails.color
+          )
+        ) {
+          if (imgsToUpload.length > 0) {
+            const formData = new FormData();
+            imgsToUpload.forEach((image) => {
+              formData.append("imgs[]", image);
             });
-            setTimeout(() => {
-              closeModal();
-              reload();
-            }, 1500);
+
+            const response = await AddProductImgs(formData);
+            if (response.status === 201) {
+              addANewProduct(response.data.paths);
+            } else {
+              console.log(response);
+              toast.error("Something went wrong. Please try again", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+              });
+              setAddProductClicked(false);
+            }
           } else {
-            toast.error("Something went wrong", {
+            toast.error("Add images to continue", {
               position: toast.POSITION.BOTTOM_RIGHT,
             });
+            setAddProductClicked(false);
           }
         } else {
-          toast.error("Product already exists", {
+          toast.error("Product already exists.", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
+          setAddProductClicked(false);
         }
       } else {
-        console.error(AddProductDetails, selectedCategory);
-
         toast.error("Required fields are empty", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
+        setAddProductClicked(false);
       }
     } catch (error) {
-      toast.error("Invalid inputs. Please check", {
-        position: toast.POSITION.BOTTOM_RIGHT,
+      console.log(error);
+      setAddProductClicked(false);
+    }
+  };
+
+  const addANewProduct = async (paths) => {
+    try {
+      if (paths) {
+        let data = {
+          name: AddProductDetails.name,
+          description: AddProductDetails.description,
+          stock: parseInt(AddProductDetails.stock),
+          size: AddProductDetails.size === "" ? null : AddProductDetails.size,
+          color:
+            AddProductDetails.color === "" ? null : AddProductDetails.color,
+          price: parseFloat(AddProductDetails.price),
+          discount:
+            AddProductDetails.discount === 0
+              ? null
+              : parseFloat(AddProductDetails.discount),
+          discounted_price:
+            AddProductDetails.discount === 0
+              ? null
+              : parseFloat(
+                  AddProductDetails.price -
+                    AddProductDetails.price * (AddProductDetails.discount / 100)
+                ),
+          images: JSON.stringify(paths),
+          thumbnail: paths[0],
+          category_id: parseInt(selectedCategoryID),
+          subcategory_id: parseInt(selectedSubcategory),
+          imgPaths: JSON.stringify(paths),
+        };
+        const response = await AddProducts(data);
+        if (response.status === 201) {
+          toast.success("Added", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 1200,
+          });
+          setAddProductClicked(false);
+          setTimeout(() => {
+            closeModal();
+            reload();
+          }, 1500);
+        } else {
+          toast.error("Something went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+          setAddProductClicked(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setAddProductClicked(false);
+    }
+  };
+
+  const handleAddImage = (e) => {
+    const files = e.target.files;
+
+    if (files.length > 0) {
+      setImgsToUpload((prevImages) => [...prevImages, ...files]);
+      // Convert each selected file to a data URL
+      const newImages = Array.from(files).map((file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      // Once all promises are resolved, update the state with the new images
+      Promise.all(newImages).then((imageArray) => {
+        setImages((prevImages) => [...prevImages, ...imageArray]);
       });
     }
+  };
+
+  const handleImgDelete = (index) => {
+    const updatedArr1 = [...images];
+    const updatedArr2 = [...imgsToUpload];
+    updatedArr1.splice(index, 1);
+    updatedArr2.splice(index, 1);
+    setImages(updatedArr1);
+    setImgsToUpload(updatedArr2);
   };
 
   return (
@@ -461,6 +536,43 @@ const AddProductView = ({
                 <span class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Product Images
                 </span>
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                  {images.length !== 0 &&
+                    images.map((img, index) => (
+                      <div
+                        key={index}
+                        class="relative rounded-lg sm:w-36 sm:h-36 dark:bg-gray-700"
+                      >
+                        <img
+                          src={img}
+                          alt="product"
+                          className="max-w-36 max-h-36"
+                        />
+                        <button
+                          type="button"
+                          class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
+                          onClick={() => handleImgDelete(index)}
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="w-5 h-5"
+                            fill="currentColor"
+                            viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                          <span class="sr-only">Remove image</span>
+                        </button>
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div class="mb-4">
                 <div class="flex justify-center items-center w-full">
                   <label
                     for="dropzone-file"
@@ -490,17 +602,41 @@ const AddProductView = ({
                         SVG, PNG, JPG or GIF (MAX. 800x400px)
                       </p>
                     </div>
-                    <input id="dropzone-file" type="file" class="hidden" />
+                    <input
+                      id="dropzone-file"
+                      type="file"
+                      class="hidden"
+                      onChange={handleAddImage}
+                    />
                   </label>
                 </div>
               </div>
               <div class="ml-56 items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
                 <button
                   type="button"
-                  class="w-full sm:w-auto justify-center text-white inline-flex bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                  onClick={addProduct}
+                  class="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
+                  onClick={uploadImgs}
                 >
-                  Add product
+                  <svg
+                    aria-hidden="true"
+                    role="status"
+                    className={`${
+                      addProductClicked ? "inline" : "hidden"
+                    } w-4 h-4 me-3 text-gray-200 animate-spin dark:text-gray-600`}
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="#1C64F2"
+                    />
+                  </svg>
+                  {addProductClicked ? "Please wait" : "Add product"}
                 </button>
 
                 <button

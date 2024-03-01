@@ -16,7 +16,7 @@ import {
   FetchCategories,
   FetchProducts,
 } from "../../api/ProductApi";
-const ManageProducts = ({ bool }) => {
+const ManageProducts = ({ bool, school }) => {
   const [fetchedProducts, setFetchedProducts] = useState([]);
   const [productsToview, setProductsToView] = useState([]);
   const [overlayClicked, setOverlayClicked] = useState(false);
@@ -182,7 +182,7 @@ const ManageProducts = ({ bool }) => {
                   type="button"
                   id="createProductButton"
                   data-modal-toggle="createProductModal"
-                  class="flex items-center justify-center text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                  class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:border-blue-500 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
                   onClick={() => {
                     setAddProductClicked(!addProductClicked);
                     setOverlayClicked(!overlayClicked);
@@ -251,7 +251,7 @@ const ManageProducts = ({ bool }) => {
                     Product
                   </th>
                   <th scope="col" class="p-2 px-6">
-                    Price
+                    Price ( {school.currency} )
                   </th>
                   <th scope="col" class="p-2 px-6">
                     Discount
@@ -310,7 +310,7 @@ const ManageProducts = ({ bool }) => {
                     </tr>
                   ))
                 ) : (
-                  <div>No products available</div>
+                  <div className="m-8">No products available</div>
                 )}
               </tbody>
             </table>
@@ -336,7 +336,7 @@ const ManageProducts = ({ bool }) => {
               id="addProductModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex mt-6 fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`flex my-16 pb-24 fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
             >
               <AddProductView
                 products={fetchedProducts}
