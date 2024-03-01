@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import defaultImg from "../../assets/default-avatar.png";
-import { base_URL } from "../../App";
+
 const AdminRow = ({
   adminData,
   openDropdown,
@@ -35,7 +35,7 @@ const AdminRow = ({
         <img
           alt="User"
           className="h-12 w-12"
-          src={`${base_URL}/user/avatar/get/${adminData.id}`}
+          src={defaultImg}
           onError={(e) => {
             e.target.src = defaultImg;
           }}

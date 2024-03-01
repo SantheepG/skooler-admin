@@ -533,8 +533,11 @@ const AddProductView = ({
               </div>
               <div class="mb-4 space-y-4 sm:flex sm:space-y-0"></div>
               <div class="mb-4">
-                <span class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Product Images
+                <span class="block  mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Product Images{" "}
+                  <span class="text-xs text-blue-800 dark:text-blue-600">
+                    ( Add thumbnail image first )
+                  </span>
                 </span>
                 <div class="grid grid-cols-3 gap-3 mb-4">
                   {images.length !== 0 &&
@@ -595,11 +598,11 @@ const AddProductView = ({
                         />
                       </svg>
                       <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span class="font-semibold">Click to upload</span>
+                        <span class="font-semibold">Click to upload </span>
                         or drag and drop
                       </p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">
-                        SVG, PNG, JPG or GIF (MAX. 800x400px)
+                      <p class="text-xs text-blue-500 dark:text-blue-600">
+                        Add thumbnail image first
                       </p>
                     </div>
                     <input

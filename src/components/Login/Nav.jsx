@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import hologoLogo from "../../assets/Hologo_logo.png";
-import { base_URL2 } from "../../App";
+import { s3base_URL } from "../../App";
 const Nav = ({ school, ui }) => {
   return (
     <React.Fragment>
@@ -10,7 +10,7 @@ const Nav = ({ school, ui }) => {
         <div className="flex">
           <div className="w-12 h-12">
             <img
-              src={`${base_URL2}/super/getlogo/${school.logo_id}`}
+              src={`${s3base_URL}${school.logo}`}
               alt="School logo"
               onError={(e) => {
                 e.target.src = hologoLogo;

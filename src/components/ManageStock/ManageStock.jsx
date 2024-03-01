@@ -220,36 +220,40 @@ const ManageStock = ({ bool }) => {
                 </tr>
               </thead>
               <tbody>
-                {productsToview.map((product, index) => (
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <ProductRow
-                      key={index}
-                      product={product}
-                      categories={categories}
-                      subcategories={subcategories}
-                      openDropdown={openDropdown}
-                      toggleDropdown={() => toggleDropdown(product.id)}
-                      previewProduct={() => {
-                        setOverlayClicked(!overlayClicked);
-                        setpreviewProductClicked(!previewProductClicked);
-                        setCurrentProductIndex(index);
-                        setCurrentProduct(product);
-                      }}
-                      editProduct={() => {
-                        setOverlayClicked(!overlayClicked);
-                        setEditProductClicked(!editProductClicked);
-                        setCurrentProductIndex(index);
-                        setCurrentProduct(product);
-                      }}
-                      deleteProduct={() => {
-                        setOverlayClicked(!overlayClicked);
-                        setdeleteProductClicked(!deleteProductClicked);
-                        setCurrentProductIndex(index);
-                        setCurrentProduct(product);
-                      }}
-                    />
-                  </tr>
-                ))}
+                {productsToview.length !== 0 ? (
+                  productsToview.map((product, index) => (
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <ProductRow
+                        key={index}
+                        product={product}
+                        categories={categories}
+                        subcategories={subcategories}
+                        openDropdown={openDropdown}
+                        toggleDropdown={() => toggleDropdown(product.id)}
+                        previewProduct={() => {
+                          setOverlayClicked(!overlayClicked);
+                          setpreviewProductClicked(!previewProductClicked);
+                          setCurrentProductIndex(index);
+                          setCurrentProduct(product);
+                        }}
+                        editProduct={() => {
+                          setOverlayClicked(!overlayClicked);
+                          setEditProductClicked(!editProductClicked);
+                          setCurrentProductIndex(index);
+                          setCurrentProduct(product);
+                        }}
+                        deleteProduct={() => {
+                          setOverlayClicked(!overlayClicked);
+                          setdeleteProductClicked(!deleteProductClicked);
+                          setCurrentProductIndex(index);
+                          setCurrentProduct(product);
+                        }}
+                      />
+                    </tr>
+                  ))
+                ) : (
+                  <div className="m-8">No products available</div>
+                )}
               </tbody>
             </table>
           </div>

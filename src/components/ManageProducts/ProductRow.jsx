@@ -104,7 +104,7 @@ const ProductRow = ({
         </button>
         {viewEditDropdown && (
           <ul
-            className={`absolute -mx-32 -mt-14 z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block`}
+            className={`absolute -mx-32 -mt-20 z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block`}
             aria-labelledby="dropdownMenuButton1"
             data-te-dropdown-menu-ref
           >

@@ -474,7 +474,9 @@ const ManageProducts = ({ bool, school }) => {
                       />
                     </svg>
                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                      Are you sure you want to delete this product?
+                      This will delete all records from complaints, reviews
+                      related to this product. Are you sure you want to still
+                      delete this product?
                     </h3>
                     <button
                       data-modal-toggle="delete-modal"

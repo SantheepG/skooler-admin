@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { base_URL2 } from "../../App";
-import { base_URL } from "../../App";
+import { s3base_URL } from "../../App";
 import { Logout } from "../../api/AuthAPI";
 import defaultImg from "../../assets/default-avatar.png";
 const Navbar = ({ toggle }) => {
   const [school, setSchool] = useState("");
   const [ui, setUI] = useState("");
-  const dispatch = useDispatch();
   const [userClicked, setUserClicked] = useState(false);
-  const [notificationsClicked, setNotificationsClicked] = useState(false);
   const navigate = useNavigate();
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setEmailAdmin] = useState("");
@@ -88,7 +84,7 @@ const Navbar = ({ toggle }) => {
               </button>
               <div className="ml-10 w-12 h-12">
                 <img
-                  src={`${base_URL2}/super/getlogo/${school.logo_id}`}
+                  src={`${s3base_URL}${school.logo}`}
                   alt="School logo"
                   className="max-w-100"
                 />
@@ -107,7 +103,6 @@ const Navbar = ({ toggle }) => {
                     data-dropdown-toggle="dropdown-user"
                     onClick={() => {
                       setUserClicked(!userClicked);
-                      setNotificationsClicked(false);
                     }}
                   >
                     <span class="sr-only">Open user menu</span>

@@ -38,7 +38,7 @@ const BookingRow = ({ booking, deleteClicked }) => {
           type="button"
           onClick={deleteClicked}
         >
-          delete
+          Cancel
         </button>
       </td>
     </React.Fragment>
