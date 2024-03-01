@@ -107,6 +107,22 @@ export const AddProductImgs = async (formData) => {
   }
 };
 
+export const UpdateProductImgs = async (formData) => {
+  try {
+    const response = await axios.post(
+      `${base_URL}/product/imgs/update`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 export const DeleteProductImg = async (data) => {
   try {
     const response = await axios.put(`${base_URL}/product/img/delete`, data, {
