@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { formatDate } from "../../CommonFuncs";
+import { formatDate, formatNumberWithSpace } from "../../CommonFuncs";
 import { s3base_URL } from "../../App";
 
 const ProductRow = ({
@@ -64,7 +64,9 @@ const ProductRow = ({
         </div>
       </th>
       <td class="px-6 py-3">
-        <div class="flex items-center">{product.price}</div>
+        <div class="flex items-center">
+          {formatNumberWithSpace(product.price)}
+        </div>
       </td>
       <td class="px-10 py-3 ">
         <div class="flex items-center">{product.discount}%</div>

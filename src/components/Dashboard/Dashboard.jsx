@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AccessDenied from "../AccessDenied";
 import UpdateInfo from "./UpdateInfo";
 import { FetchStats } from "../../api/SchoolApi";
-import { UpdateName } from "../../api/AuthAPI";
+import { formatDate } from "../../CommonFuncs";
 import avatar from "../../assets/default-avatar.png";
 const Dashboard = ({ bool, roles, admin, ui, school }) => {
   const [adminCnt, setAdminCnt] = useState("0");
@@ -12,6 +12,7 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
   const [orderCnt, setOrderCnt] = useState("0");
   const [productsCnt, setProductCnt] = useState("0");
   const [total, setTotal] = useState("0");
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   const [overlayClicked, setOverlayClicked] = useState(false);
 
@@ -24,6 +25,7 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
           setOrderCnt(response.data.orders_count);
           setUserCnt(response.data.users_count);
           setProductCnt(response.data.products_count);
+          setUpcomingEvents(response.data.upcoming);
           setTotal(response.data.total);
         }
       } catch (error) {
@@ -33,25 +35,6 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
     getCounts();
   }, []);
 
-  const updateName = async () => {
-    const response = await UpdateName();
-    if (response.status === 200) {
-      toast.success("Updated", {
-        position: "bottom-right",
-      });
-    } else {
-      toast.error("Something went wrong. Please try again", {
-        position: "bottom-right",
-      });
-    }
-    try {
-    } catch (error) {
-      toast.error("Something went wrong. Please try again", {
-        position: "bottom-right",
-      });
-      console.log(error);
-    }
-  };
   return (
     <React.Fragment>
       <ToastContainer />
@@ -183,26 +166,8 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                     <div class="relative bg-clip-border rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none m-0 flex items-center justify-between p-6">
                       <div>
                         <h6 class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-1">
-                          New users
+                          upcoming events
                         </h6>
-                        <p class="antialiased font-sans text-sm leading-normal flex items-center gap-1 font-normal text-blue-gray-600">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="3"
-                            stroke="currentColor"
-                            aria-hidden="true"
-                            class="h-4 w-4 text-blue-500"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M4.5 12.75l6 6 9-13.5"
-                            ></path>
-                          </svg>
-                          <strong>30 done</strong> this month
-                        </p>
                       </div>
                     </div>
                     <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
@@ -211,143 +176,56 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                           <tr>
                             <th class="border-b border-blue-gray-50 py-3 px-6 text-left">
                               <p class="block antialiased font-sans text-[11px] font-medium uppercase text-blue-gray-400">
-                                companies
+                                Event
                               </p>
                             </th>
                             <th class="border-b border-blue-gray-50 py-3 px-6 text-left">
                               <p class="block antialiased font-sans text-[11px] font-medium uppercase text-blue-gray-400">
-                                budget
+                                Event info
                               </p>
                             </th>
                             <th class="border-b border-blue-gray-50 py-3 px-6 text-left">
                               <p class="block antialiased font-sans text-[11px] font-medium uppercase text-blue-gray-400">
-                                completion
+                                To be held on
                               </p>
                             </th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="flex items-center gap-4">
-                                <p class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
-                                  Material XD Version
-                                </p>
-                              </div>
-                            </td>
+                          {upcomingEvents.length !== 0 ? (
+                            upcomingEvents.map((event) => (
+                              <tr>
+                                <td
+                                  key={event.id}
+                                  class="py-3 px-5 border-b border-blue-gray-50"
+                                >
+                                  <div class="flex items-center gap-4">
+                                    <p class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
+                                      {event.event_name}
+                                    </p>
+                                  </div>
+                                </td>
 
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">
-                                $14,000
-                              </p>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="w-10/12">
-                                <p class="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">
-                                  60%
-                                </p>
-                                <div class="flex flex-start bg-blue-gray-50 overflow-hidden w-full rounded-sm font-sans text-xs font-medium h-1">
-                                  <div class="flex justify-center items-center h-full bg-gradient-to-tr from-blue-600 to-blue-400 text-white"></div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="flex items-center gap-4">
-                                <p class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
-                                  Add Progress Track
-                                </p>
-                              </div>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">
-                                $3,000
-                              </p>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="w-10/12">
-                                <p class="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">
-                                  10%
-                                </p>
-                                <div class="flex flex-start bg-blue-gray-50 overflow-hidden w-full rounded-sm font-sans text-xs font-medium h-1">
-                                  <div class="flex justify-center items-center h-full bg-gradient-to-tr from-blue-600 to-blue-400 text-white"></div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="flex items-center gap-4">
-                                <p class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
-                                  Fix Platform Errors
-                                </p>
-                              </div>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">
-                                Not set
-                              </p>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="w-10/12">
-                                <p class="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">
-                                  100%
-                                </p>
-                                <div class="flex flex-start bg-blue-gray-50 overflow-hidden w-full rounded-sm font-sans text-xs font-medium h-1">
-                                  <div class="flex justify-center items-center h-full bg-gradient-to-tr from-green-600 to-green-400 text-white"></div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="flex items-center gap-4">
-                                <p class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
-                                  Launch our Mobile App
-                                </p>
-                              </div>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">
-                                $20,500
-                              </p>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="w-10/12">
-                                <p class="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">
-                                  100%
-                                </p>
-                                <div class="flex flex-start bg-blue-gray-50 overflow-hidden w-full rounded-sm font-sans text-xs font-medium h-1">
-                                  <div class="flex justify-center items-center h-full bg-gradient-to-tr from-green-600 to-green-400 text-white"></div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="flex items-center gap-4">
-                                <p class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
-                                  Add the New Pricing Page
-                                </p>
-                              </div>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">
-                                $500
-                              </p>
-                            </td>
-                            <td class="py-3 px-5 border-b border-blue-gray-50">
-                              <div class="w-10/12">
-                                <p class="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">
-                                  25%
-                                </p>
-                                <div class="flex flex-start bg-blue-gray-50 overflow-hidden w-full rounded-sm font-sans text-xs font-medium h-1">
-                                  <div class="flex justify-center items-center h-full bg-gradient-to-tr from-blue-600 to-blue-400 text-white"></div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
+                                <td class="py-3 px-5 border-b border-blue-gray-50">
+                                  <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">
+                                    {event.event_info}
+                                  </p>
+                                </td>
+                                <td class="py-3 px-5 border-b border-blue-gray-50">
+                                  <div class="w-10/12">
+                                    <p class="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">
+                                      {formatDate(event.event_datetime)}
+                                    </p>
+                                    <div class="flex flex-start bg-blue-gray-50 overflow-hidden w-full rounded-sm font-sans text-xs font-medium h-1">
+                                      <div class="flex justify-center items-center h-full bg-gradient-to-tr from-blue-600 to-blue-400 text-white"></div>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>Nothing available</tr>
+                          )}
                         </tbody>
                       </table>
                     </div>

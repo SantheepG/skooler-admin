@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate } from "../../CommonFuncs";
+import { formatDate, formatNumberWithSpace } from "../../CommonFuncs";
 const BookingRow = ({ booking, deleteClicked }) => {
   return (
     <React.Fragment>
@@ -26,7 +26,9 @@ const BookingRow = ({ booking, deleteClicked }) => {
         <div class="flex items-center">{booking.tickets}</div>
       </td>
       <td class="px-4 py-3">
-        <div class="flex items-center">{booking.paid}</div>
+        <div class="flex items-center">
+          {formatNumberWithSpace(booking.paid)}
+        </div>
         <div class="flex items-center">{booking.payment_method}</div>
       </td>
 

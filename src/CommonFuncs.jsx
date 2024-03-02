@@ -28,3 +28,24 @@ export const calculateElapsedTime = (dateTimeString) => {
     return `${days} ${days === 1 ? "day" : "days"} ago`;
   }
 };
+export const formatNumberWithSpace = (value) => {
+  let decimalValue;
+
+  if (typeof value === "string") {
+    decimalValue = parseFloat(value);
+
+    if (isNaN(decimalValue)) {
+      return "";
+    }
+  } else if (typeof value === "number") {
+    decimalValue = value;
+  } else {
+    return "";
+  }
+  const formattedNumber = decimalValue
+    .toFixed(2)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    .toString();
+
+  return formattedNumber;
+};

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { formatDate } from "../../CommonFuncs";
+import { formatDate, formatNumberWithSpace } from "../../CommonFuncs";
 const EventRow = ({
   event,
   previewEvent,
@@ -52,7 +52,9 @@ const EventRow = ({
         <div class="flex items-center">{event.reserved_slots}</div>
       </td>
       <td class="px-8 py-3 ">
-        <div class="flex items-center">{event.payment}</div>
+        <div class="flex items-center">
+          {formatNumberWithSpace(event.payment)}
+        </div>
       </td>
 
       <td class="px-12 py-4">

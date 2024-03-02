@@ -9,6 +9,14 @@ export const FetchEvents = async () => {
     return error;
   }
 };
+export const FetchUpcomingEvents = async () => {
+  try {
+    const response = await axios.get(`${base_URL}/upcoming/events/fetch`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 export const FetchBookings = async () => {
   try {
     const response = await axios.get(`${base_URL}/fetch/bookings`);
@@ -17,7 +25,6 @@ export const FetchBookings = async () => {
     return error;
   }
 };
-
 export const GetEvent = async (id) => {
   try {
     const response = await axios.get(`${base_URL}/event/get/${id}`);
