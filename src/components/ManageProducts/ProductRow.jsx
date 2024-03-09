@@ -36,7 +36,7 @@ const ProductRow = ({
         setSubCategoryName(subcat[0].name);
       }
     }
-  }, []);
+  }, [categories, subcategories]);
   return (
     <React.Fragment>
       <td class="px-5 p-4">

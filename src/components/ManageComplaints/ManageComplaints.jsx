@@ -183,7 +183,7 @@ const ManageComplaints = ({ bool }) => {
               id="EditComplaintModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-6 lg:mx-14 md:mx-36 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <ComplaintView
                 complaint={currentComplaint}

@@ -56,7 +56,6 @@ const AddAdminView = ({ closeModal, reload }) => {
             const response = await AddAdmin(data);
 
             if (response.status === 201) {
-              console.log("Created success");
               toast.success("Admin added", {
                 duration: 1200,
                 position: "center",
@@ -77,7 +76,6 @@ const AddAdminView = ({ closeModal, reload }) => {
             });
           }
         } else {
-          console.error("Password didn't match");
           toast.error("Passwords didn't match. Please check", {
             duration: 1200,
             position: "center",
@@ -85,7 +83,6 @@ const AddAdminView = ({ closeModal, reload }) => {
           });
         }
       } else {
-        console.error("Required fields are empty");
         toast.error("Required fields are empty", {
           duration: 1200,
           position: "center",
@@ -94,7 +91,6 @@ const AddAdminView = ({ closeModal, reload }) => {
       }
     } catch (error) {
       console.error(error.message);
-      console.log(addAdminData);
       toast.error("Invalid mobile number or password", {
         duration: 1500,
         position: "center",
@@ -523,7 +519,7 @@ const AddAdminView = ({ closeModal, reload }) => {
           <div class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
             <button
               type="button"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:border-blue-500 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
               onClick={addAdmin}
             >
               Save

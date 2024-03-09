@@ -21,7 +21,6 @@ const Login = ({ ui, school }) => {
           password: formData.password,
         });
         if (response.status === 200) {
-          console.log(response.data);
           if (response.data.admin.is_active === 1) {
             localStorage.setItem("tkn", response.data.token);
             localStorage.setItem("admin", JSON.stringify(response.data.admin));
@@ -35,7 +34,6 @@ const Login = ({ ui, school }) => {
           }
         }
       } else {
-        console.error("Required fields are empty");
         toast.error("Required fields are empty", {
           duration: 1200,
           position: "top-center",

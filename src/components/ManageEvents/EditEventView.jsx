@@ -153,7 +153,7 @@ const EditEventView = ({ closeModal, event, reload }) => {
               <div>
                 <button
                   type="button"
-                  class="text-white mr-5 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-white-300 font-xs rounded-lg text-xs px-5 py-1.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  class="w-full justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2 mr-6 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                   onClick={updateEvent}
                 >
                   Update
@@ -311,17 +311,17 @@ const EditEventView = ({ closeModal, event, reload }) => {
                         {event.event_datetime}
                       </span>
                     </label>
-                    <div className="flex w-full">
+                    <div className="lg:flex w-full">
                       <div>
                         <DatePicker
                           selected={selectedDate}
-                          className="w-44 rounded border border-gray-300 "
+                          className="w-44 mb-2 lg:mb-0 rounded border border-gray-300 "
                           onChange={(date) => {
                             setSelectedDate(date);
                           }}
                         />
                       </div>
-                      <div className="flex ml-2">
+                      <div className="flex ml-2 md:mt-2 lg:mt-0">
                         <input
                           type="number"
                           name="hour1"
@@ -357,17 +357,17 @@ const EditEventView = ({ closeModal, event, reload }) => {
                         {event.payment_deadline}
                       </span>
                     </label>
-                    <div className="flex w-full">
+                    <div className="lg:flex w-full">
                       <div>
                         <DatePicker
                           selected={selectedDeadline}
-                          className="w-44 rounded border border-gray-300"
+                          className="w-44 mb-2 lg:mb-0 rounded border border-gray-300"
                           onChange={(date) => {
                             setSelectedDeadline(date);
                           }}
                         />
                       </div>
-                      <div className="flex ml-2">
+                      <div className="flex ml-2 md:mt-2 lg:mt-0">
                         <input
                           type="number"
                           name="hour2"

@@ -13,7 +13,6 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
   const [productsCnt, setProductCnt] = useState("0");
   const [total, setTotal] = useState("0");
   const [upcomingEvents, setUpcomingEvents] = useState([]);
-
   const [overlayClicked, setOverlayClicked] = useState(false);
 
   useEffect(() => {
@@ -299,16 +298,6 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                           class="block antialiased font-sans text-sm leading-normal py-0.5 px-1 font-normal text-inherit transition-colors hover:text-blue-500"
                         >
                           About Us
-                        </a>
-                      </li>
-
-                      <li>
-                        <a
-                          href="#"
-                          target="_blank"
-                          class="block antialiased font-sans text-sm leading-normal py-0.5 px-1 font-normal text-inherit transition-colors hover:text-blue-500"
-                        >
-                          License
                         </a>
                       </li>
                     </ul>

@@ -27,7 +27,7 @@ const ManageUsers = ({ bool }) => {
       if (response.status === 200) {
         setFetchedUsers(response.data.users);
         setUsersToView(response.data.users);
-        console.log("Status changed");
+
         toast.success("Status changed", {
           duration: 1200,
           position: "top-center",
@@ -55,7 +55,6 @@ const ManageUsers = ({ bool }) => {
         if (response.status === 200) {
           setFetchedUsers(response.data.users);
           setUsersToView(response.data.users);
-          console.log(response.data.users);
         }
       } catch (error) {
         console.error("Fetch error: ", error);
@@ -166,10 +165,10 @@ const ManageUsers = ({ bool }) => {
             </table>
             {viewUserDetails && (
               <div
-                id="editUserModal"
+                id="viewUserModal"
                 tabindex="-1"
                 aria-hidden="true"
-                className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}
+                className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-36 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
               >
                 <UserDetailsView
                   ViewOverlayHandler={ViewOverlayHandler}

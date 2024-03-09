@@ -119,7 +119,6 @@ const AddEventView = ({ closeModal, reload }) => {
         });
 
         if (response.status === 201) {
-          console.log("Event added");
           toast.success("Added", {
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 1200,
@@ -149,12 +148,7 @@ const AddEventView = ({ closeModal, reload }) => {
 
   return (
     <React.Fragment>
-      <div
-        id="createEventModal"
-        tabindex="-1"
-        aria-hidden="true"
-        class="ml-96 h-56 overflow-y-auto overflow-x-hidden top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] md:h-full"
-      >
+      <div id="createEventModal" tabindex="-1" aria-hidden="true" class="">
         <div class="relative p-4 w-full max-w-3xl h-full md:h-auto">
           <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
@@ -281,7 +275,7 @@ const AddEventView = ({ closeModal, reload }) => {
                       </label>
                       <DatePicker
                         selected={selectedDate}
-                        className="w-44 rounded border border-gray-300 "
+                        className="md:w-24 lg:w-44 rounded border border-gray-300 "
                         onChange={(date) => {
                           setSelectedDate(date);
                         }}
@@ -294,7 +288,7 @@ const AddEventView = ({ closeModal, reload }) => {
                       >
                         Time<span className="required text-red-500"> *</span>
                       </label>
-                      <div className="flex w-full">
+                      <div className="flex w-64 md:w-28 lg:w-full md:-ml-5 lg:ml-0">
                         <input
                           type="number"
                           name="hour1"
@@ -303,7 +297,7 @@ const AddEventView = ({ closeModal, reload }) => {
                           max={23}
                           value={hours.hour1}
                           onChange={(e) => handleHourChange(e, "hour1")}
-                          className="mr-1 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          class="mr-1 py-2.5 w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         />
                         <div className="text-3xl"> : </div>
                         <input
@@ -314,7 +308,7 @@ const AddEventView = ({ closeModal, reload }) => {
                           max={59}
                           value={mins.mins1}
                           onChange={(e) => handleMinChange(e, "mins1")}
-                          class="ml-1 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          class="ml-1 py-2.5 w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         />
                       </div>
                     </div>
@@ -322,9 +316,9 @@ const AddEventView = ({ closeModal, reload }) => {
                       <div className="flex">
                         <label
                           for="weight"
-                          class="block mb-2  text-sm font-medium text-gray-900 dark:text-white"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                          Deadline date
+                          Deadline
                         </label>
                         <span
                           className="p-1 ml-2 hover:text-green-600 cursor-pointer"
@@ -333,11 +327,11 @@ const AddEventView = ({ closeModal, reload }) => {
                           <IoIosAddCircleOutline />
                         </span>
                       </div>
-                      <div className="border rounded-lg">
+                      <div className="border md:w-12 lg:w-full rounded-lg">
                         {viewDate && (
                           <DatePicker
                             selected={selectedDeadline}
-                            className="w-44 rounded Slidedown border border-gray-300"
+                            className="md:w-24 lg:w-44 rounded border border-gray-300 "
                             onChange={(date) => {
                               setSelectedDeadline(date);
                             }}
@@ -362,14 +356,14 @@ const AddEventView = ({ closeModal, reload }) => {
                       </div>
                       <div className="border-t rounded-lg">
                         {viewTime && (
-                          <div className="flex Slidedown w-full">
+                          <div className="flex Slidedown w-64 md:w-28 lg:w-full md:-ml-5 lg:ml-0">
                             <input
                               type="number"
                               name="hour2"
                               id="hour2"
                               value={hours.hour2}
                               onChange={(e) => handleHourChange(e, "hour2")}
-                              class="mr-1 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              class=" py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             />
                             <div className="text-3xl"> : </div>
                             <input
@@ -378,7 +372,7 @@ const AddEventView = ({ closeModal, reload }) => {
                               id="mins2"
                               value={mins.mins2}
                               onChange={(e) => handleMinChange(e, "mins2")}
-                              class="ml-1 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              class="mr-2 py-2.5 w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             />
                           </div>
                         )}
@@ -428,10 +422,10 @@ const AddEventView = ({ closeModal, reload }) => {
                   </div>
                 </div>
 
-                <div class="ml-56 items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                <div class="flex items-center justify-center w-full space-x-2">
                   <button
                     type="button"
-                    class="w-full sm:w-auto justify-center text-white inline-flex bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:border-blue-500 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
                     onClick={addEvent}
                   >
                     Add event
@@ -440,7 +434,7 @@ const AddEventView = ({ closeModal, reload }) => {
                   <button
                     data-modal-toggle="createProductModal"
                     type="button"
-                    class="w-full justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                    class="justify-center text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                     onClick={() => {
                       closeModal();
                     }}

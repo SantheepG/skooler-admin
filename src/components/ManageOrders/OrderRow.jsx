@@ -7,6 +7,7 @@ const OrderRow = ({
   deleteOrder,
   previewOrder,
   editOrder,
+  viewSlip,
 }) => {
   const [viewEditDropdown, setViewEditDropdown] = useState(false);
 
@@ -38,9 +39,6 @@ const OrderRow = ({
         >
           {order.id}{" "}
           <div className="text-xs text-gray-500 mt-1">
-            <span>{order.order_type}</span>
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
             <span>
               {order.created_at !== null
                 ? getFormattedDate(order.created_at)
@@ -54,7 +52,15 @@ const OrderRow = ({
         </th>
         <td class="px-4 py-3 text-gray-900">{order.user_id}</td>
         <td class="px-4 py-3 text-gray-900">
-          {order.dispatch_datetime !== null ? order.dispatch_datetime : null}
+          {order.order_type}
+          <div className="text-xs text-gray-500 mt-1">
+            <span>
+              {order.dispatch_datetime !== null
+                ? order.dispatch_datetime
+                : null}
+            </span>
+          </div>
+
           <div className="text-xs text-gray-500 mt-1">
             <span>Address : {order.dispatch_address}</span>
           </div>
@@ -64,6 +70,16 @@ const OrderRow = ({
           <div className="text-xs text-gray-500 mt-1">
             <span>{order.payment_method}</span>
           </div>
+
+          {order.bank_slip && (
+            <a
+              href="#"
+              className="text-xs text-blue-500 rounded-xl hover:text-blue-800"
+              onClick={viewSlip}
+            >
+              view slip
+            </a>
+          )}
         </td>
         <td class="px-2 py-3">
           <div className="flex">
@@ -72,7 +88,8 @@ const OrderRow = ({
                 <div className="h-2.5 w-2.5 rounded-full bg-green-500 mt-1 mr-2"></div>
                 <div>{order.order_status}</div>
               </>
-            ) : order.order_status === "Cancelled" ? (
+            ) : order.order_status === "Cancelled" ||
+              order.order_status === "Declined" ? (
               <>
                 <div className="h-2.5 w-2.5 rounded-full bg-red-600 mt-1 mr-2"></div>
                 <div>{order.order_status}</div>
@@ -104,7 +121,7 @@ const OrderRow = ({
             </svg>
           </button>
           <ul
-            className={`absolute right-32 top-0 z-[1000] m-0 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
+            className={`absolute right-24 top-0 z-[1000] m-0 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
               viewEditDropdown ? "mt-6" : "hidden"
             }`}
             aria-labelledby="dropdownMenuButton1"

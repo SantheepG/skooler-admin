@@ -36,7 +36,6 @@ const EditOrderView = ({ closeModal, order, reload }) => {
       console.log("Invalid time");
     } else {
       setMins(inputMin.toString().padStart(2, "0"));
-      console.log(mins);
     }
   };
 
@@ -53,7 +52,6 @@ const EditOrderView = ({ closeModal, order, reload }) => {
           order_status: order.order_status,
         });
       }
-      console.log(orderData, hour, mins);
     };
 
     const ParseProducts = () => {
@@ -99,7 +97,6 @@ const EditOrderView = ({ closeModal, order, reload }) => {
         };
         const response = await UpdateOrder(data);
         if (response) {
-          console.log("updated");
           toast.success("Updated", {
             duration: 1200,
             position: "right-center",
@@ -183,7 +180,7 @@ const EditOrderView = ({ closeModal, order, reload }) => {
                     </label>
                     <DatePicker
                       selected={selectedDate}
-                      className="w-64 rounded border border-gray-300 "
+                      className="lg:w-64 md:w-56 w-64 rounded border border-gray-300 "
                       onChange={(date) => {
                         setSelectedDate(date);
                       }}
@@ -270,6 +267,12 @@ const EditOrderView = ({ closeModal, order, reload }) => {
                     >
                       Cancelled
                     </option>
+                    <option
+                      value="Declined"
+                      selected={order.order_status === "Declined"}
+                    >
+                      Declined
+                    </option>
                   </select>
                 </div>
                 <div class="sm:col-span-6">
@@ -297,15 +300,15 @@ const EditOrderView = ({ closeModal, order, reload }) => {
                 </div>
               </div>
             </div>
-            <div class="ml-36 pb-8 items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+            <div class="flex items-center justify-center w-full space-x-2 pb-4">
+              {" "}
               <button
                 type="button"
-                className="w-full sm:w-auto justify-center text-white inline-flex bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                class="py-2.5 px-8 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
                 onClick={updateOrder}
               >
                 Update
               </button>
-
               <button
                 data-modal-toggle="createProductModal"
                 type="button"

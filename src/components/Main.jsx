@@ -12,7 +12,7 @@ import ManageStock from "./ManageStock/ManageStock";
 import ManageComplaints from "./ManageComplaints/ManageComplaints";
 import ManageEvents from "./ManageEvents/ManageEvents";
 import { useNavigate } from "react-router-dom";
-
+import Cookies from "js-cookie";
 const Main = ({ school, ui }) => {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState([]);
@@ -20,6 +20,8 @@ const Main = ({ school, ui }) => {
   const [toggleSidebar, setToggleBar] = useState(false);
   useEffect(() => {
     const storedAdminData = JSON.parse(localStorage.getItem("admin"));
+    const cookie = Cookies.get("jwt");
+    console.log(cookie);
     if (storedAdminData) {
       setAdminData(storedAdminData);
       const jsonData = JSON.parse(storedAdminData.roles);
@@ -32,7 +34,6 @@ const Main = ({ school, ui }) => {
     }
   }, []);
 
-  console.log(roles);
   //const hasDashboard = yourArray.includes('Dashboard');
   const state = useSelector((state) => state);
 

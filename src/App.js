@@ -22,7 +22,6 @@ function App() {
           localStorage.setItem("school", JSON.stringify(response.data.school));
           setSchool(response.data.school);
           setUI(JSON.parse(response.data.school.ui));
-          console.log(JSON.parse(response.data.school));
         } else {
           console.log(response);
         }

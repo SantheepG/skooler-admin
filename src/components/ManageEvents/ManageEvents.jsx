@@ -198,38 +198,10 @@ const ManageEvents = ({ bool, school }) => {
                   overlayClicked ? "opacity-40" : ""
                 }`}
               >
-                <label for="table-search" class="sr-only">
-                  Search
-                </label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <svg
-                      class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    id="table-search-users"
-                    className="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search for events"
-                    onChange={searchEvent}
-                  />
-                </div>
-                <div>
-                  <div class="max-w-screen-md mx-auto">
-                    <div class="rounded-lg border border-gray-300 bg-white py-1 px-3">
+                <div className="flex">
+                  <div class="mx-4">
+                    <div class="rounded-lg border border-gray-300 bg-white py-0.2 px-3">
+                      {" "}
                       <nav class="flex flex-wrap gap-4">
                         <a
                           href="#"
@@ -253,14 +225,46 @@ const ManageEvents = ({ bool, school }) => {
                         </a>
                       </nav>
                     </div>
+                  </div>{" "}
+                  <div>
+                    <label for="table-search" class="sr-only">
+                      Search
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg
+                          class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                          />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        id="table-search-users"
+                        className="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Search events"
+                        onChange={searchEvent}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-2 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                   <button
                     type="button"
-                    id="createProductButton"
-                    data-modal-toggle="createProductModal"
-                    class="flex items-center justify-center text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                    id="createEventButton"
+                    data-modal-toggle="createEventModal"
+                    class="inline-flex items-center mt-2 px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:border-blue-500 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
                     onClick={() => {
                       setAddEventClicked(!addEventClicked);
                       setOverlayClicked(!overlayClicked);
@@ -364,38 +368,9 @@ const ManageEvents = ({ bool, school }) => {
                   overlayClicked ? "opacity-40" : ""
                 }`}
               >
-                <label for="table-search" class="sr-only">
-                  Search
-                </label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <svg
-                      class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    id="table-search-users"
-                    className="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search for bookings"
-                    onChange={searchBooking}
-                  />
-                </div>
-                <div>
-                  <div class="max-w-screen-md mr-24 -mx-2">
-                    <div class="rounded-lg border border-gray-300 bg-white py-1 px-3">
+                <div className="flex">
+                  <div class="mx-4">
+                    <div class="rounded-lg border border-gray-300 bg-white py-0.2 px-3">
                       <nav class="flex flex-wrap gap-4">
                         <a
                           href="#"
@@ -420,7 +395,39 @@ const ManageEvents = ({ bool, school }) => {
                       </nav>
                     </div>
                   </div>
+                  <div>
+                    <label for="table-search" class="sr-only">
+                      Search
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg
+                          class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                          />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        id="table-search-users"
+                        className="block ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Search bookings"
+                        onChange={searchBooking}
+                      />
+                    </div>
+                  </div>
                 </div>
+
                 <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                   <select
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -495,7 +502,7 @@ const ManageEvents = ({ bool, school }) => {
               id="previewUserModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-6 lg:mx-14 md:mx-36 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <EventPreview
                 closeModal={() => {
@@ -511,7 +518,7 @@ const ManageEvents = ({ bool, school }) => {
               id="addEventModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex my-16 fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-6 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <AddEventView
                 reload={() => setReloadComponent(true)}
@@ -524,10 +531,10 @@ const ManageEvents = ({ bool, school }) => {
           )}
           {editEventClicked && (
             <div
-              id="editProductModal"
+              id="editEventModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <EditEventView
                 event={currentEvent}
@@ -543,7 +550,7 @@ const ManageEvents = ({ bool, school }) => {
             <div
               id="delete-modal"
               tabindex="-1"
-              class={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <div class="relative w-full h-auto max-w-md max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -623,7 +630,7 @@ const ManageEvents = ({ bool, school }) => {
             <div
               id="delete-modal-1"
               tabindex="-1"
-              class={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <div class="relative w-full h-auto max-w-md max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">

@@ -31,7 +31,6 @@ const AdminDetailsView = ({ ViewAdminOverlayHandler, admin, reload }) => {
             (key) => jsonData[key] === false
           );
           setNonSelectedRoles(adminRoles);
-          console.log(nonSelectedRoles);
         } catch (error) {
           console.error("Error parsing JSON:", error);
         }
@@ -74,7 +73,6 @@ const AdminDetailsView = ({ ViewAdminOverlayHandler, admin, reload }) => {
 
       const response = await UpdateRoles(admin.id, JSON.stringify(roles));
       if (response) {
-        console.log("success");
         toast.success("Saved", {
           duration: 1200,
           position: "center",
@@ -308,7 +306,7 @@ const AdminDetailsView = ({ ViewAdminOverlayHandler, admin, reload }) => {
             <div class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
               <button
                 type="button"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:border-blue-500 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
                 onClick={() => updateRoles()}
               >
                 Save

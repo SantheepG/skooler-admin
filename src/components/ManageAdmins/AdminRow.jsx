@@ -30,7 +30,7 @@ const AdminRow = ({
       <th className="px-8">{adminData.id}</th>
       <th
         scope="row"
-        class="flex items-center  py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+        class="flex items-center py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
         <img
           alt="User"

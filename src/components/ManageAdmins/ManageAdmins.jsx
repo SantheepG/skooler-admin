@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import AdminRow from "./AdminRow";
 import DeleteView from "./DeleteView";
 import { Toaster, toast } from "react-hot-toast";
@@ -41,14 +40,13 @@ const ManageAdmins = ({ adminData, bool }) => {
         setAdminsToView(
           response.data.admins.filter((admin) => admin.id !== adminData.id)
         );
-        console.log("Status changed");
+
         toast.success("Status changed", {
           duration: 1200,
           position: "top-center",
           //icon: "❌",
         });
       } else {
-        console.error("Something went wrong");
         toast.error("Something went wrong", {
           duration: 1200,
           position: "top-center",
@@ -164,7 +162,7 @@ const ManageAdmins = ({ adminData, bool }) => {
                 type="button"
                 id="createProductButton"
                 data-modal-toggle="createProductModal"
-                class="flex items-center justify-center text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:border-blue-500 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ms-3"
                 onClick={ViewAddAdminHandler}
               >
                 Add
@@ -227,10 +225,10 @@ const ManageAdmins = ({ adminData, bool }) => {
             </table>
             {viewAdminDetails && (
               <div
-                id="editUserModal"
+                id="viewAdminModal"
                 tabindex="-1"
                 aria-hidden="true"
-                className={`flex fixed mt-4 top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}
+                className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-6 lg:mx-14 md:mx-36 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
               >
                 <AdminDetailsView
                   ViewAdminOverlayHandler={() => ViewAdminOverlayHandler()}
@@ -245,7 +243,7 @@ const ManageAdmins = ({ adminData, bool }) => {
                 id="addAdminModal"
                 tabindex="-1"
                 aria-hidden="true"
-                className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full `}
+                className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-6 lg:mx-14 md:mx-36 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
               >
                 <AddAdminView
                   closeModal={() => {

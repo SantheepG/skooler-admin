@@ -43,7 +43,6 @@ const ManageProducts = ({ bool, school }) => {
           setCategories(category);
           setSubcategories(subcategory);
         }
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -138,12 +137,11 @@ const ManageProducts = ({ bool, school }) => {
     <React.Fragment>
       {bool ? (
         <div className="viewContent relative m-5 mb-15 ">
-          <div className="fixed">
-            <ToastContainer />
-          </div>
-          <div class="relative shadow-md sm:rounded-lg admin-table">
+          <ToastContainer />
+
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
             <div
-              class={`flex items-center lg:px-6  justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
+              class={`flex items-center lg:px-6 justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
                 overlayClicked ? "opacity-40" : ""
               }`}
             >
@@ -177,7 +175,7 @@ const ManageProducts = ({ bool, school }) => {
                 />
               </div>
 
-              <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+              <div class="w-full md:mt-2 md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-1 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                 <button
                   type="button"
                   id="createProductButton"
@@ -320,7 +318,7 @@ const ManageProducts = ({ bool, school }) => {
               id="previewUserModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <ProductPreview
                 product={currentProduct}
@@ -355,7 +353,7 @@ const ManageProducts = ({ bool, school }) => {
               id="editProductModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <EditProductView
                 product={currentProduct}
@@ -372,7 +370,7 @@ const ManageProducts = ({ bool, school }) => {
               id="updateProductModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <UpdateStockView
                 product={currentProduct}
@@ -391,7 +389,7 @@ const ManageProducts = ({ bool, school }) => {
               id="AddCategoryModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <AddCatView
                 categories={categories}
@@ -410,7 +408,7 @@ const ManageProducts = ({ bool, school }) => {
               id="AddSubCategoryModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <AddSubCatView
                 category={categories}
@@ -429,7 +427,7 @@ const ManageProducts = ({ bool, school }) => {
             <div
               id="delete-modal"
               tabindex="-1"
-              class={`flex ml-10 fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <div class="relative w-full h-auto max-w-md max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">

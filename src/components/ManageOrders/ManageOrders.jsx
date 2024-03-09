@@ -6,11 +6,13 @@ import AccessDenied from "../AccessDenied";
 import OrderPreview from "./OrderPreview";
 import EditOrderView from "./EditOrderView";
 import { FetchOrders, DeleteOrder } from "../../api/OrderApi";
+import SlipView from "./SlipView";
 const ManageOrders = ({ bool, school }) => {
   const [overlayClicked, setOverlayClicked] = useState(false);
   const [fetchedOrders, setFetchedOrders] = useState([]);
   const [ordersToView, setOrdersToView] = useState([]);
   const [currentOrder, setCurrentOrder] = useState(null);
+  const [viewSlipClicked, setViewSlipClicked] = useState(false);
   const [previewOrderClicked, setPreviewOrderClicked] = useState(false);
   const [updateOrderClicked, setUpdateOrderClicked] = useState(false);
   const [deleteOrderClicked, setdeleteOrderClicked] = useState(false);
@@ -228,6 +230,11 @@ const ManageOrders = ({ bool, school }) => {
                         setOverlayClicked(!overlayClicked);
                         setdeleteOrderClicked(!deleteOrderClicked);
                       }}
+                      viewSlip={() => {
+                        setCurrentOrder(order);
+                        setViewSlipClicked(!viewSlipClicked);
+                        setOverlayClicked(!overlayClicked);
+                      }}
                     />
                   ))
                 ) : (
@@ -241,7 +248,7 @@ const ManageOrders = ({ bool, school }) => {
               id="previewOrderModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <OrderPreview
                 order={currentOrder}
@@ -258,7 +265,7 @@ const ManageOrders = ({ bool, school }) => {
               id="EditOrderModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <EditOrderView
                 order={currentOrder}
@@ -274,9 +281,7 @@ const ManageOrders = ({ bool, school }) => {
             <div
               id="delete-modal"
               tabindex="-1"
-              class={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-0.1rem)] max-h-full ${
-                deleteOrderClicked ? "" : " hidden"
-              }`}
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <div class="relative w-full h-auto max-w-md max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -349,6 +354,22 @@ const ManageOrders = ({ bool, school }) => {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+          {viewSlipClicked && (
+            <div
+              id="EditOrderModal"
+              tabindex="-1"
+              aria-hidden="true"
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
+            >
+              <SlipView
+                order={currentOrder}
+                closeModal={() => {
+                  setOverlayClicked(!overlayClicked);
+                  setViewSlipClicked(!viewSlipClicked);
+                }}
+              />
             </div>
           )}
         </div>

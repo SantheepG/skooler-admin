@@ -209,7 +209,7 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
                         </label>
                       </div>
                       <div className="mt-2">
-                        <div className="w-full px-4 bg-gray-100 rounded py-2">
+                        <div className="w-full px-4 bg-gray-100 rounded py-2 overflow-hidden overflow-x-auto">
                           <div>
                             <span className="text-gray-500">Product ID : </span>
                             <span className="">{complaint.product_id}</span>
@@ -229,7 +229,7 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
                         User
                       </label>
                       <div className="mt-2">
-                        <div className="w-full px-4 bg-gray-100 rounded py-2">
+                        <div className="w-full px-4 bg-gray-100 rounded py-2 overflow-hidden overflow-x-auto">
                           <div>
                             <span className="text-gray-500">
                               # {complaint.user_id} -{" "}
@@ -255,14 +255,14 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
             <div class="ml-36 pb-8 items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
               <button
                 type="button"
-                className="w-full sm:w-auto justify-center text-white inline-flex bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                class="w-full justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                 onClick={updateStatus}
               >
                 Update
               </button>
 
               <button
-                data-modal-toggle="createProductModal"
+                data-modal-toggle="cancel"
                 type="button"
                 class="w-full justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                 onClick={() => {
