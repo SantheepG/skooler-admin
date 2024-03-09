@@ -389,7 +389,7 @@ const ManageProducts = ({ bool, school }) => {
               id="AddCategoryModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
+              className={`fixed top-24 left-2 right-0 md:top-36 md:left-16 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <AddCatView
                 categories={categories}
@@ -408,7 +408,7 @@ const ManageProducts = ({ bool, school }) => {
               id="AddSubCategoryModal"
               tabindex="-1"
               aria-hidden="true"
-              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
+              className={`fixed top-24 left-2 right-0 md:top-36 md:left-16 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
             >
               <AddSubCatView
                 category={categories}

@@ -12,7 +12,7 @@ const SlipView = ({ order, closeModal }) => {
           <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                Update order details
+                Order details - Bank slip
                 <div className="text-xs text-gray-500">
                   Order ID : # {order.id} | Order type : {order.order_type}
                 </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import EventRow from "./EventRow";
 import AddEventView from "./AddEventView";
 import EventPreview from "./EventPreview";
@@ -26,7 +25,6 @@ const ManageEvents = ({ bool, school }) => {
   const [previewEventClicked, setpreviewEventClicked] = useState(false);
   const [deleteEventClicked, setdeleteEventClicked] = useState(false);
   const [deleteBookingClicked, setdeleteBookingClicked] = useState(false);
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [currentEvent, setCurrentEvent] = useState("");
   const [currentBooking, setCurrentBooking] = useState("");
   const [reloadComponent, setReloadComponent] = useState(false);
@@ -334,19 +332,16 @@ const ManageEvents = ({ bool, school }) => {
                           previewEvent={() => {
                             setOverlayClicked(!overlayClicked);
                             setpreviewEventClicked(!previewEventClicked);
-                            setCurrentEventIndex(index);
                             setCurrentEvent(event);
                           }}
                           editEvent={() => {
                             setOverlayClicked(!overlayClicked);
                             setEditEventClicked(!editEventClicked);
-                            setCurrentEventIndex(index);
                             setCurrentEvent(event);
                           }}
                           deleteEvent={() => {
                             setOverlayClicked(!overlayClicked);
                             setdeleteEventClicked(!deleteEventClicked);
-                            setCurrentEventIndex(index);
                             setCurrentEvent(event);
                           }}
                         />
