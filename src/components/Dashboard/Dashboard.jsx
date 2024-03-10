@@ -5,6 +5,7 @@ import AccessDenied from "../AccessDenied";
 import UpdateInfo from "./UpdateInfo";
 import { FetchStats } from "../../api/SchoolApi";
 import { formatDate } from "../../CommonFuncs";
+import { formatNumberWithSpace } from "../../CommonFuncs";
 import avatar from "../../assets/default-avatar.png";
 const Dashboard = ({ bool, roles, admin, ui, school }) => {
   const [adminCnt, setAdminCnt] = useState("0");
@@ -149,7 +150,10 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                       </p>
                       <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
                         <span>{school.currency} </span>
-                        <span>{total}</span>
+                        <span>
+                          {" "}
+                          {total !== null && formatNumberWithSpace(total)}
+                        </span>
                       </h4>
                     </div>
                     <div class="border-t border-blue-gray-50 p-4">

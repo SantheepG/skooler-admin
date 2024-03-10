@@ -79,7 +79,7 @@ const Login = ({ ui, school }) => {
                     name="phone_no"
                     id="phone_no"
                     type="text"
-                    placeholder="+94 77 712 3456"
+                    placeholder="Phone number"
                     required=""
                     value={formData.mobile_no}
                     onChange={(e) =>

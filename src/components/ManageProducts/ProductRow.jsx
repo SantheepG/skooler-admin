@@ -65,7 +65,7 @@ const ProductRow = ({
       </th>
       <td class="px-6 py-3">
         <div class="flex items-center">
-          {formatNumberWithSpace(product.price)}
+          {product.price !== null && formatNumberWithSpace(product.price)}
         </div>
       </td>
       <td class="px-10 py-3 ">

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
 import { AddProductImgs, AddProducts } from "../../api/ProductApi";
-
 import "react-toastify/dist/ReactToastify.css";
 const AddProductView = ({
   products,
