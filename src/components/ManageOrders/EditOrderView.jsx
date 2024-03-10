@@ -42,13 +42,22 @@ const EditOrderView = ({ closeModal, order, reload }) => {
   useEffect(() => {
     const addOrderData = () => {
       if (order !== null) {
-        setSelectedDate(new Date(order.dispatch_datetime.split(" ")[0]));
-        setHour(parseInt(order.dispatch_datetime.split(" ")[1].split(":")[0]));
-        setMins(parseInt(order.dispatch_datetime.split(" ")[1].split(":")[1]));
+        if (order.dispatch_datetime !== null) {
+          setSelectedDate(new Date(order.dispatch_datetime.split(" ")[0]));
+          setHour(
+            parseInt(order.dispatch_datetime.split(" ")[1].split(":")[0])
+          );
+          setMins(
+            parseInt(order.dispatch_datetime.split(" ")[1].split(":")[1])
+          );
+        }
+
         setOrderData({
           ...orderData,
-          dispatch_datetime: order.dispatch_datetime,
-          dispatch_address: order.dispatch_address,
+          dispatch_datetime: order.dispatch_datetime && order.dispatch_datetime,
+          dispatch_address: order.dispatch_address
+            ? order.dispatch_address
+            : "",
           order_status: order.order_status,
         });
       }
@@ -273,6 +282,12 @@ const EditOrderView = ({ closeModal, order, reload }) => {
                     >
                       Declined
                     </option>
+                    <option
+                      value="Pending"
+                      selected={order.order_status === "Pending"}
+                    >
+                      Pending
+                    </option>
                   </select>
                 </div>
                 <div class="sm:col-span-6">
@@ -289,7 +304,9 @@ const EditOrderView = ({ closeModal, order, reload }) => {
                     id="venue"
                     rows="2"
                     class="block mt-6 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    value={orderData.dispatch_address}
+                    value={
+                      orderData.dispatch_address && orderData.dispatch_address
+                    }
                     onChange={(e) =>
                       setOrderData({
                         ...orderData,
@@ -302,13 +319,6 @@ const EditOrderView = ({ closeModal, order, reload }) => {
             </div>
             <div class="flex items-center justify-center w-full space-x-2 pb-4">
               {" "}
-              <button
-                type="button"
-                class="py-2.5 px-8 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
-                onClick={updateOrder}
-              >
-                Update
-              </button>
               <button
                 data-modal-toggle="createProductModal"
                 type="button"
@@ -330,6 +340,13 @@ const EditOrderView = ({ closeModal, order, reload }) => {
                   />
                 </svg>
                 Discard
+              </button>
+              <button
+                type="button"
+                class="py-2.5 px-8 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
+                onClick={updateOrder}
+              >
+                Update
               </button>
             </div>
           </form>
