@@ -11,9 +11,11 @@ import {
   DeleteEvent,
   FetchBookings,
   FetchEvents,
+  UpdateBookingStatus,
 } from "../../api/EventApi";
 
 import BookingRow from "./BookingRow";
+import BookingSlipView from "./BookingSlipView";
 const ManageEvents = ({ bool, school }) => {
   const [fetchedEvents, setFetchedEvents] = useState([]);
   const [fetchedBookings, setFetchedBookings] = useState([]);
@@ -30,7 +32,7 @@ const ManageEvents = ({ bool, school }) => {
   const [reloadComponent, setReloadComponent] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [bookingClicked, setBookingClicked] = useState(false);
-
+  const [viewSlip, setViewSlip] = useState(false);
   const toggleDropdown = (Id) => {
     setOpenDropdown((prevOpenDropdown) =>
       prevOpenDropdown === Id ? null : Id
@@ -181,6 +183,27 @@ const ManageEvents = ({ bool, school }) => {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
+  };
+
+  const updateBookingStatus = async (statusChange, bookingId, userId) => {
+    try {
+      let data = {
+        booking_id: bookingId,
+        user_id: userId,
+        status: statusChange,
+      };
+      const response = await UpdateBookingStatus(data);
+      if (response.status === 200) {
+        setReloadComponent(true);
+        toast.error("Status updated", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      } else {
+        toast.error("Something went wrong", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      }
+    } catch (error) {}
   };
   return (
     <React.Fragment>
@@ -462,7 +485,9 @@ const ManageEvents = ({ bool, school }) => {
                     <th scope="col" class="p-4 px-2">
                       Paid ( {school.currency} )
                     </th>
-
+                    <th scope="col" class="p-4 px-2">
+                      Status
+                    </th>
                     <th scope="col" class="p-4">
                       Action
                     </th>
@@ -475,6 +500,27 @@ const ManageEvents = ({ bool, school }) => {
                         <BookingRow
                           key={booking.id}
                           booking={booking}
+                          verified={() => {
+                            setCurrentBooking(booking);
+                            updateBookingStatus(
+                              "Verified",
+                              booking.id,
+                              booking.user_id
+                            );
+                          }}
+                          denied={() => {
+                            setCurrentBooking(booking);
+                            updateBookingStatus(
+                              "Denied",
+                              booking.id,
+                              booking.user_id
+                            );
+                          }}
+                          viewSlip={() => {
+                            setOverlayClicked(!overlayClicked);
+                            setViewSlip(true);
+                            setCurrentBooking(booking);
+                          }}
                           deleteClicked={() => {
                             setCurrentBooking(booking);
                             setdeleteBookingClicked(!deleteBookingClicked);
@@ -699,6 +745,23 @@ const ManageEvents = ({ bool, school }) => {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+          {viewSlip && (
+            <div
+              id="EditOrderModal"
+              tabindex="-1"
+              aria-hidden="true"
+              className={`fixed top-16 left-0 right-0 bottom-0 z-50 lg:flex lg:items-center lg:justify-center lg:top-0 lg:mx-14 md:mx-6 md:ml-64 p-4 overflow-x-hidden overflow-y-auto h-full`}
+            >
+              <BookingSlipView
+                school={school}
+                booking={currentBooking}
+                closeModal={() => {
+                  setOverlayClicked(!overlayClicked);
+                  setViewSlip(!viewSlip);
+                }}
+              />
             </div>
           )}
         </div>

@@ -73,3 +73,19 @@ export const DeleteBooking = async (id) => {
     return error;
   }
 };
+export const UpdateBookingStatus = async (data) => {
+  try {
+    const response = await axios.put(
+      `${base_URL}/user/booking/statusupdate`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
