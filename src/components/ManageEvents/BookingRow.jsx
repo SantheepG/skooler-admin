@@ -48,6 +48,9 @@ const BookingRow = ({ booking, deleteClicked, viewSlip, verified, denied }) => {
           {booking.status === "Pending" && (
             <div class="h-2.5 w-2.5 mt-1 rounded-full bg-orange-500 me-2"></div>
           )}
+          {booking.status === "Denied" && (
+            <div class="h-2.5 w-2.5 mt-1 rounded-full bg-red-500 me-2"></div>
+          )}
           {booking.status}
         </div>
         {booking.status === "Pending" && (

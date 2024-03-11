@@ -195,7 +195,7 @@ const ManageEvents = ({ bool, school }) => {
       const response = await UpdateBookingStatus(data);
       if (response.status === 200) {
         setReloadComponent(true);
-        toast.error("Status updated", {
+        toast.success("Status updated", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       } else {
@@ -203,7 +203,12 @@ const ManageEvents = ({ bool, school }) => {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Something went wrong", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      console.log(error);
+    }
   };
   return (
     <React.Fragment>
