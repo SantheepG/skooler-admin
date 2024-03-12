@@ -3,7 +3,11 @@ import { base_URL } from "../App";
 
 export const FetchProducts = async () => {
   try {
-    const response = await axios.get(`${base_URL}/products`);
+    const response = await axios.get(`${base_URL}/products`, {
+      headers: {
+        "ngrok-skip-browser-warning": "0",
+      },
+    });
     return response;
   } catch (error) {
     return error;
@@ -12,7 +16,11 @@ export const FetchProducts = async () => {
 
 export const FetchCategories = async () => {
   try {
-    const response = await axios.get(`${base_URL}/categories `);
+    const response = await axios.get(`${base_URL}/categories`, {
+      headers: {
+        "ngrok-skip-browser-warning": "0",
+      },
+    });
     return response;
   } catch (error) {
     return error;
@@ -24,6 +32,7 @@ export const AddProducts = async (data) => {
     const response = await axios.post(`${base_URL}/addproduct`, data, {
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "0",
       },
     });
     return response;
@@ -41,6 +50,7 @@ export const AddCategory = async (category) => {
       {
         headers: {
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "0",
         },
       }
     );
@@ -54,6 +64,7 @@ export const AddSubcategory = async (data) => {
     const response = await axios.post(`${base_URL}/subcategory/add`, data, {
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "0",
       },
     });
     return response;
@@ -66,6 +77,7 @@ export const UpdateProduct = async (data) => {
     const response = await axios.put(`${base_URL}/product/update`, data, {
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "0",
       },
     });
     return response;
@@ -75,7 +87,11 @@ export const UpdateProduct = async (data) => {
 };
 export const DeleteProduct = async (id) => {
   try {
-    const response = await axios.delete(`${base_URL}/deleteproduct/${id}`);
+    const response = await axios.delete(`${base_URL}/deleteproduct/${id}`, {
+      headers: {
+        "ngrok-skip-browser-warning": "0",
+      },
+    });
     return response;
   } catch (error) {
     return error;
@@ -83,7 +99,11 @@ export const DeleteProduct = async (id) => {
 };
 export const UpdateStock = async (id, stockChange) => {
   try {
-    const response = await axios.put(`${base_URL}/stock/${id}/${stockChange}`);
+    const response = await axios.put(`${base_URL}/stock/${id}/${stockChange}`, {
+      headers: {
+        "ngrok-skip-browser-warning": "0",
+      },
+    });
     return response;
   } catch (error) {
     return error;
@@ -95,9 +115,11 @@ export const AddProductImgs = async (formData) => {
     const response = await axios.post(
       `${base_URL}/product/imgs/add`,
       formData,
+
       {
         headers: {
           "Content-Type": "multipart/form-data",
+          "ngrok-skip-browser-warning": "0",
         },
       }
     );
@@ -115,6 +137,7 @@ export const UpdateProductImgs = async (formData) => {
       {
         headers: {
           "Content-Type": "multipart/form-data",
+          "ngrok-skip-browser-warning": "0",
         },
       }
     );
@@ -128,6 +151,7 @@ export const DeleteProductImg = async (data) => {
     const response = await axios.put(`${base_URL}/product/img/delete`, data, {
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "0",
       },
     });
     return response;

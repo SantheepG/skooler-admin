@@ -6,6 +6,7 @@ export const AdminLogin = async (data) => {
     const response = await axios.post(`${base_URL}/login/admin`, data, {
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "0",
       },
     });
     return response;
@@ -18,6 +19,7 @@ export const Logout = async () => {
     const response = await axios.post(`${base_URL}/logout/admin`, null, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("tkn")}`,
+        "ngrok-skip-browser-warning": "0",
       },
     });
     return response;
@@ -31,6 +33,7 @@ export const UpdatePwd = async (data) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("tkn")}`,
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "0",
       },
     });
     return response;
@@ -45,6 +48,7 @@ export const UpdateName = async (data) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("tkn")}`,
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "0",
       },
     });
     return response;

@@ -15,7 +15,7 @@ const UserDetailsView = ({ ViewOverlayHandler, user }) => {
                   onError={(e) => {
                     e.target.src = defaultAvatar;
                   }}
-                  class="h-24 w-auto max-w-36 rounded-full"
+                  class="h-24 w-auto max-w-24 rounded-full"
                 />
               </div>
               <h3 class="text-xl my-6 mx-4 font-semibold text-gray-900 dark:text-white">
