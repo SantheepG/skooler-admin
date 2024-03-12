@@ -163,7 +163,7 @@ const ManageUsers = ({ bool }) => {
                     </tr>
                   )
                 ) : (
-                  <tr class="h-16 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <tr class="h-16 w-full justify-center border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td
                       colSpan="number of columns"
                       className="text-center px-12 py-6"
