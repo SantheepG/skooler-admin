@@ -1,6 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { AddAdmin } from "../../api/AdminApi";
+import * as yup from "yup";
+
+//Valdation check schemas
+const AdminDetailsSchema = yup.object().shape({
+  first_name: yup.string().required("First name is required"),
+  last_name: yup.string().required("Last name is required"),
+  mobile_no: yup
+    .string()
+    .required("Mobile number is required")
+    .matches(/^\d{10}$/, "Phone number must be exactly 10 digits"),
+  email: yup
+    .string()
+    .required("Email  is required")
+    .email("Invalid email address"),
+  password: yup
+    .string()
+    .required("Password  is required")
+    .min(8, "Password must be at least 8 characters long"),
+});
 const AddAdminView = ({ closeModal, reload }) => {
   const [viewRolesDropdown, setViewRolesDropdown] = useState(false);
   const [addAdminData, setaddAdminData] = useState("");
@@ -33,57 +52,52 @@ const AddAdminView = ({ closeModal, reload }) => {
 
   const addAdmin = async () => {
     try {
-      if (
-        addAdminData.last_name !== "" &&
-        addAdminData.first_name !== "" &&
-        addAdminData.email !== "" &&
-        addAdminData.mobile_no !== "" &&
-        addAdminData.password !== "" &&
-        addAdminData.confirmPassword !== ""
-      ) {
-        if (addAdminData.password === addAdminData.confirmPassword) {
-          if (addAdminData.password.length >= 8) {
-            let data = {
-              first_name: addAdminData.first_name,
-              last_name: addAdminData.last_name,
-              email: addAdminData.email,
-              mobile_no: addAdminData.mobile_no,
-              password: addAdminData.password,
-              roles: JSON.stringify(addAdminData.roles),
-              profile_pic: null,
-              is_active: true,
-            };
-            const response = await AddAdmin(data);
+      await AdminDetailsSchema.validate(
+        {
+          first_name: addAdminData.first_name,
+          last_name: addAdminData.last_name,
+          mobile_no: addAdminData.mobile_no,
+          email: addAdminData.email,
+          password: addAdminData.password,
+        },
+        { abortEarly: false }
+      );
+      if (addAdminData.password === addAdminData.confirmPassword) {
+        if (addAdminData.password.length >= 8) {
+          let data = {
+            first_name: addAdminData.first_name,
+            last_name: addAdminData.last_name,
+            email: addAdminData.email,
+            mobile_no: addAdminData.mobile_no,
+            password: addAdminData.password,
+            roles: JSON.stringify(addAdminData.roles),
+            profile_pic: null,
+            is_active: true,
+          };
+          const response = await AddAdmin(data);
 
-            if (response.status === 201) {
-              toast.success("Admin added", {
-                duration: 1200,
-                position: "center",
-                //icon: "❌",
-              });
-
-              reload();
-
-              setTimeout(() => {
-                closeModal();
-              }, 1500);
-            }
-          } else {
-            toast.error("Password should atleast contain 8 characters", {
-              duration: 2000,
+          if (response.status === 201) {
+            toast.success("Admin added", {
+              duration: 1200,
               position: "center",
               //icon: "❌",
             });
+
+            reload();
+
+            setTimeout(() => {
+              closeModal();
+            }, 1500);
           }
         } else {
-          toast.error("Passwords didn't match. Please check", {
-            duration: 1200,
+          toast.error("Password should atleast contain 8 characters", {
+            duration: 2000,
             position: "center",
             //icon: "❌",
           });
         }
       } else {
-        toast.error("Required fields are empty", {
+        toast.error("Passwords didn't match. Please check", {
           duration: 1200,
           position: "center",
           //icon: "❌",
@@ -91,11 +105,18 @@ const AddAdminView = ({ closeModal, reload }) => {
       }
     } catch (error) {
       console.error(error.message);
-      toast.error("Invalid mobile number or password", {
-        duration: 1500,
-        position: "center",
-        //icon: "❌",
-      });
+      if (error.name === "ValidationError") {
+        toast.error(error.errors[0], {
+          duration: 1500,
+          position: "center",
+        });
+      } else {
+        toast.error("Email or mobile number is already registered", {
+          duration: 1500,
+          position: "center",
+          //icon: "❌",
+        });
+      }
     }
   };
 

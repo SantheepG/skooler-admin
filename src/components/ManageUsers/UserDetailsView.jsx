@@ -67,7 +67,7 @@ const UserDetailsView = ({ ViewOverlayHandler, user }) => {
                     class="pl-5 shadow-sm bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-3xl focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Bonnie"
                     required=""
-                    value={user.name}
+                    value={user.first_name}
                     disabled
                   />
                 </div>
@@ -85,6 +85,7 @@ const UserDetailsView = ({ ViewOverlayHandler, user }) => {
                     class="pl-5 shadow-sm bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-3xl focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Green"
                     required=""
+                    value={user.last_name}
                     disabled
                   />
                 </div>
