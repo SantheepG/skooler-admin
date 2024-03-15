@@ -10,7 +10,8 @@ const AdminDetailsSchema = yup.object().shape({
   mobile_no: yup
     .string()
     .required("Mobile number is required")
-    .matches(/^\d{10}$/, "Phone number must be exactly 10 digits"),
+    .matches(/^[0-9]+$/, "Mobile number must contain only numbers")
+    .min(8, "Invalid phone number"),
   email: yup
     .string()
     .required("Email  is required")
@@ -20,10 +21,10 @@ const AdminDetailsSchema = yup.object().shape({
     .required("Password  is required")
     .min(8, "Password must be at least 8 characters long"),
 });
-const AddAdminView = ({ closeModal, reload }) => {
+const AddAdminView = ({ closeModal, reload, school }) => {
   const [viewRolesDropdown, setViewRolesDropdown] = useState(false);
   const [addAdminData, setaddAdminData] = useState("");
-
+  const [phone, setPhone] = useState("");
   useEffect(() => {
     const resetData = async () => {
       setaddAdminData({
@@ -49,14 +50,25 @@ const AddAdminView = ({ closeModal, reload }) => {
     };
     resetData();
   }, [closeModal]);
-
+  useEffect(() => {
+    let newNumber;
+    if (phone && phone.length > 1 && phone[0] === "0") {
+      newNumber = school.country_code + phone.substring(1);
+    } else if (phone && phone.length > 1 && phone[0] === "+") {
+      newNumber = phone;
+    } else {
+      newNumber = school.country_code + phone;
+    }
+    setaddAdminData({ ...addAdminData, mobile_no: newNumber });
+    console.log(addAdminData);
+  }, [phone]);
   const addAdmin = async () => {
     try {
       await AdminDetailsSchema.validate(
         {
           first_name: addAdminData.first_name,
           last_name: addAdminData.last_name,
-          mobile_no: addAdminData.mobile_no,
+          mobile_no: phone,
           email: addAdminData.email,
           password: addAdminData.password,
         },
@@ -239,12 +251,7 @@ const AddAdminView = ({ closeModal, reload }) => {
                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder=" +12 3456 789"
                   required=""
-                  onChange={(e) =>
-                    setaddAdminData({
-                      ...addAdminData,
-                      mobile_no: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
 

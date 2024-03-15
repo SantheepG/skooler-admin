@@ -1,24 +1,36 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import Nav from "./Nav";
-import ForgetPwd from "./ForgetPwd";
+import PwdReset from "./PwdReset";
 import { AdminLogin } from "../../api/AuthAPI";
 const Login = ({ ui, school }) => {
   const navigate = useNavigate();
   const [forgetPwdClicked, setForgetPwdClicked] = useState(false);
-  const [formData, setFormData] = useState({
-    mobile_no: "",
-    password: "",
-  });
+  const [phone, setPhone] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [phoneToLogin, setPhoneToLogin] = useState("");
+
+  useEffect(() => {
+    let newNumber;
+    if (phone && phone.length > 1 && phone[0] === "0") {
+      newNumber = school.country_code + phone.substring(1);
+    } else if (phone && phone.length > 1 && phone[0] === "+") {
+      newNumber = phone;
+    } else {
+      newNumber = school.country_code + phone;
+    }
+    console.log(phone);
+    setPhoneToLogin(newNumber);
+    console.log(phoneToLogin);
+  }, [phone]);
 
   const handleLogin = async () => {
     try {
-      if (formData.mobile_no !== "" && formData.password !== "") {
+      if (phoneToLogin !== "" && pwd !== "") {
         const response = await AdminLogin({
-          mobile_no: formData.mobile_no,
-          password: formData.password,
+          mobile_no: phoneToLogin,
+          password: pwd,
         });
         if (response.status === 200) {
           if (response.data.admin.is_active === 1) {
@@ -81,13 +93,8 @@ const Login = ({ ui, school }) => {
                     type="text"
                     placeholder="Phone number"
                     required=""
-                    value={formData.mobile_no}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        mobile_no: e.target.value,
-                      })
-                    }
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
                 <div class="mb-6">
@@ -103,13 +110,8 @@ const Login = ({ ui, school }) => {
                     placeholder="•••••••••••••••••"
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
-                    value={formData.password}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        password: e.target.value,
-                      })
-                    }
+                    value={pwd}
+                    onChange={(e) => setPwd(e.target.value)}
                   />
                 </div>
                 <div class="flex items-center justify-between">
@@ -133,7 +135,13 @@ const Login = ({ ui, school }) => {
           </div>
         )}
         {forgetPwdClicked && (
-          <ForgetPwd Cancel={() => setForgetPwdClicked(false)} />
+          <PwdReset
+            loginClicked={() => {
+              setForgetPwdClicked(false);
+            }}
+            ui={ui}
+            school={school}
+          />
         )}
       </div>
     </React.Fragment>

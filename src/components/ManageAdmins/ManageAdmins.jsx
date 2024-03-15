@@ -7,7 +7,7 @@ import AccessDenied from "../AccessDenied";
 import AddAdminView from "./AddAdminView";
 import { ChangeStatus, DeleteAdmin, FetchAdmins } from "../../api/AdminApi";
 
-const ManageAdmins = ({ adminData, bool }) => {
+const ManageAdmins = ({ adminData, bool, school }) => {
   const [fetchedAdmins, setFetchedAdmins] = useState(null);
   const [adminsToView, setAdminsToView] = useState([]);
   const [currentRoles, setCurrentRoles] = useState([]);
@@ -279,6 +279,7 @@ const ManageAdmins = ({ adminData, bool }) => {
                     setviewAddAdmin(false);
                   }}
                   reload={() => setReloadComponent(true)}
+                  school={school}
                 />
               </div>
             )}
