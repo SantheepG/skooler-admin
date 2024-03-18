@@ -44,7 +44,6 @@ const ManageStock = ({ bool }) => {
       }
     };
 
-    fetchCategories();
     const fetchProducts = async () => {
       if (bool) {
         try {
@@ -60,7 +59,11 @@ const ManageStock = ({ bool }) => {
         }
       }
     };
-    fetchProducts();
+
+    if (bool) {
+      fetchProducts();
+      fetchCategories();
+    }
   }, [reloadComponent]);
 
   const deleteProduct = async (id) => {

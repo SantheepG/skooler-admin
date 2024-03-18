@@ -269,7 +269,7 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                                   </p>
                                 </td>
 
-                                <td class="py-3 px-5 border-b border-blue-gray-50 flex">
+                                <td class="py-5 px-5 border-b border-blue-gray-50 flex">
                                   <p
                                     class="block antialiased font-sans text-xl hover:text-red-600 cursor-pointer font-medium text-blue-gray-600"
                                     onClick={() => {

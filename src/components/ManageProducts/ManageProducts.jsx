@@ -48,8 +48,6 @@ const ManageProducts = ({ bool, school }) => {
       }
     };
 
-    fetchCategories();
-
     const fetchProducts = async () => {
       try {
         const response = await FetchProducts();
@@ -63,8 +61,10 @@ const ManageProducts = ({ bool, school }) => {
         setReloadComponent(false);
       }
     };
-
-    fetchProducts();
+    if (bool) {
+      fetchProducts();
+      fetchCategories();
+    }
   }, [reloadComponent]);
 
   const toggleDropdown = (adminId) => {

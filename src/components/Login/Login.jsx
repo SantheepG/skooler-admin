@@ -59,7 +59,7 @@ const Login = ({ ui, school }) => {
         });
       } else {
         // Handle other errors
-        toast.error("Something went wrong", {
+        toast.error("Invalid credentials", {
           position: "bottom-right",
         });
       }

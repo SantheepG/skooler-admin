@@ -40,8 +40,9 @@ const ManageOrders = ({ bool, school }) => {
         console.log("some error occured");
       }
     };
-
-    fetchOrders();
+    if (bool) {
+      fetchOrders();
+    }
   }, [reloadComponent]);
 
   const searchHandler = (event) => {

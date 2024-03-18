@@ -62,9 +62,11 @@ const ManageEvents = ({ bool, school }) => {
         console.log(error);
       }
     };
-    fetchBookings();
-    fetchEvents();
-    setReloadComponent(false);
+    if (bool) {
+      fetchBookings();
+      fetchEvents();
+      setReloadComponent(false);
+    }
   }, [reloadComponent]);
 
   const deleteEvent = async (id) => {

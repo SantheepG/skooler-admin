@@ -24,8 +24,9 @@ const ManageComplaints = ({ bool }) => {
         console.log(error);
       }
     };
-
-    fetchComplaints();
+    if (bool) {
+      fetchComplaints();
+    }
   }, [reloadComponent]);
 
   const searchHandler = (event) => {
