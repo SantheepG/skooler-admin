@@ -1,5 +1,4 @@
 import React from "react";
-import { MdOutlineMarkEmailRead } from "react-icons/md";
 import { ImMobile2 } from "react-icons/im";
 const ForgetPwd = ({ Cancel }) => {
   return (

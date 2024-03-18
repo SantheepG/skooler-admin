@@ -41,7 +41,6 @@ export const UpdatePwd = async (data) => {
     console.error("Error logging out:", error);
   }
 };
-
 export const UpdateName = async (data) => {
   try {
     const response = await axios.put(`${base_URL}/admin/update/name`, data, {
@@ -56,7 +55,6 @@ export const UpdateName = async (data) => {
     console.error("Error logging out:", error);
   }
 };
-
 export const VerifyAdminPhone = async (phoneNo) => {
   try {
     const response = await axios.post(

@@ -8,6 +8,7 @@ import {
   FetchCategories,
   UpdateProduct,
 } from "../../api/ProductApi";
+
 const EditProductView = ({ closeModal, product, reload }) => {
   const [imgs, setImgs] = useState([]);
   const [imgsToUpload, setImgsToUpload] = useState([]);
@@ -617,15 +618,15 @@ const EditProductView = ({ closeModal, product, reload }) => {
                   </div>
                   <div>
                     <label
-                      for="width"
+                      for="size"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Size
                     </label>
                     <input
-                      type="number"
-                      name="width"
-                      id="width"
+                      type="text"
+                      name="size"
+                      id="size"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       value={updateDetails.size}
                       required=""

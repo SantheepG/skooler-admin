@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Toaster, toast } from "react-hot-toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Nav from "./Nav";
 import PwdReset from "./PwdReset";
 import { AdminLogin } from "../../api/AuthAPI";
+import { loginSchema } from "../../validations";
+
 const Login = ({ ui, school }) => {
   const navigate = useNavigate();
   const [forgetPwdClicked, setForgetPwdClicked] = useState(false);
@@ -27,38 +30,39 @@ const Login = ({ ui, school }) => {
 
   const handleLogin = async () => {
     try {
-      if (phoneToLogin !== "" && pwd !== "") {
-        const response = await AdminLogin({
-          mobile_no: phoneToLogin,
+      await loginSchema.validate(
+        {
+          mobile_no: phone,
           password: pwd,
-        });
-        if (response.status === 200) {
-          if (response.data.admin.is_active === 1) {
-            localStorage.setItem("tkn", response.data.token);
-            localStorage.setItem("admin", JSON.stringify(response.data.admin));
-            navigate("/admin");
-          } else {
-            toast.error("Your account is disabled. Please contact support", {
-              duration: 2500,
-              position: "top-center",
-              //icon: "❌",
-            });
-          }
+        },
+        { abortEarly: false }
+      );
+      const response = await AdminLogin({
+        mobile_no: phoneToLogin,
+        password: pwd,
+      });
+      if (response.status === 200) {
+        if (response.data.admin.is_active === 1) {
+          localStorage.setItem("tkn", response.data.token);
+          localStorage.setItem("admin", JSON.stringify(response.data.admin));
+          navigate("/admin");
+        } else {
+          toast.error("Your account is disabled. Please contact support", {
+            position: "bottom-right",
+          });
         }
-      } else {
-        toast.error("Required fields are empty", {
-          duration: 1200,
-          position: "top-center",
-          //icon: "❌",
-        });
       }
     } catch (error) {
-      console.error(error.message);
-      toast.error("Invalid mobile number or password", {
-        duration: 1500,
-        position: "top-center",
-        //icon: "❌",
-      });
+      if (error.name === "ValidationError") {
+        toast.error(error.errors[0], {
+          position: "bottom-right",
+        });
+      } else {
+        // Handle other errors
+        toast.error("Something went wrong", {
+          position: "bottom-right",
+        });
+      }
     }
   };
 
@@ -70,7 +74,7 @@ const Login = ({ ui, school }) => {
         </nav>
       </div>
       <div className={`h-screen py-20 p-4 md:p-20 lg:p-32`}>
-        <Toaster className="notifier" />
+        <ToastContainer />
         {!forgetPwdClicked && (
           <div
             className={`border-t-8 border-${ui.secondary_clr} max-w-sm mt-12 lg:mt-8 bg-white rounded-lg overflow-hidden shadow-lg mx-auto box-with-shadow`}
@@ -78,7 +82,7 @@ const Login = ({ ui, school }) => {
             <div class="p-6">
               <h2 class="text-xl font-bold text-gray-800 mb-2">Admin Login</h2>
               <p class="text-gray-700 mb-6">Please Login in to your account</p>
-              <form>
+              <form className="animate-slide-in-from-right ">
                 <div class="mb-4">
                   <label
                     class="block text-gray-700 font-bold mb-2"

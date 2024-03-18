@@ -1,30 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { AddAdmin } from "../../api/AdminApi";
-import * as yup from "yup";
+import { adminDetailsSchema } from "../../validations";
 
-//Valdation check schemas
-const AdminDetailsSchema = yup.object().shape({
-  first_name: yup.string().required("First name is required"),
-  last_name: yup.string().required("Last name is required"),
-  mobile_no: yup
-    .string()
-    .required("Mobile number is required")
-    .matches(/^[0-9]+$/, "Mobile number must contain only numbers")
-    .min(8, "Invalid phone number"),
-  email: yup
-    .string()
-    .required("Email  is required")
-    .email("Invalid email address"),
-  password: yup
-    .string()
-    .required("Password  is required")
-    .min(8, "Password must be at least 8 characters long"),
-});
 const AddAdminView = ({ closeModal, reload, school }) => {
   const [viewRolesDropdown, setViewRolesDropdown] = useState(false);
-  const [addAdminData, setaddAdminData] = useState("");
+  //Admin data
+  const [addAdminData, setaddAdminData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    mobile_no: "",
+
+    roles: {
+      Dashboard: false,
+      ManageUsers: false,
+      ManageAdmins: false,
+      ManageProducts: false,
+      ManageOrders: false,
+      ManageStock: false,
+      ManageEvents: false,
+      ManageComplaints: false,
+    },
+    password: "",
+    confirmPassword: "",
+    profile_pic: null,
+  });
   const [phone, setPhone] = useState("");
+
   useEffect(() => {
     const resetData = async () => {
       setaddAdminData({
@@ -50,6 +53,7 @@ const AddAdminView = ({ closeModal, reload, school }) => {
     };
     resetData();
   }, [closeModal]);
+
   useEffect(() => {
     let newNumber;
     if (phone && phone.length > 1 && phone[0] === "0") {
@@ -62,9 +66,10 @@ const AddAdminView = ({ closeModal, reload, school }) => {
     setaddAdminData({ ...addAdminData, mobile_no: newNumber });
     console.log(addAdminData);
   }, [phone]);
+
   const addAdmin = async () => {
     try {
-      await AdminDetailsSchema.validate(
+      await adminDetailsSchema.validate(
         {
           first_name: addAdminData.first_name,
           last_name: addAdminData.last_name,

@@ -2,14 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { VerifyAdminPhone, CheckOtp, RecoverAccount } from "../../api/AuthAPI";
-import * as yup from "yup";
+import { phoneSchema, pwdSchema } from "../../validations";
 
-const pwdSchema = yup.object().shape({
-  password: yup
-    .string()
-    .required("Password  is required")
-    .min(8, "Password must be at least 8 characters long"),
-});
 const PwdReset = ({ loginClicked, ui, school }) => {
   const [phoneNo, setPhoneNo] = useState("");
   const [actualNumber, setActualNumber] = useState("");
@@ -58,6 +52,12 @@ const PwdReset = ({ loginClicked, ui, school }) => {
 
   const verifyAdminPhone = async () => {
     try {
+      await phoneSchema.validate(
+        {
+          mobile_no: phoneNo,
+        },
+        { abortEarly: false }
+      );
       const response = await VerifyAdminPhone(actualNumber);
       if (response.status === 422) {
         toast.error("Invalid Phone Number", {
@@ -79,9 +79,18 @@ const PwdReset = ({ loginClicked, ui, school }) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong. Please try again", {
-        position: "bottom-right",
-      });
+      if (error.name === "ValidationError") {
+        setViewSpinner(false);
+        toast.error(error.errors[0], {
+          position: "bottom-right",
+        });
+      } else {
+        // Handle other errors
+        setViewSpinner(false);
+        toast.error("Something went wrong", {
+          position: "bottom-right",
+        });
+      }
       setViewSpinner(false);
     }
   };
@@ -160,15 +169,12 @@ const PwdReset = ({ loginClicked, ui, school }) => {
           <div
             className={`border-t-8 border-${ui.secondary_clr} max-w-sm mt-12 lg:mt-8 bg-white rounded-lg overflow-hidden shadow-lg mx-auto box-with-shadow`}
           >
-            <div class="p-6">
-              <form>
+            <div class=" p-6">
+              <label class="block text-gray-700 font-bold mb-10" for="username">
+                Enter your phone number
+              </label>
+              <form className="animate-slide-in-from-right">
                 <div class="mt-12 mb-36">
-                  <label
-                    class="block text-gray-700 font-bold mb-10"
-                    for="username"
-                  >
-                    Enter your phone number
-                  </label>
                   <input
                     class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     name="phone_no"

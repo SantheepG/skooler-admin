@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AccessDenied from "../AccessDenied";
 import UpdateInfo from "./UpdateInfo";
@@ -7,14 +7,21 @@ import { FetchStats } from "../../api/SchoolApi";
 import { formatDate } from "../../CommonFuncs";
 import { formatNumberWithSpace } from "../../CommonFuncs";
 import avatar from "../../assets/default-avatar.png";
+import { MdOutlineDeleteSweep } from "react-icons/md";
+import AddHolidayView from "./AddHolidayView";
+import { DeleteHoliday, FetchHolidays } from "../../api/EventApi";
 const Dashboard = ({ bool, roles, admin, ui, school }) => {
   const [adminCnt, setAdminCnt] = useState("0");
   const [userCnt, setUserCnt] = useState("0");
   const [orderCnt, setOrderCnt] = useState("0");
   const [productsCnt, setProductCnt] = useState("0");
   const [total, setTotal] = useState("0");
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [reload, setReload] = useState(true);
+  const [holidays, setHolidays] = useState([]);
+  const [deleteClicked, setDeleteClicked] = useState(null);
   const [overlayClicked, setOverlayClicked] = useState(false);
+  const [addHolidayClicked, setAddHolidayClicked] = useState(false);
+  const [updateInfoClicked, setUpdateInfoClicked] = useState(false);
 
   useEffect(() => {
     const getCounts = async () => {
@@ -25,7 +32,6 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
           setOrderCnt(response.data.orders_count);
           setUserCnt(response.data.users_count);
           setProductCnt(response.data.products_count);
-          setUpcomingEvents(response.data.upcoming);
           setTotal(response.data.total);
         }
       } catch (error) {
@@ -35,6 +41,40 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
     getCounts();
   }, []);
 
+  useEffect(() => {
+    const fetchHolidays = async () => {
+      try {
+        const response = await FetchHolidays();
+        if (response.status === 200) {
+          setHolidays(response.data.holidays);
+          setReload(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setReload(false);
+      }
+    };
+    fetchHolidays();
+  }, [reload]);
+
+  const deleteHoliday = async (id) => {
+    try {
+      setDeleteClicked(false);
+      const response = await DeleteHoliday(id);
+      if (response.status === 200) {
+        toast.success("deleted", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        setReload(!reload);
+      } else {
+        toast.error("Something went wrong", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <React.Fragment>
       <ToastContainer />
@@ -169,8 +209,19 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                     <div class="relative bg-clip-border rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none m-0 flex items-center justify-between p-6">
                       <div>
                         <h6 class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-1">
-                          upcoming events
+                          Holidays
                         </h6>
+                      </div>
+                      <div>
+                        <span
+                          className="border px-4 py-1 hover:border-blue-400 cursor-pointer rounded-xl"
+                          onClick={() => {
+                            setOverlayClicked(true);
+                            setAddHolidayClicked(true);
+                          }}
+                        >
+                          Add
+                        </span>
                       </div>
                     </div>
                     <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
@@ -179,55 +230,72 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                           <tr>
                             <th class="border-b border-blue-gray-50 py-3 px-6 text-left">
                               <p class="block antialiased font-sans text-[11px] font-medium uppercase text-blue-gray-400">
-                                Event
+                                Date
                               </p>
                             </th>
                             <th class="border-b border-blue-gray-50 py-3 px-6 text-left">
                               <p class="block antialiased font-sans text-[11px] font-medium uppercase text-blue-gray-400">
-                                Event info
-                              </p>
-                            </th>
-                            <th class="border-b border-blue-gray-50 py-3 px-6 text-left">
-                              <p class="block antialiased font-sans text-[11px] font-medium uppercase text-blue-gray-400">
-                                To be held on
+                                Info
                               </p>
                             </th>
                           </tr>
                         </thead>
                         <tbody>
-                          {upcomingEvents.length !== 0 ? (
-                            upcomingEvents.map((event) => (
+                          {holidays.length !== 0 ? (
+                            holidays.map((holiday) => (
                               <tr>
                                 <td
-                                  key={event.id}
+                                  key={holiday.id}
                                   class="py-3 px-5 border-b border-blue-gray-50"
                                 >
-                                  <div class="flex items-center gap-4">
-                                    <p class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
-                                      {event.event_name}
-                                    </p>
-                                  </div>
-                                </td>
-
-                                <td class="py-3 px-5 border-b border-blue-gray-50">
-                                  <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">
-                                    {event.event_info}
-                                  </p>
-                                </td>
-                                <td class="py-3 px-5 border-b border-blue-gray-50">
-                                  <div class="w-10/12">
+                                  <div class="">
                                     <p class="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">
-                                      {formatDate(event.event_datetime)}
+                                      {holiday.date !== null &&
+                                        `${
+                                          formatDate(holiday.date).split(",")[0]
+                                        }, ${
+                                          formatDate(holiday.date).split(",")[1]
+                                        }`}
                                     </p>
                                     <div class="flex flex-start bg-blue-gray-50 overflow-hidden w-full rounded-sm font-sans text-xs font-medium h-1">
                                       <div class="flex justify-center items-center h-full bg-gradient-to-tr from-blue-600 to-blue-400 text-white"></div>
                                     </div>
                                   </div>
                                 </td>
+
+                                <td class="py-3 px-5 border-b border-blue-gray-50">
+                                  <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">
+                                    {holiday.name}
+                                  </p>
+                                </td>
+
+                                <td class="py-3 px-5 border-b border-blue-gray-50 flex">
+                                  <p
+                                    class="block antialiased font-sans text-xl hover:text-red-600 cursor-pointer font-medium text-blue-gray-600"
+                                    onClick={() => {
+                                      setDeleteClicked(holiday.id);
+                                    }}
+                                  >
+                                    <MdOutlineDeleteSweep />
+                                  </p>
+                                  {deleteClicked !== null &&
+                                    deleteClicked === holiday.id && (
+                                      <p
+                                        class="block antialiased border ml-6 mt-0.5 absolute rounded-lg px-2 font-sans text-xs hover:text-red-600 hover:border-red-600 cursor-pointer font-medium text-blue-gray-600"
+                                        onClick={() =>
+                                          deleteHoliday(holiday.id)
+                                        }
+                                      >
+                                        Delete
+                                      </p>
+                                    )}
+                                </td>
                               </tr>
                             ))
                           ) : (
-                            <tr>Nothing available</tr>
+                            <tr className="">
+                              <div className="m-4">Nothing available</div>
+                            </tr>
                           )}
                         </tbody>
                       </table>
@@ -237,7 +305,10 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                     <div className="w-full text-right text-sm text-gray-400">
                       <span
                         className="border px-4 py-1 hover:border-blue-400 cursor-pointer rounded-xl"
-                        onClick={() => setOverlayClicked(true)}
+                        onClick={() => {
+                          setOverlayClicked(true);
+                          setUpdateInfoClicked(true);
+                        }}
                       >
                         Edit
                       </span>
@@ -310,7 +381,7 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
               </div>
             </div>
           </div>
-          {overlayClicked && (
+          {overlayClicked && updateInfoClicked && (
             <div
               id="addAdminModal"
               tabindex="-1"
@@ -321,6 +392,25 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
                 admin={admin}
                 close={() => {
                   setOverlayClicked(false);
+                  setUpdateInfoClicked(false);
+                }}
+              />
+            </div>
+          )}
+          {overlayClicked && addHolidayClicked && (
+            <div
+              id="addAdminModal"
+              tabindex="-1"
+              aria-hidden="true"
+              className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full `}
+            >
+              <AddHolidayView
+                fetch={() => {
+                  setReload(true);
+                }}
+                close={() => {
+                  setOverlayClicked(false);
+                  setAddHolidayClicked(false);
                 }}
               />
             </div>

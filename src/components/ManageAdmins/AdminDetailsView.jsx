@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import { UpdateRoles } from "../../api/AdminApi";
 
@@ -225,7 +224,6 @@ const AdminDetailsView = ({ ViewAdminOverlayHandler, admin, reload }) => {
                           >
                             {role}
                             <button
-                              //disabled={order.order_type === "delivery"}
                               key={index}
                               type="button"
                               class="inline-flex items-center p-1 ms-2 text-sm text-red-400 bg-transparent rounded-sm hover:bg-red-200 hover:text-red-900 dark:hover:bg-red-800 dark:hover:text-red-300"

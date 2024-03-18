@@ -73,7 +73,7 @@ const ProductPreview = ({ closeModal, product }) => {
               <dl class="grid grid-cols-2 gap-4 mb-4">
                 <div class="col-span-2 p-3 bg-gray-100 rounded-lg border border-gray-200 dark:bg-gray-700 sm:col-span-1 dark:border-gray-600">
                   <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-                    Category
+                    Category ID
                   </dt>
                   <dd class="flex items-center text-gray-500 dark:text-gray-400">
                     {product.category_id}
@@ -82,7 +82,7 @@ const ProductPreview = ({ closeModal, product }) => {
 
                 <div class="p-3 bg-gray-100 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                   <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-                    Subcategory
+                    Subcategory ID
                   </dt>
                   <dd class="text-gray-500 dark:text-gray-400">
                     <span class="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">

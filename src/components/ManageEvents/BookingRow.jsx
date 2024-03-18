@@ -11,7 +11,7 @@ const BookingRow = ({ booking, deleteClicked, viewSlip, verified, denied }) => {
       </td>
       <td class="px-4 py-3">
         <div class="flex items-center text-gray-600">
-          #{booking.id} {booking.user_name}
+          #{booking.user_id} {booking.user_name}
         </div>
         <div class="flex items-center text-gray-600 text-xs">
           {booking.user_email} | {booking.user_mobile_no}
