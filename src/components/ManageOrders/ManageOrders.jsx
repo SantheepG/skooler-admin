@@ -5,7 +5,11 @@ import OrderRow from "./OrderRow";
 import AccessDenied from "../AccessDenied";
 import OrderPreview from "./OrderPreview";
 import EditOrderView from "./EditOrderView";
-import { FetchOrders, DeleteOrder } from "../../api/OrderApi";
+import {
+  FetchOrders,
+  DeleteOrder,
+  ChangeOrderStatus,
+} from "../../api/OrderApi";
 import SlipView from "./SlipView";
 const ManageOrders = ({ bool, school }) => {
   const [overlayClicked, setOverlayClicked] = useState(false);
@@ -90,7 +94,35 @@ const ManageOrders = ({ bool, school }) => {
       setOrdersToView(sortedOrders);
     }
   };
+  const changeOrderStatus = async (orderId, status) => {
+    try {
+      const response = await ChangeOrderStatus(orderId, status);
+      if (response.status === 200) {
+        toast.success("Status updated", {
+          duration: 1200,
+          position: "right-center",
+          //icon: "❌",
+        });
 
+        setTimeout(() => {
+          setReloadComponent(true);
+        }, 1000);
+      } else {
+        toast.error("Something went wrong.", {
+          duration: 2000,
+          position: "right-center",
+          //icon: "❌",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong.", {
+        duration: 2000,
+        position: "right-center",
+        //icon: "❌",
+      });
+    }
+  };
   const handleDelete = async () => {
     try {
       const response = await DeleteOrder(currentOrder.id);
@@ -236,6 +268,12 @@ const ManageOrders = ({ bool, school }) => {
                           setCurrentOrder(order);
                           setViewSlipClicked(!viewSlipClicked);
                           setOverlayClicked(!overlayClicked);
+                        }}
+                        processing={() => {
+                          changeOrderStatus(order.id, "Processing");
+                        }}
+                        declined={() => {
+                          changeOrderStatus(order.id, "Declined");
                         }}
                       />
                     ))

@@ -13,7 +13,26 @@ export const FetchOrders = async () => {
     return error;
   }
 };
-
+export const ChangeOrderStatus = async (id, status) => {
+  try {
+    const response = await axios.put(
+      `${base_URL}/admin/order/status/update`,
+      {
+        id: id,
+        status: status,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "0",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const UpdateOrder = async (data) => {
   try {
     const response = await axios.put(`${base_URL}/admin/order/update`, data, {

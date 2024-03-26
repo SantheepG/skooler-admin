@@ -8,6 +8,8 @@ const OrderRow = ({
   previewOrder,
   editOrder,
   viewSlip,
+  processing,
+  declined,
 }) => {
   const [viewEditDropdown, setViewEditDropdown] = useState(false);
 
@@ -100,7 +102,23 @@ const OrderRow = ({
                 <div>{order.order_status}</div>
               </>
             )}
-          </div>
+          </div>{" "}
+          {order.order_status === "Pending" && (
+            <>
+              <button
+                className="text-xs border px-2 py-0.5 mt-2 rounded-lg hover:border-green-500 hover:text-green-400"
+                onClick={processing}
+              >
+                Approve
+              </button>
+              <button
+                className="text-xs border px-2 py-0.5 mt-2 mx-1 rounded-lg hover:border-red-600 hover:text-red-600"
+                onClick={declined}
+              >
+                Deny
+              </button>
+            </>
+          )}
         </td>
         <td class="relative px-4 py-3 flex items-center justify-start">
           <button

@@ -18,6 +18,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
   const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [imgToDelete, setImgToDelete] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [subcategoriesDisabled, setSubcategoriesDisabled] = useState(true);
   const [updateDetails, setUpdateDetails] = useState({
@@ -87,24 +88,31 @@ const EditProductView = ({ closeModal, product, reload }) => {
     });
   };
   const handleAddImage = (e) => {
-    const files = e.target.files;
+    try {
+      const files = e.target.files;
 
-    if (files.length > 0) {
-      setImgsToUpload((prevImages) => [...prevImages, ...files]);
-      // Convert each selected file to a data URL
-      const newImages = Array.from(files).map((file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result);
-          };
-          reader.readAsDataURL(file);
+      if (files.length > 0) {
+        setImgsToUpload((prevImages) => [...prevImages, ...files]);
+        // Convert each selected file to a data URL
+        const newImages = Array.from(files).map((file) => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              resolve(reader.result);
+            };
+            reader.readAsDataURL(file);
+          });
         });
-      });
 
-      // Once all promises are resolved, update the state with the new images
-      Promise.all(newImages).then((imageArray) => {
-        setNewlyAddedImgs((prevImages) => [...prevImages, ...imageArray]);
+        // Once all promises are resolved, update the state with the new images
+        Promise.all(newImages).then((imageArray) => {
+          setNewlyAddedImgs((prevImages) => [...prevImages, ...imageArray]);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Invalid image", {
+        position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
   };
@@ -356,7 +364,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                   </div>
                   <div class="mb-4">
                     <span class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Product Images
+                      Product Images (First image will be the thumbnail image)
                     </span>
                     <div class="grid grid-cols-3 gap-4 mb-4">
                       {imgs.length !== 0 &&
@@ -371,26 +379,39 @@ const EditProductView = ({ closeModal, product, reload }) => {
                               alt="product"
                               className="max-w-36 max-h-36"
                             />
-                            <button
-                              type="button"
-                              class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
-                              onClick={() => handleProductImgDelete(index)}
-                            >
-                              <svg
-                                aria-hidden="true"
-                                class="w-5 h-5"
-                                fill="currentColor"
-                                viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
+                            <div className="flex">
+                              <button
+                                type="button"
+                                class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
+                                onClick={() => setImgToDelete(index)}
                               >
-                                <path
-                                  fill-rule="evenodd"
-                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                  clip-rule="evenodd"
-                                />
-                              </svg>
-                              <span class="sr-only">Remove image</span>
-                            </button>
+                                <svg
+                                  aria-hidden="true"
+                                  class="w-5 h-5"
+                                  fill="currentColor"
+                                  viewbox="0 0 20 20"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fill-rule="evenodd"
+                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                    clip-rule="evenodd"
+                                  />
+                                </svg>
+                                <span class="sr-only">Remove image</span>
+                              </button>
+                              {imgToDelete !== null &&
+                                imgToDelete === index && (
+                                  <p
+                                    class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1 ml-6 text-xs border rounded-xl px-2 cursor-pointer hover:red-800"
+                                    onClick={() =>
+                                      handleProductImgDelete(index)
+                                    }
+                                  >
+                                    Delete
+                                  </p>
+                                )}
+                            </div>
                           </div>
                         ))}
                     </div>
@@ -464,6 +485,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                           type="file"
                           class="hidden"
                           onChange={handleAddImage}
+                          accept="image/*"
                         />
                       </label>
                     </div>

@@ -3,18 +3,18 @@ import * as yup from "yup";
 export const loginSchema = yup.object().shape({
   mobile_no: yup
     .string()
-    .required("Phone number is required")
     .matches(/^[0-9]+$/, "Phone number must contain only numbers")
-    .min(7, "Invalid phone number"),
+    .min(7, "Invalid phone number")
+    .required("Phone number is required"),
   password: yup.string().required("Password  is required"),
 });
 
 export const phoneSchema = yup.object().shape({
   mobile_no: yup
     .string()
-    .required("Phone number is required")
     .matches(/^[0-9]+$/, "Phone number must contain only numbers")
-    .min(7, "Invalid phone number"),
+    .min(7, "Invalid phone number")
+    .required("Phone number is required"),
 });
 
 export const pwdSchema = yup.object().shape({

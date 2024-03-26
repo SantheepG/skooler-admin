@@ -210,24 +210,31 @@ const AddProductView = ({
   };
 
   const handleAddImage = (e) => {
-    const files = e.target.files;
+    try {
+      const files = e.target.files;
 
-    if (files.length > 0) {
-      setImgsToUpload((prevImages) => [...prevImages, ...files]);
-      // Convert each selected file to a data URL
-      const newImages = Array.from(files).map((file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result);
-          };
-          reader.readAsDataURL(file);
+      if (files.length > 0) {
+        setImgsToUpload((prevImages) => [...prevImages, ...files]);
+        // Convert each selected file to a data URL
+        const newImages = Array.from(files).map((file) => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              resolve(reader.result);
+            };
+            reader.readAsDataURL(file);
+          });
         });
-      });
 
-      // Once all promises are resolved, update the state with the new images
-      Promise.all(newImages).then((imageArray) => {
-        setImages((prevImages) => [...prevImages, ...imageArray]);
+        // Once all promises are resolved, update the state with the new images
+        Promise.all(newImages).then((imageArray) => {
+          setImages((prevImages) => [...prevImages, ...imageArray]);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Invalid image", {
+        position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
   };
@@ -609,6 +616,7 @@ const AddProductView = ({
                       type="file"
                       class="hidden"
                       onChange={handleAddImage}
+                      accept="image/*"
                     />
                   </label>
                 </div>

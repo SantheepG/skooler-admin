@@ -13,6 +13,7 @@ const Login = ({ ui, school }) => {
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
   const [phoneToLogin, setPhoneToLogin] = useState("");
+  const [errorAlert, setErrorAlert] = useState({});
 
   useEffect(() => {
     let newNumber;
@@ -54,9 +55,16 @@ const Login = ({ ui, school }) => {
       }
     } catch (error) {
       if (error.name === "ValidationError") {
-        toast.error(error.errors[0], {
-          position: "bottom-right",
+        error.inner.forEach((error) => {
+          setErrorAlert((prevState) => ({
+            ...prevState,
+            [error.path]: error.message,
+          }));
         });
+
+        setTimeout(() => {
+          setErrorAlert({});
+        }, 3000);
       } else {
         // Handle other errors
         toast.error("Invalid credentials", {
@@ -91,7 +99,9 @@ const Login = ({ ui, school }) => {
                     Phone Number
                   </label>
                   <input
-                    class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class={`${
+                      errorAlert.hasOwnProperty("mobile_no") && "border-red-500"
+                    } mt-2 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                     name="phone_no"
                     id="phone_no"
                     type="text"
@@ -100,6 +110,13 @@ const Login = ({ ui, school }) => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
+                  <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                    {errorAlert && errorAlert.hasOwnProperty("mobile_no") && (
+                      <span className="animate-view-content">
+                        {errorAlert["mobile_no"]}
+                      </span>
+                    )}
+                  </span>
                 </div>
                 <div class="mb-6">
                   <label
@@ -112,11 +129,20 @@ const Login = ({ ui, school }) => {
                     id="password"
                     type="password"
                     placeholder="•••••••••••••••••"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class={`${
+                      errorAlert.hasOwnProperty("password") && "border-red-500"
+                    } bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                     required=""
                     value={pwd}
                     onChange={(e) => setPwd(e.target.value)}
                   />
+                  <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                    {errorAlert && errorAlert.hasOwnProperty("password") && (
+                      <span className="animate-view-content">
+                        {errorAlert["password"]}
+                      </span>
+                    )}
+                  </span>
                 </div>
                 <div class="flex items-center justify-between">
                   <button

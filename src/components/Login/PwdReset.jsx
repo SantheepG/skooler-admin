@@ -16,6 +16,7 @@ const PwdReset = ({ loginClicked, ui, school }) => {
   const [inputValues, setInputValues] = useState(["", "", "", "", "", ""]);
   const [otpNo, setOtpNo] = useState("");
   const inputs = useRef([]);
+  const [errorAlert, setErrorAlert] = useState({});
 
   useEffect(() => {
     const concatenatedValue = inputValues.join("");
@@ -81,9 +82,16 @@ const PwdReset = ({ loginClicked, ui, school }) => {
       console.log(error);
       if (error.name === "ValidationError") {
         setViewSpinner(false);
-        toast.error(error.errors[0], {
-          position: "bottom-right",
+        error.inner.forEach((error) => {
+          setErrorAlert((prevState) => ({
+            ...prevState,
+            [error.path]: error.message,
+          }));
         });
+
+        setTimeout(() => {
+          setErrorAlert({});
+        }, 3000);
       } else {
         // Handle other errors
         setViewSpinner(false);
@@ -96,16 +104,23 @@ const PwdReset = ({ loginClicked, ui, school }) => {
   };
   const checkOTP = async () => {
     try {
-      const response = await CheckOtp(actualNumber, otpNo);
-      if (response && response.data.verified) {
-        setViewSpinner(false);
-        setViewPwdFields(true);
+      if (otpNo !== "") {
+        const response = await CheckOtp(actualNumber, otpNo);
+        if (response && response.data.verified) {
+          setViewSpinner(false);
+          setViewPwdFields(true);
+        } else {
+          toast.error("Invalid OTP, please try again", {
+            position: "bottom-right",
+          });
+          setViewSpinner(false);
+          setInputValues(["", "", "", "", "", ""]);
+        }
       } else {
-        toast.error("Invalid OTP, please try again", {
+        setViewSpinner(false);
+        toast.error("Required fields are empty", {
           position: "bottom-right",
         });
-        setViewSpinner(false);
-        setInputValues(["", "", "", "", "", ""]);
       }
     } catch (error) {
       console.log(error);
@@ -176,7 +191,9 @@ const PwdReset = ({ loginClicked, ui, school }) => {
               <form className="animate-slide-in-from-right">
                 <div class="mt-12 mb-36">
                   <input
-                    class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class={`${
+                      errorAlert.hasOwnProperty("mobile_no") && "border-red-500"
+                    } mt-2 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                     name="phone_no"
                     id="phone_no"
                     type="text"
@@ -185,6 +202,13 @@ const PwdReset = ({ loginClicked, ui, school }) => {
                     value={phoneNo}
                     onChange={(e) => setPhoneNo(e.target.value)}
                   />
+                  <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                    {errorAlert && errorAlert.hasOwnProperty("mobile_no") && (
+                      <span className="animate-view-content">
+                        {errorAlert["mobile_no"]}
+                      </span>
+                    )}
+                  </span>
                 </div>
 
                 <div class="flex items-center justify-between">
