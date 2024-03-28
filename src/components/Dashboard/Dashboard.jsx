@@ -13,7 +13,6 @@ import { DeleteHoliday, FetchHolidays } from "../../api/EventApi";
 const Dashboard = ({ bool, roles, admin, ui, school }) => {
   const [adminCnt, setAdminCnt] = useState("0");
   const [userCnt, setUserCnt] = useState("0");
-  const [orderCnt, setOrderCnt] = useState("0");
   const [productsCnt, setProductCnt] = useState("0");
   const [total, setTotal] = useState("0");
   const [reload, setReload] = useState(true);
@@ -29,7 +28,6 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
         const response = await FetchStats();
         if (response.status === 200) {
           setAdminCnt(response.data.admins_count);
-          setOrderCnt(response.data.orders_count);
           setUserCnt(response.data.users_count);
           setProductCnt(response.data.products_count);
           setTotal(response.data.total);
@@ -80,8 +78,12 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
       <ToastContainer />
       {bool ? (
         <>
-          <div className={`${overlayClicked ? "opacity-40" : ""} viewContent`}>
-            <div class="p-4 ">
+          <div
+            className={`animate-view-content ${
+              overlayClicked ? "opacity-40" : ""
+            }`}
+          >
+            <div class={`p-4 ${overlayClicked ? "opacity-40" : ""}`}>
               <div class="mt-12">
                 <div class="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
                   <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">

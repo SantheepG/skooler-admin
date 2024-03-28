@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
 import { AddProductImgs, AddProducts } from "../../api/ProductApi";
+import { imgFormats } from "../../App";
 import "react-toastify/dist/ReactToastify.css";
 const AddProductView = ({
   products,
@@ -212,8 +213,18 @@ const AddProductView = ({
   const handleAddImage = (e) => {
     try {
       const files = e.target.files;
+      const fileCount = files.length;
+      let invalidImgs = 0;
+      for (let i = 0; i < fileCount; i++) {
+        const fileExtension = files[i].name.split(".").pop().toLowerCase();
+        console.log(fileExtension);
+        if (!imgFormats.includes(fileExtension)) {
+          invalidImgs++;
+          break;
+        }
+      }
 
-      if (files.length > 0) {
+      if (files.length > 0 && invalidImgs === 0) {
         setImgsToUpload((prevImages) => [...prevImages, ...files]);
         // Convert each selected file to a data URL
         const newImages = Array.from(files).map((file) => {
@@ -229,6 +240,10 @@ const AddProductView = ({
         // Once all promises are resolved, update the state with the new images
         Promise.all(newImages).then((imageArray) => {
           setImages((prevImages) => [...prevImages, ...imageArray]);
+        });
+      } else {
+        toast.error("Invalid image format", {
+          position: toast.POSITION.BOTTOM_RIGHT,
         });
       }
     } catch (error) {
@@ -623,6 +638,29 @@ const AddProductView = ({
               </div>
               <div class="flex items-center justify-center w-full space-x-2">
                 <button
+                  data-modal-toggle="createProductModal"
+                  type="button"
+                  class="justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  onClick={() => {
+                    resetStates();
+                    closeModal();
+                  }}
+                >
+                  <svg
+                    class="mr-1 -ml-1 w-5 h-5"
+                    fill="currentColor"
+                    viewbox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Discard
+                </button>
+                <button
                   type="button"
                   class="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
                   onClick={uploadImgs}
@@ -647,30 +685,6 @@ const AddProductView = ({
                     />
                   </svg>
                   {addProductClicked ? "Please wait" : "Add product"}
-                </button>
-
-                <button
-                  data-modal-toggle="createProductModal"
-                  type="button"
-                  class="justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                  onClick={() => {
-                    resetStates();
-                    closeModal();
-                  }}
-                >
-                  <svg
-                    class="mr-1 -ml-1 w-5 h-5"
-                    fill="currentColor"
-                    viewbox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  Discard
                 </button>
               </div>
             </form>

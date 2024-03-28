@@ -4,6 +4,7 @@ import Login from "./components/Login/Login";
 import { FetchSchool } from "./api/SchoolApi";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
+export const imgFormats = ["jpg", "jpeg", "png", "bmp", "wbmp"]; //img formats
 export const base_URL = "http://127.0.0.1:8000/api"; //URL for school DB
 export const base_URL2 = "http://127.0.0.1:8080/api"; //URL for main DB
 export const s3base_URL = "https://skoolers3.s3.amazonaws.com/"; //base url for amazon s3 bucket

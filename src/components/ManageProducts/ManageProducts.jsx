@@ -136,7 +136,7 @@ const ManageProducts = ({ bool, school }) => {
   return (
     <React.Fragment>
       {bool ? (
-        <div className="viewContent relative m-5 mb-15 ">
+        <div className="animate-view-content relative m-5 mb-15 ">
           <ToastContainer />
 
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">

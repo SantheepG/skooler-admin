@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { s3base_URL } from "../../App";
+import { s3base_URL, imgFormats } from "../../App";
 import { ToastContainer, toast } from "react-toastify";
 import { UpdateProductImgs } from "../../api/ProductApi";
 import "react-toastify/dist/ReactToastify.css";
@@ -90,8 +90,17 @@ const EditProductView = ({ closeModal, product, reload }) => {
   const handleAddImage = (e) => {
     try {
       const files = e.target.files;
-
-      if (files.length > 0) {
+      const fileCount = files.length;
+      let invalidImgs = 0;
+      for (let i = 0; i < fileCount; i++) {
+        const fileExtension = files[i].name.split(".").pop().toLowerCase();
+        console.log(fileExtension);
+        if (!imgFormats.includes(fileExtension)) {
+          invalidImgs++;
+          break;
+        }
+      }
+      if (files.length > 0 && invalidImgs === 0) {
         setImgsToUpload((prevImages) => [...prevImages, ...files]);
         // Convert each selected file to a data URL
         const newImages = Array.from(files).map((file) => {
@@ -107,6 +116,10 @@ const EditProductView = ({ closeModal, product, reload }) => {
         // Once all promises are resolved, update the state with the new images
         Promise.all(newImages).then((imageArray) => {
           setNewlyAddedImgs((prevImages) => [...prevImages, ...imageArray]);
+        });
+      } else {
+        toast.error("Invalid image format", {
+          position: toast.POSITION.BOTTOM_RIGHT,
         });
       }
     } catch (error) {

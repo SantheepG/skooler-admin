@@ -31,6 +31,7 @@ const UpdateInfo = ({ admin, close }) => {
             toast.success("Password updated", {
               position: toast.POSITION.BOTTOM_RIGHT,
             });
+            setPwdClicked(false);
           } else if (response.status === 401) {
             toast.error("Current password is incorrect", {
               position: toast.POSITION.BOTTOM_RIGHT,
@@ -52,6 +53,9 @@ const UpdateInfo = ({ admin, close }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
     }
   };
   const updateName = async () => {
@@ -89,13 +93,13 @@ const UpdateInfo = ({ admin, close }) => {
           <p class="text-sm text-gray-600">Edit your account details</p>
         </div>
         <button
-          className="mr-2 hidden rounded-lg border-2 px-4 py-2 font-medium text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
+          className="mr-2 hidden rounded-lg border-2 px-4 py-1 text-sm text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
           onClick={close}
         >
           Cancel
         </button>
         <button
-          className="mr-2 hidden rounded-lg border-2 px-4 py-2 font-medium text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
+          className="mr-2 hidden rounded-lg border-2 px-4 py-1 text-sm text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
           onClick={updateName}
         >
           Save

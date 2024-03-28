@@ -71,13 +71,13 @@ const AddHolidayView = ({ fetch, close }) => {
             <p class="font-medium"> Add a holiday</p>
           </div>
           <button
-            className="mr-2 hidden rounded-lg border-2 px-4 py-2 font-medium text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
+            className="mr-2 hidden rounded-lg border-2 px-4 py-1 text-sm text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
             onClick={close}
           >
             Cancel
           </button>
           <button
-            className="mr-2 hidden rounded-lg border-2 px-4 py-2 font-medium text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
+            className="mr-2 hidden rounded-lg border-2 px-4 py-1 text-sm text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
             onClick={handleSubmit}
           >
             Add

@@ -78,7 +78,7 @@ const ManageComplaints = ({ bool }) => {
   return (
     <React.Fragment>
       {bool ? (
-        <div className="viewContent relative m-5">
+        <div className="animate-view-content relative m-5">
           <Toaster className="notifier" />
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
             <div

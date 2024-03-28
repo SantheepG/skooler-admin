@@ -91,7 +91,7 @@ const Login = ({ ui, school }) => {
               <h2 class="text-xl font-bold text-gray-800 mb-2">Admin Login</h2>
               <p class="text-gray-700 mb-6">Please Login in to your account</p>
               <form className="animate-slide-in-from-right ">
-                <div class="mb-4">
+                <div class="mb-6">
                   <label
                     class="block text-gray-700 font-bold mb-2"
                     for="username"
@@ -118,7 +118,7 @@ const Login = ({ ui, school }) => {
                     )}
                   </span>
                 </div>
-                <div class="mb-6">
+                <div class="mb-10">
                   <label
                     class="block text-gray-700 font-bold mb-2"
                     for="password"

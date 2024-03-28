@@ -215,7 +215,7 @@ const ManageEvents = ({ bool, school }) => {
   return (
     <React.Fragment>
       {bool ? (
-        <div className="viewContent relative m-5">
+        <div className="animate-view-content relative m-5">
           <div className="fixed">
             <ToastContainer />
           </div>

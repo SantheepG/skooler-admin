@@ -252,15 +252,7 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
                 </div>
               </div>
             </div>
-            <div class="ml-36 pb-8 items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-              <button
-                type="button"
-                class="w-full justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                onClick={updateStatus}
-              >
-                Update
-              </button>
-
+            <div class="pb-8 flex justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
               <button
                 data-modal-toggle="cancel"
                 type="button"
@@ -282,6 +274,13 @@ const ComplaintView = ({ complaint, closeModal, reload }) => {
                   />
                 </svg>
                 Discard
+              </button>
+              <button
+                type="button"
+                class="w-full justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                onClick={updateStatus}
+              >
+                Update
               </button>
             </div>
           </form>
