@@ -64,11 +64,11 @@ const AddHolidayView = ({ fetch, close }) => {
   };
   return (
     <>
-      <div class="my-4  bg-white max-w-screen-md border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
+      <div className="my-4  bg-white max-w-screen-md border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
         <ToastContainer />
-        <div class="flex flex-col border-b py-4 sm:flex-row sm:items-start">
-          <div class="shrink-0 mr-auto sm:py-3">
-            <p class="font-medium"> Add a holiday</p>
+        <div className="flex flex-col border-b py-4 sm:flex-row sm:items-start">
+          <div className="shrink-0 mr-auto sm:py-3">
+            <p className="font-medium"> Add a holiday</p>
           </div>
           <button
             className="mr-2 hidden rounded-lg border-2 px-4 py-1 text-sm text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
@@ -83,19 +83,19 @@ const AddHolidayView = ({ fetch, close }) => {
             Add
           </button>
         </div>
-        <div class="gap-4 border-b py-4 sm:flex-row">
-          <p class="shrink-0 w-32 font-medium">
+        <div className="gap-4 border-b py-4 sm:flex-row">
+          <p className="shrink-0 w-32 font-medium">
             Name<span className="required text-red-500"> *</span>
           </p>
           <input
             placeholder=""
-            class="mb-2 lg:w-96 w-full mt-2 rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 sm:mr-4 sm:mb-0 focus:ring-1"
+            className="mb-2 lg:w-96 w-full mt-2 rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 sm:mr-4 sm:mb-0 focus:ring-1"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div class="flex flex-col gap-4 border-b py-4 sm:flex-row mb-24">
-          <p class="shrink-0 w-32 font-medium">
+        <div className="flex flex-col gap-4 border-b py-4 sm:flex-row mb-24">
+          <p className="shrink-0 w-32 font-medium">
             Date<span className="required text-red-500"> *</span>
           </p>
           <DatePicker
@@ -107,11 +107,17 @@ const AddHolidayView = ({ fetch, close }) => {
           />
         </div>
 
-        <div class="flex justify-end py-4 sm:hidden">
-          <button class="mr-2 rounded-lg border-2 px-4 py-2 font-medium text-gray-500 focus:outline-none focus:ring hover:bg-gray-200">
+        <div className="flex justify-end py-4 sm:hidden">
+          <button
+            className="mr-2 rounded-lg border-2 px-4 py-2 font-medium text-gray-500 focus:outline-none focus:ring hover:bg-gray-200"
+            onClick={close}
+          >
             Cancel
           </button>
-          <button class="rounded-lg border-2 border-transparent bg-blue-600 px-4 py-2 font-medium text-white focus:outline-none focus:ring hover:bg-blue-700">
+          <button
+            className="rounded-lg border-2 border-transparent bg-blue-600 px-4 py-2 font-medium text-white focus:outline-none focus:ring hover:bg-blue-700"
+            onClick={handleSubmit}
+          >
             Save
           </button>
         </div>

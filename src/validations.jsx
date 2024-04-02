@@ -36,17 +36,17 @@ export const adminDetailsSchema = yup.object().shape({
   last_name: yup.string().required("Last name is required"),
   mobile_no: yup
     .string()
-    .required("Mobile number is required")
     .matches(/^[0-9]+$/, "Mobile number must contain only numbers")
-    .min(8, "Invalid phone number"),
+    .min(8, "Invalid phone number")
+    .required("Mobile number is required"),
   email: yup
     .string()
-    .required("Email  is required")
-    .email("Invalid email address"),
+    .email("Invalid email address")
+    .required("Email is required"),
   password: yup
     .string()
-    .required("Password  is required")
-    .min(8, "Password must be at least 8 characters long"),
+    .min(8, "Password must be at least 8 characters long")
+    .required("Password  is required"),
 });
 
 //Manage events validations
@@ -62,3 +62,11 @@ export const eventSchema = yup.object().shape({
 });
 
 //Manage product validations
+export const productSchema = yup.object().shape({
+  name: yup.string().required("Product name is required"),
+  description: yup.string().required("Product description is required"),
+  stock: yup.string().required("Product quantity is required"),
+  price: yup.string().required("Product price is required"),
+  thumbnail: yup.string().required("Event time is required"),
+  category_id: yup.string().required("Product category is required"),
+});

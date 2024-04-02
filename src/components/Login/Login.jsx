@@ -24,9 +24,7 @@ const Login = ({ ui, school }) => {
     } else {
       newNumber = school.country_code + phone;
     }
-    console.log(phone);
     setPhoneToLogin(newNumber);
-    console.log(phoneToLogin);
   }, [phone]);
 
   const handleLogin = async () => {

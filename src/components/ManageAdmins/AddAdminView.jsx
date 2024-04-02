@@ -5,13 +5,13 @@ import { adminDetailsSchema } from "../../validations";
 
 const AddAdminView = ({ closeModal, reload, school }) => {
   const [viewRolesDropdown, setViewRolesDropdown] = useState(false);
+  const [errorAlert, setErrorAlert] = useState({});
   //Admin data
   const [addAdminData, setaddAdminData] = useState({
     first_name: "",
     last_name: "",
     email: "",
     mobile_no: "",
-
     roles: {
       Dashboard: false,
       ManageUsers: false,
@@ -80,38 +80,28 @@ const AddAdminView = ({ closeModal, reload, school }) => {
         { abortEarly: false }
       );
       if (addAdminData.password === addAdminData.confirmPassword) {
-        if (addAdminData.password.length >= 8) {
-          let data = {
-            first_name: addAdminData.first_name,
-            last_name: addAdminData.last_name,
-            email: addAdminData.email,
-            mobile_no: addAdminData.mobile_no,
-            password: addAdminData.password,
-            roles: JSON.stringify(addAdminData.roles),
-            profile_pic: null,
-            is_active: true,
-          };
-          const response = await AddAdmin(data);
+        let data = {
+          first_name: addAdminData.first_name,
+          last_name: addAdminData.last_name,
+          email: addAdminData.email,
+          mobile_no: addAdminData.mobile_no,
+          password: addAdminData.password,
+          roles: JSON.stringify(addAdminData.roles),
+          profile_pic: null,
+          is_active: true,
+        };
+        const response = await AddAdmin(data);
 
-          if (response.status === 201) {
-            toast.success("Admin added", {
-              duration: 1200,
-              position: "center",
-              //icon: "❌",
-            });
-
-            reload();
-
-            setTimeout(() => {
-              closeModal();
-            }, 1500);
-          }
-        } else {
-          toast.error("Password should atleast contain 8 characters", {
-            duration: 2000,
+        if (response.status === 201) {
+          toast.success("Admin added", {
+            duration: 1200,
             position: "center",
             //icon: "❌",
           });
+          reload();
+          setTimeout(() => {
+            closeModal();
+          }, 1500);
         }
       } else {
         toast.error("Passwords didn't match. Please check", {
@@ -123,10 +113,16 @@ const AddAdminView = ({ closeModal, reload, school }) => {
     } catch (error) {
       console.error(error.message);
       if (error.name === "ValidationError") {
-        toast.error(error.errors[0], {
-          duration: 1500,
-          position: "center",
+        error.inner.forEach((error) => {
+          setErrorAlert((prevState) => ({
+            ...prevState,
+            [error.path]: error.message,
+          }));
         });
+
+        setTimeout(() => {
+          setErrorAlert({});
+        }, 3000);
       } else {
         toast.error("Email or mobile number is already registered", {
           duration: 1500,
@@ -186,7 +182,9 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                   type="text"
                   name="first-name"
                   id="first-name"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class={`${
+                    errorAlert.hasOwnProperty("first_name") && "border-red-500"
+                  } shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                   placeholder="Bonnie"
                   required=""
                   onChange={(e) =>
@@ -196,6 +194,13 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                     })
                   }
                 />
+                <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                  {errorAlert && errorAlert.hasOwnProperty("first_name") && (
+                    <span className="animate-view-content">
+                      {errorAlert["first_name"]}
+                    </span>
+                  )}
+                </span>
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label
@@ -208,7 +213,9 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                   type="text"
                   name="last-name"
                   id="last-name"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class={`${
+                    errorAlert.hasOwnProperty("last_name") && "border-red-500"
+                  } shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                   placeholder="Green"
                   required=""
                   onChange={(e) =>
@@ -218,6 +225,13 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                     })
                   }
                 />
+                <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                  {errorAlert && errorAlert.hasOwnProperty("last_name") && (
+                    <span className="animate-view-content">
+                      {errorAlert["last_name"]}
+                    </span>
+                  )}
+                </span>
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label
@@ -230,7 +244,9 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                   type="email"
                   name="email"
                   id="email"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class={`${
+                    errorAlert.hasOwnProperty("email") && "border-red-500"
+                  } shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                   placeholder="example@company.com"
                   required=""
                   value={addAdminData.email}
@@ -241,6 +257,13 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                     })
                   }
                 />
+                <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                  {errorAlert && errorAlert.hasOwnProperty("email") && (
+                    <span className="animate-view-content">
+                      {errorAlert["email"]}
+                    </span>
+                  )}
+                </span>
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label
@@ -253,11 +276,20 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                   type="text"
                   name="phone-number"
                   id="phone-number"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class={`${
+                    errorAlert.hasOwnProperty("mobile_no") && "border-red-500"
+                  } shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                   placeholder=" +12 3456 789"
                   required=""
                   onChange={(e) => setPhone(e.target.value)}
                 />
+                <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                  {errorAlert && errorAlert.hasOwnProperty("mobile_no") && (
+                    <span className="animate-view-content">
+                      {errorAlert["mobile_no"]}
+                    </span>
+                  )}
+                </span>
               </div>
 
               <div class="col-span-6 sm:col-span-3">
@@ -271,7 +303,9 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                   type="password"
                   name="password"
                   id="password"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class={`${
+                    errorAlert.hasOwnProperty("password") && "border-red-500"
+                  } shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                   placeholder="••••••••"
                   required=""
                   onChange={(e) =>
@@ -281,6 +315,13 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                     })
                   }
                 />
+                <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                  {errorAlert && errorAlert.hasOwnProperty("password") && (
+                    <span className="animate-view-content">
+                      {errorAlert["password"]}
+                    </span>
+                  )}
+                </span>
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label
@@ -293,7 +334,9 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                   type="password"
                   name="confirm-password"
                   id="confirm-password"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class={`${
+                    errorAlert.hasOwnProperty("password") && "border-red-500"
+                  } shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                   placeholder="••••••••"
                   required=""
                   onChange={(e) =>
@@ -303,6 +346,13 @@ const AddAdminView = ({ closeModal, reload, school }) => {
                     })
                   }
                 />
+                <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                  {errorAlert && errorAlert.hasOwnProperty("password") && (
+                    <span className="animate-view-content">
+                      {errorAlert["password"]}
+                    </span>
+                  )}
+                </span>
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label
