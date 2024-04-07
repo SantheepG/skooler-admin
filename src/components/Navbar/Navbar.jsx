@@ -3,37 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { s3base_URL } from "../../App";
 import { Logout } from "../../api/AuthAPI";
 import defaultImg from "../../assets/default-avatar.png";
+import { useAppContext } from "../../AppContext";
+
 const Navbar = ({ toggle }) => {
-  const [school, setSchool] = useState("");
-  const [ui, setUI] = useState("");
+  const { ui, school, setLoginStatus, admin } = useAppContext();
   const [userClicked, setUserClicked] = useState(false);
   const navigate = useNavigate();
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setEmailAdmin] = useState("");
-  const [adminData, setAdminData] = useState({
-    name: "",
-    student_id: "",
-    mobile_no: "",
-    email: "",
-    password: "",
-  });
 
   useEffect(() => {
-    const storedUIData = JSON.parse(localStorage.getItem("ui"));
-    const storedSchoolData = JSON.parse(localStorage.getItem("school"));
-    if (storedUIData) {
-      setUI(storedUIData);
-    }
-    if (storedSchoolData) {
-      setSchool(storedSchoolData);
-    }
-    const storedAdminData = JSON.parse(localStorage.getItem("admin"));
-    if (storedAdminData) {
-      setAdminData(storedAdminData);
-      setAdminName(
-        `${storedAdminData.first_name} ${storedAdminData.last_name}`
-      );
-      setEmailAdmin(storedAdminData.email);
+    if (admin) {
+      setAdminName(`${admin.first_name} ${admin.last_name}`);
+      setEmailAdmin(admin.email);
     }
   }, []);
 
@@ -41,10 +23,12 @@ const Navbar = ({ toggle }) => {
     try {
       const response = await Logout();
       if (response.status === 200) {
+        setLoginStatus(false);
         console.log("logged out");
         localStorage.clear();
         navigate("/");
-        window.location.reload();
+      } else {
+        console.log("Error: ", response);
       }
     } catch (error) {
       console.error("Error logging out:", error);

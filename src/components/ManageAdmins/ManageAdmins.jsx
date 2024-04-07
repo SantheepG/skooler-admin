@@ -6,8 +6,10 @@ import AdminDetailsView from "./AdminDetailsView";
 import AccessDenied from "../AccessDenied";
 import AddAdminView from "./AddAdminView";
 import { ChangeStatus, DeleteAdmin, FetchAdmins } from "../../api/AdminApi";
+import { useAppContext } from "../../AppContext";
 
-const ManageAdmins = ({ adminData, bool, school }) => {
+const ManageAdmins = ({ bool }) => {
+  const { ui, school, admin } = useAppContext();
   const [fetchedAdmins, setFetchedAdmins] = useState(null);
   const [adminsToView, setAdminsToView] = useState([]);
   const [currentRoles, setCurrentRoles] = useState([]);
@@ -35,10 +37,14 @@ const ManageAdmins = ({ adminData, bool, school }) => {
       const response = await ChangeStatus(id, isActive);
       if (response.status === 200) {
         setFetchedAdmins(
-          response.data.admins.filter((admin) => admin.id !== adminData.id)
+          response.data.admins.filter(
+            (currentAdmin) => currentAdmin.id !== admin.id
+          )
         );
         setAdminsToView(
-          response.data.admins.filter((admin) => admin.id !== adminData.id)
+          response.data.admins.filter(
+            (currentAdmin) => currentAdmin.id !== admin.id
+          )
         );
 
         toast.success("Status changed", {
@@ -66,10 +72,14 @@ const ManageAdmins = ({ adminData, bool, school }) => {
           const response = await FetchAdmins();
           if (response.status === 200) {
             setAdminsToView(
-              response.data.admins.filter((admin) => admin.id !== adminData.id)
+              response.data.admins.filter(
+                (currentAdmin) => currentAdmin.id !== admin.id
+              )
             );
             setFetchedAdmins(
-              response.data.admins.filter((admin) => admin.id !== adminData.id)
+              response.data.admins.filter(
+                (currentAdmin) => currentAdmin.id !== admin.id
+              )
             );
           } else {
             console.log(response);

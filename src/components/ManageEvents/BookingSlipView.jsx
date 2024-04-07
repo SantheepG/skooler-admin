@@ -1,6 +1,9 @@
 import React from "react";
 import { s3base_URL } from "../../App";
-const BookingSlipView = ({ school, booking, closeModal }) => {
+import { useAppContext } from "../../AppContext";
+const BookingSlipView = ({ booking, closeModal }) => {
+  const { school } = useAppContext();
+
   const handleImageClick = () => {
     const imageUrl = `${s3base_URL}${booking.bank_slip}`;
     window.open(imageUrl, "_blank");

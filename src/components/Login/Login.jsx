@@ -6,8 +6,10 @@ import Nav from "./Nav";
 import PwdReset from "./PwdReset";
 import { AdminLogin } from "../../api/AuthAPI";
 import { loginSchema } from "../../validations";
+import { useAppContext } from "../../AppContext";
 
-const Login = ({ ui, school }) => {
+const Login = () => {
+  const { ui, school, setAdmin, setLoginStatus, setRoles } = useAppContext();
   const navigate = useNavigate();
   const [forgetPwdClicked, setForgetPwdClicked] = useState(false);
   const [phone, setPhone] = useState("");
@@ -43,7 +45,13 @@ const Login = ({ ui, school }) => {
       if (response.status === 200) {
         if (response.data.admin.is_active === 1) {
           localStorage.setItem("tkn", response.data.token);
-          localStorage.setItem("admin", JSON.stringify(response.data.admin));
+          setLoginStatus(true);
+          const jsonData = JSON.parse(response.data.admin.roles);
+          const adminRoles = Object.keys(jsonData).filter(
+            (key) => jsonData[key] === true
+          );
+          setRoles(adminRoles);
+          setAdmin(response.data.admin);
           navigate("/admin");
         } else {
           toast.error("Your account is disabled. Please contact support", {

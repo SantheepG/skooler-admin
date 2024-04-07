@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
-const OrderPreview = ({ closeModal, order, school }) => {
+import { useAppContext } from "../../AppContext";
+const OrderPreview = ({ closeModal, order }) => {
+  const { school } = useAppContext();
   const [view, setView] = useState(true);
   const [products, setProducts] = useState([]);
 

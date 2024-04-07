@@ -10,7 +10,10 @@ import avatar from "../../assets/default-avatar.png";
 import { MdOutlineDeleteSweep } from "react-icons/md";
 import AddHolidayView from "./AddHolidayView";
 import { DeleteHoliday, FetchHolidays } from "../../api/EventApi";
-const Dashboard = ({ bool, roles, admin, ui, school }) => {
+import { useAppContext } from "../../AppContext";
+
+const Dashboard = ({ bool }) => {
+  const { school, admin, roles } = useAppContext();
   const [adminCnt, setAdminCnt] = useState("0");
   const [userCnt, setUserCnt] = useState("0");
   const [productsCnt, setProductCnt] = useState("0");
@@ -391,7 +394,6 @@ const Dashboard = ({ bool, roles, admin, ui, school }) => {
               className={`flex fixed top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full `}
             >
               <UpdateInfo
-                admin={admin}
                 close={() => {
                   setOverlayClicked(false);
                   setUpdateInfoClicked(false);

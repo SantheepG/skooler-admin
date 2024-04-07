@@ -1,7 +1,9 @@
 import React from "react";
 import hologoLogo from "../../assets/Hologo_logo.png";
 import { s3base_URL } from "../../App";
-const Nav = ({ school, ui }) => {
+import { useAppContext } from "../../AppContext";
+const Nav = () => {
+  const { ui, school } = useAppContext();
   return (
     <React.Fragment>
       <nav

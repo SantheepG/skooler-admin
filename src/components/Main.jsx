@@ -11,24 +11,16 @@ import ManageStock from "./ManageStock/ManageStock";
 import ManageComplaints from "./ManageComplaints/ManageComplaints";
 import ManageEvents from "./ManageEvents/ManageEvents";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-const Main = ({ school, ui }) => {
+import { useAppContext } from "../AppContext";
+
+const Main = () => {
+  const { roles } = useAppContext();
   const navigate = useNavigate();
-  const [adminData, setAdminData] = useState([]);
-  const [roles, setRoles] = useState("");
   const [toggleSidebar, setToggleBar] = useState(false);
+
   useEffect(() => {
-    const storedAdminData = JSON.parse(localStorage.getItem("admin"));
-    const cookie = Cookies.get("jwt");
-    console.log(cookie);
-    if (storedAdminData) {
-      setAdminData(storedAdminData);
-      const jsonData = JSON.parse(storedAdminData.roles);
-      const adminRoles = Object.keys(jsonData).filter(
-        (key) => jsonData[key] === true
-      );
-      setRoles(adminRoles);
-    } else {
+    const token = localStorage.getItem("tkn");
+    if (!token) {
       navigate("/");
     }
   }, []);
@@ -39,92 +31,50 @@ const Main = ({ school, ui }) => {
   let componentToRender;
 
   if (state.dashboardClicked) {
-    if (roles.includes("Dashboard")) {
-      componentToRender = (
-        <Dashboard
-          bool={true}
-          roles={roles}
-          admin={adminData}
-          ui={ui}
-          school={school}
-        />
-      );
-    } else {
-      componentToRender = <Dashboard bool={false} ui={ui} school={school} />;
-    }
+    componentToRender = (
+      <Dashboard bool={roles.includes("Dashboard") ? true : false} />
+    );
   } else if (state.usersClicked) {
-    if (roles.includes("ManageUsers")) {
-      componentToRender = <ManageUsers bool={true} ui={ui} school={school} />;
-    } else {
-      componentToRender = <ManageUsers bool={false} ui={ui} school={school} />;
-    }
+    componentToRender = (
+      <ManageUsers bool={roles.includes("ManageUsers") ? true : false} />
+    );
   } else if (state.adminsClicked) {
-    if (roles.includes("ManageAdmins")) {
-      componentToRender = (
-        <ManageAdmins
-          adminData={adminData}
-          bool={true}
-          ui={ui}
-          school={school}
-        />
-      );
-    } else {
-      componentToRender = <ManageAdmins bool={false} ui={ui} school={school} />;
-    }
+    componentToRender = (
+      <ManageAdmins bool={roles.includes("ManageAdmins") ? true : false} />
+    );
   } else if (state.productsClicked) {
-    if (roles.includes("ManageProducts")) {
-      componentToRender = (
-        <ManageProducts bool={true} ui={ui} school={school} />
-      );
-    } else {
-      componentToRender = (
-        <ManageProducts bool={false} ui={ui} school={school} />
-      );
-    }
+    componentToRender = (
+      <ManageProducts bool={roles.includes("ManageProducts") ? true : false} />
+    );
   } else if (state.ordersClicked) {
-    if (roles.includes("ManageOrders")) {
-      componentToRender = <ManageOrders bool={true} ui={ui} school={school} />;
-    } else {
-      componentToRender = <ManageOrders bool={false} />;
-    }
+    componentToRender = (
+      <ManageOrders bool={roles.includes("ManageOrders") ? true : false} />
+    );
   } else if (state.stockClicked) {
-    if (roles.includes("ManageStock")) {
-      componentToRender = <ManageStock bool={true} ui={ui} school={school} />;
-    } else {
-      componentToRender = <ManageStock bool={false} ui={ui} school={school} />;
-    }
+    componentToRender = (
+      <ManageStock bool={roles.includes("ManageStock") ? true : false} />
+    );
   } else if (state.complaintsClicked) {
-    if (roles.includes("ManageComplaints")) {
-      componentToRender = (
-        <ManageComplaints bool={true} ui={ui} school={school} />
-      );
-    } else {
-      componentToRender = (
-        <ManageComplaints bool={false} ui={ui} school={school} />
-      );
-    }
+    componentToRender = (
+      <ManageComplaints
+        bool={roles.includes("ManageComplaints") ? true : false}
+      />
+    );
   } else if (state.eventsClicked) {
-    if (roles.includes("ManageEvents")) {
-      componentToRender = <ManageEvents bool={true} ui={ui} school={school} />;
-    } else {
-      componentToRender = <ManageEvents bool={false} ui={ui} school={school} />;
-    }
+    componentToRender = (
+      <ManageEvents bool={roles.includes("ManageEvents") ? true : false} />
+    );
   }
 
   return (
     <React.Fragment>
-      <Navbar
-        ui={ui}
-        school={school}
-        toggle={() => setToggleBar(!toggleSidebar)}
-      />
-      <Sidebar roles={roles} toggle={toggleSidebar} ui={ui} />
+      <Navbar toggle={() => setToggleBar(!toggleSidebar)} />
+      <Sidebar toggle={toggleSidebar} />
       <div class="p-2 sm:ml-64">
         <div class="p-6 gray-200 rounded-lg dark:border-gray-700 mt-14">
           {componentToRender}
         </div>
       </div>
-      <div></div>
     </React.Fragment>
   );
 };

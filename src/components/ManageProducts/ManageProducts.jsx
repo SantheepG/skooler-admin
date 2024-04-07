@@ -6,7 +6,6 @@ import AddProductView from "./AddProductView";
 import UpdateStockView from "../ManageStock/UpdateStockView";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import AccessDenied from "../AccessDenied";
 import { FaPlus } from "react-icons/fa6";
 import AddCatView from "./AddCatView";
@@ -16,7 +15,9 @@ import {
   FetchCategories,
   FetchProducts,
 } from "../../api/ProductApi";
-const ManageProducts = ({ bool, school }) => {
+import { useAppContext } from "../../AppContext";
+const ManageProducts = ({ bool }) => {
+  const { school } = useAppContext();
   const [fetchedProducts, setFetchedProducts] = useState(null);
   const [productsToview, setProductsToView] = useState([]);
   const [overlayClicked, setOverlayClicked] = useState(false);

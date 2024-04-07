@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { AddAdmin } from "../../api/AdminApi";
 import { adminDetailsSchema } from "../../validations";
-
-const AddAdminView = ({ closeModal, reload, school }) => {
+import { useAppContext } from "../../AppContext";
+const AddAdminView = ({ closeModal, reload }) => {
+  const { school } = useAppContext();
   const [viewRolesDropdown, setViewRolesDropdown] = useState(false);
   const [errorAlert, setErrorAlert] = useState({});
   //Admin data

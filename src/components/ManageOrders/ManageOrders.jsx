@@ -11,7 +11,9 @@ import {
   ChangeOrderStatus,
 } from "../../api/OrderApi";
 import SlipView from "./SlipView";
-const ManageOrders = ({ bool, school }) => {
+import { useAppContext } from "../../AppContext";
+const ManageOrders = ({ bool }) => {
+  const { school } = useAppContext();
   const [overlayClicked, setOverlayClicked] = useState(false);
   const [fetchedOrders, setFetchedOrders] = useState(null);
   const [ordersToView, setOrdersToView] = useState([]);

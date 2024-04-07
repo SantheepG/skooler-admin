@@ -13,10 +13,12 @@ import {
   FetchEvents,
   UpdateBookingStatus,
 } from "../../api/EventApi";
-
 import BookingRow from "./BookingRow";
 import BookingSlipView from "./BookingSlipView";
-const ManageEvents = ({ bool, school }) => {
+import { useAppContext } from "../../AppContext";
+
+const ManageEvents = ({ bool }) => {
+  const { school } = useAppContext();
   const [fetchedEvents, setFetchedEvents] = useState(null);
   const [fetchedBookings, setFetchedBookings] = useState(null);
   const [eventsToView, setEventsToView] = useState([]);

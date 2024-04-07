@@ -3,6 +3,7 @@ import Main from "./components/Main";
 import Login from "./components/Login/Login";
 import { FetchSchool } from "./api/SchoolApi";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AppProvider } from "./AppContext";
 
 export const imgFormats = ["jpg", "jpeg", "png", "bmp", "wbmp"]; //img formats
 export const base_URL = "http://127.0.0.1:8000/api"; //URL for school DB
@@ -12,17 +13,15 @@ export const schoolID = "SC-24"; //School ID
 
 function App() {
   const [school, setSchool] = useState("");
-  const [ui, setUI] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await FetchSchool();
         if (response.status === 200) {
-          localStorage.setItem("ui", response.data.school.ui);
-          localStorage.setItem("school", JSON.stringify(response.data.school));
           setSchool(response.data.school);
-          setUI(JSON.parse(response.data.school.ui));
+        } else if (response.status === 401) {
+          console.log("Unauthorized");
         } else {
           console.log(response);
         }
@@ -34,19 +33,18 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      {school.is_active && (
-        <div className="App">
-          <Routes>
-            <Route path="/" element={<Login school={school} ui={ui} />}></Route>
-            <Route
-              path="/admin"
-              element={<Main school={school} ui={ui} />}
-            ></Route>
-          </Routes>
-        </div>
-      )}
-    </Router>
+    <AppProvider>
+      <Router>
+        {school && school.is_active && (
+          <div className="App">
+            <Routes>
+              <Route path="/" element={<Login />}></Route>
+              <Route path="/admin" element={<Main />}></Route>
+            </Routes>
+          </div>
+        )}
+      </Router>
+    </AppProvider>
   );
 }
 

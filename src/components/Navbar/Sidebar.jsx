@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   BiGridAlt,
   BiErrorCircle,
@@ -7,29 +7,17 @@ import {
 } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setClicked } from "../../redux/action";
-
-const Sidebar = ({ roles, toggle }) => {
+import { useAppContext } from "../../AppContext";
+const Sidebar = ({ toggle }) => {
+  const { ui, roles } = useAppContext();
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  const [ui, setUI] = useState("");
-  const [school, setSchool] = useState("");
 
   const handleItemClick = (item) => {
     if (!state[item]) {
       dispatch(setClicked(item, true));
     }
   };
-
-  useEffect(() => {
-    const storedUIData = JSON.parse(localStorage.getItem("ui"));
-    const storedSchoolData = JSON.parse(localStorage.getItem("school"));
-    if (storedUIData) {
-      setUI(storedUIData);
-    }
-    if (storedSchoolData) {
-      setSchool(storedSchoolData);
-    }
-  }, []);
 
   return (
     <React.Fragment>

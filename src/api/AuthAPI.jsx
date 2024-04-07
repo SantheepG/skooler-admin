@@ -14,6 +14,21 @@ export const AdminLogin = async (data) => {
     console.error("Error logging out:", error);
   }
 };
+export const FetchAdmin = async () => {
+  try {
+    let tkn = localStorage.getItem("tkn");
+    const response = await axios.get(`${base_URL}/admin`, {
+      headers: {
+        Authorization: `Bearer ${tkn}`,
+        "ngrok-skip-browser-warning": "0",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 export const Logout = async () => {
   try {
     const response = await axios.post(`${base_URL}/logout/admin`, null, {

@@ -3,8 +3,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { VerifyAdminPhone, CheckOtp, RecoverAccount } from "../../api/AuthAPI";
 import { phoneSchema, pwdSchema } from "../../validations";
-
-const PwdReset = ({ loginClicked, ui, school }) => {
+import { useAppContext } from "../../AppContext";
+const PwdReset = ({ loginClicked }) => {
+  const { ui, school } = useAppContext();
   const [phoneNo, setPhoneNo] = useState("");
   const [actualNumber, setActualNumber] = useState("");
   const [viewSpinner, setViewSpinner] = useState(false);

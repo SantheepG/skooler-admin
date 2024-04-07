@@ -3,7 +3,9 @@ import { UpdatePwd } from "../../api/AuthAPI";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UpdateName } from "../../api/AuthAPI";
-const UpdateInfo = ({ admin, close }) => {
+import { useAppContext } from "../../AppContext";
+const UpdateInfo = ({ close }) => {
+  const { admin } = useAppContext();
   const [fname, setFname] = useState("");
   const [surname, setSurname] = useState("");
   const [pwdClicked, setPwdClicked] = useState(false);
