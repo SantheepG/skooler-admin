@@ -163,9 +163,9 @@ const ManageComplaints = ({ bool }) => {
               <tbody>
                 {fetchedComplaints !== null ? (
                   complaintsToView.length !== 0 ? (
-                    complaintsToView.map((complaint, index) => (
+                    complaintsToView.map((complaint) => (
                       <ComplaintRow
-                        key={index}
+                        key={complaint.id}
                         reload={() => setReloadComponent(true)}
                         complaint={complaint}
                         overlayClicked={() => {

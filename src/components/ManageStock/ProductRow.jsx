@@ -94,7 +94,7 @@ const OrderRow = ({
         </a>
         {viewEditDropdown && (
           <ul
-            className={`absolute z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
+            className={`animate-slide-in-from-right absolute z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
               viewEditDropdown ? "-mx-32 -mt-12" : "hidden"
             }`}
             aria-labelledby="dropdownMenuButton1"

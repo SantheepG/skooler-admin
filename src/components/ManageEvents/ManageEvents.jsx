@@ -222,7 +222,7 @@ const ManageEvents = ({ bool }) => {
             <ToastContainer />
           </div>
           {!bookingClicked && (
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
+            <div class="animate-view-content relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
               <div
                 class={`flex items-center lg:px-6 justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
                   overlayClicked ? "opacity-40" : ""
@@ -355,7 +355,7 @@ const ManageEvents = ({ bool }) => {
                 <tbody>
                   {fetchedEvents !== null ? (
                     eventsToView.length !== 0 ? (
-                      eventsToView.map((event, index) => (
+                      eventsToView.map((event) => (
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                           <EventRow
                             key={event.id}
@@ -413,7 +413,7 @@ const ManageEvents = ({ bool }) => {
             </div>
           )}
           {bookingClicked && (
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
+            <div class="animate-view-content relative overflow-x-auto shadow-md sm:rounded-lg admin-table">
               <div
                 class={`flex items-center lg:px-6 justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900 ${
                   overlayClicked ? "opacity-40" : ""

@@ -87,7 +87,7 @@ const UpdateInfo = ({ close }) => {
     }
   };
   return (
-    <div className="my-4  bg-white max-w-screen-md border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
+    <div className="animate-view-content my-4 bg-white max-w-screen-md border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
       <ToastContainer />
       <div className="flex flex-col border-b py-4 sm:flex-row sm:items-start">
         <div className="shrink-0 mr-auto sm:py-3">

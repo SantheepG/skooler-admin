@@ -136,7 +136,7 @@ const AddAdminView = ({ closeModal, reload }) => {
 
   return (
     <React.Fragment>
-      <div class="relative w-full max-w-2xl max-h-full">
+      <div class="animate-view-content relative w-full max-w-2xl max-h-full">
         <Toaster className="notifier" />
         <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">

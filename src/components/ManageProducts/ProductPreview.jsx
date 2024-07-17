@@ -12,7 +12,7 @@ const ProductPreview = ({ closeModal, product }) => {
   return (
     <React.Fragment>
       {product ? (
-        <div class="relative w-full max-w-3xl max-h-full">
+        <div class="animate-view-content relative w-full max-w-3xl max-h-full">
           <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">

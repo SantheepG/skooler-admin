@@ -95,7 +95,7 @@ const AdminDetailsView = ({ ViewAdminOverlayHandler, admin, reload }) => {
   return (
     <React.Fragment>
       {admin ? (
-        <div class="relative w-full max-w-2xl max-h-full">
+        <div class="animate-view-content relative w-full max-w-2xl max-h-full">
           <Toaster className="notifier" />
           <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
@@ -220,7 +220,7 @@ const AdminDetailsView = ({ ViewAdminOverlayHandler, admin, reload }) => {
                         selectedRoles.map((role, index) => (
                           <span
                             id={index}
-                            class="inline-flex mb-1 items-center px-2 py-1 me-2 text-sm font-medium text-blue-800 bg-blue-100 rounded dark:bg-blue-900 dark:text-blue-300"
+                            class="animate-view-content inline-flex mb-1 items-center px-2 py-1 me-2 text-sm font-medium text-blue-800 bg-blue-100 rounded dark:bg-blue-900 dark:text-blue-300"
                           >
                             {role}
                             <button
@@ -261,7 +261,7 @@ const AdminDetailsView = ({ ViewAdminOverlayHandler, admin, reload }) => {
                         ? nonSelectedRoles.map((role, index) => (
                             <span
                               id={index}
-                              class="inline-flex mb-1 items-center px-2 py-1 me-2 text-sm font-medium text-gray-800 bg-gray-200 rounded dark:bg-blue-900 dark:text-blue-300"
+                              class="animate-view-content inline-flex mb-1 items-center px-2 py-1 me-2 text-sm font-medium text-gray-800 bg-gray-200 rounded dark:bg-blue-900 dark:text-blue-300"
                             >
                               {role}
                               <button

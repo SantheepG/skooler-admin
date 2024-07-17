@@ -139,7 +139,7 @@ const OrderRow = ({
             </svg>
           </button>
           <ul
-            className={`absolute right-24 top-0 z-[1000] m-0 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
+            className={`animate-slide-in-from-right absolute right-24 top-0 z-[1000] m-0 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block ${
               viewEditDropdown ? "mt-6" : "hidden"
             }`}
             aria-labelledby="dropdownMenuButton1"

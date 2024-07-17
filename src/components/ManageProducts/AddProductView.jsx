@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { AddProductImgs, AddProducts } from "../../api/ProductApi";
 import { imgFormats } from "../../App";
 import "react-toastify/dist/ReactToastify.css";
+import { useAppContext } from "../../AppContext";
 const AddProductView = ({
   products,
   category,
@@ -11,6 +12,7 @@ const AddProductView = ({
   closeModal,
   reload,
 }) => {
+  const { school } = useAppContext();
   const [viewSubcategory, setViewSubcategory] = useState(false);
   const [viewDiscount, setViewDiscount] = useState(false);
   const [viewColor, setViewColor] = useState(false);
@@ -273,7 +275,7 @@ const AddProductView = ({
       >
         <ToastContainer />
 
-        <div class="relative p-4 w-full max-w-3xl h-full md:h-auto">
+        <div class="animate-view-content relative p-4 w-full max-w-3xl h-full md:h-auto">
           <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -283,6 +285,7 @@ const AddProductView = ({
                 type="button"
                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                 data-modal-toggle="createProductModal"
+                disabled={addProductClicked}
                 onClick={() => {
                   resetStates();
                   closeModal();
@@ -320,6 +323,7 @@ const AddProductView = ({
                     id="name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     required=""
+                    disabled={addProductClicked}
                     onChange={(e) =>
                       setAddProductDetails({
                         ...AddProductDetails,
@@ -338,6 +342,7 @@ const AddProductView = ({
                   <select
                     id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    disabled={addProductClicked}
                     onChange={(e) => handleCategoryChange(e)}
                   >
                     <option value="" disabled selected>
@@ -364,6 +369,7 @@ const AddProductView = ({
                     id="price"
                     min={0}
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    disabled={addProductClicked}
                     onChange={(e) =>
                       setAddProductDetails({
                         ...AddProductDetails,
@@ -382,6 +388,7 @@ const AddProductView = ({
                     </label>
                     <span
                       className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                      disabled={addProductClicked}
                       onClick={() => setViewSubcategory(!viewSubcategory)}
                     >
                       <IoIosAddCircleOutline />
@@ -422,6 +429,7 @@ const AddProductView = ({
                       id="width"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       min={0}
+                      disabled={addProductClicked}
                       onChange={(e) =>
                         setAddProductDetails({
                           ...AddProductDetails,
@@ -435,12 +443,14 @@ const AddProductView = ({
                       <label
                         for="weight"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        disabled={addProductClicked}
                         onClick={() => setViewDiscount(!viewDiscount)}
                       >
                         Discount %
                       </label>
                       <span
                         className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                        disabled={addProductClicked}
                         onClick={() => setViewDiscount(!viewDiscount)}
                       >
                         <IoIosAddCircleOutline />
@@ -455,6 +465,7 @@ const AddProductView = ({
                           id="weight"
                           class="Slidedown bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                           min={0}
+                          disabled={addProductClicked}
                           onChange={(e) =>
                             setAddProductDetails({
                               ...AddProductDetails,
@@ -464,6 +475,16 @@ const AddProductView = ({
                         />
                       )}
                     </div>
+                    {AddProductDetails.discount > 0 && (
+                      <span className="absolute mt-1 text-xs text-gray-500">
+                        {school.currency}
+                        {parseFloat(
+                          AddProductDetails.price -
+                            AddProductDetails.price *
+                              (AddProductDetails.discount / 100)
+                        )}
+                      </span>
+                    )}
                   </div>
                   <div>
                     <div className="flex">
@@ -475,6 +496,7 @@ const AddProductView = ({
                       </label>
                       <span
                         className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                        disabled={addProductClicked}
                         onClick={() => setViewColor(!viewColor)}
                       >
                         <IoIosAddCircleOutline />
@@ -487,6 +509,7 @@ const AddProductView = ({
                           name="color"
                           id="color"
                           class="bg-gray-50 border Slidedown border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          disabled={addProductClicked}
                           onChange={(e) =>
                             setAddProductDetails({
                               ...AddProductDetails,
@@ -507,6 +530,7 @@ const AddProductView = ({
                       </label>
                       <span
                         className="p-1 ml-2 hover:text-green-600 cursor-pointer"
+                        disabled={addProductClicked}
                         onClick={() => setViewSize(!viewSize)}
                       >
                         <IoIosAddCircleOutline />
@@ -520,6 +544,7 @@ const AddProductView = ({
                           id="breadth"
                           class="bg-gray-50 Slidedown border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                           min={0}
+                          disabled={addProductClicked}
                           onChange={(e) =>
                             setAddProductDetails({
                               ...AddProductDetails,
@@ -543,6 +568,7 @@ const AddProductView = ({
                     rows="4"
                     class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Write product description here"
+                    disabled={addProductClicked}
                     onChange={(e) =>
                       setAddProductDetails({
                         ...AddProductDetails,
@@ -575,6 +601,7 @@ const AddProductView = ({
                         <button
                           type="button"
                           class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
+                          disabled={addProductClicked}
                           onClick={() => handleImgDelete(index)}
                         >
                           <svg
@@ -630,6 +657,7 @@ const AddProductView = ({
                       id="dropzone-file"
                       type="file"
                       class="hidden"
+                      disabled={addProductClicked}
                       onChange={handleAddImage}
                       accept="image/*"
                     />
@@ -641,6 +669,7 @@ const AddProductView = ({
                   data-modal-toggle="createProductModal"
                   type="button"
                   class="justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  disabled={addProductClicked}
                   onClick={() => {
                     resetStates();
                     closeModal();
@@ -663,6 +692,7 @@ const AddProductView = ({
                 <button
                   type="button"
                   class="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
+                  disabled={addProductClicked}
                   onClick={uploadImgs}
                 >
                   <svg

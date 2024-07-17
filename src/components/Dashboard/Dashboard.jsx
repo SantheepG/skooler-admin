@@ -251,7 +251,7 @@ const Dashboard = ({ bool }) => {
                               <tr>
                                 <td
                                   key={holiday.id}
-                                  className="py-3 px-5 border-b border-blue-gray-50"
+                                  className="animate-view-content py-3 px-5 border-b border-blue-gray-50"
                                 >
                                   <div className="">
                                     <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">

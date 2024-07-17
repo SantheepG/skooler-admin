@@ -245,9 +245,9 @@ const ManageOrders = ({ bool }) => {
               <tbody className="">
                 {fetchedOrders !== null ? (
                   ordersToView.length !== 0 ? (
-                    ordersToView.map((order, index) => (
+                    ordersToView.map((order) => (
                       <OrderRow
-                        key={index}
+                        key={order.id}
                         order={order}
                         openDropdown={openDropdown}
                         toggleDropdown={() => toggleDropdown(order.id)}

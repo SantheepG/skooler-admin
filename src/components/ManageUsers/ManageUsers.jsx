@@ -144,9 +144,8 @@ const ManageUsers = ({ bool }) => {
                 {fetchedUsers !== null ? (
                   usersToView !== undefined && usersToView.length !== 0 ? (
                     usersToView.map((user) => (
-                      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <UserRow
-                          key={user._id}
+                      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" key={user.id}>
+                        <UserRow 
                           userData={user}
                           openDropdown={openDropdown}
                           toggleDropdown={() => toggleDropdown(user.id)}

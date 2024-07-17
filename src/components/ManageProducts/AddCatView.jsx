@@ -44,7 +44,7 @@ const AddCatView = ({ closeModal, categories, setReloadComponent }) => {
       <div class="relative w-full max-w-xs max-h-full">
         <Toaster className="notifier" />
 
-        <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <form class="animate-view-content relative bg-white rounded-lg shadow dark:bg-gray-700">
           <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
               Add category

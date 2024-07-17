@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import Main from "./components/Main";
 import Login from "./components/Login/Login";
 import { FetchSchool } from "./api/SchoolApi";
@@ -7,14 +7,14 @@ import { AppProvider } from "./AppContext";
 
 export const imgFormats = ["jpg", "jpeg", "png", "bmp", "wbmp"]; //img formats
 export const base_URL = "http://127.0.0.1:8000/api"; //URL for school DB
-export const base_URL2 = "http://127.0.0.1:8080/api"; //URL for main DB
-export const s3base_URL = "https://skoolers3.s3.amazonaws.com/"; //base url for amazon s3 bucket
+export const base_URL2 ="http://localhost:8080/api"; //URL for main DB
+export const s3base_URL = "https://skooler.s3.amazonaws.com/"; //base url for amazon s3 bucket
 export const schoolID = "SC-24"; //School ID
 
 function App() {
   const [school, setSchool] = useState("");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchData = async () => {
       try {
         const response = await FetchSchool();

@@ -17,7 +17,7 @@ const ManageStock = ({ bool }) => {
   const [editProductClicked, setEditProductClicked] = useState(false);
   const [previewProductClicked, setpreviewProductClicked] = useState(false);
   const [deleteProductClicked, setdeleteProductClicked] = useState(false);
-  const [currentProductIndex, setCurrentProductIndex] = useState(0);
+
   const [currentProduct, setCurrentProduct] = useState([]);
   const [reloadComponent, setReloadComponent] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -224,10 +224,10 @@ const ManageStock = ({ bool }) => {
               <tbody>
                 {fetchedProducts !== null ? (
                   productsToview.length !== 0 ? (
-                    productsToview.map((product, index) => (
-                      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    productsToview.map((product) => (
+                      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" key={product.id}>
                         <ProductRow
-                          key={index}
+                          
                           product={product}
                           categories={categories}
                           subcategories={subcategories}
@@ -236,19 +236,19 @@ const ManageStock = ({ bool }) => {
                           previewProduct={() => {
                             setOverlayClicked(!overlayClicked);
                             setpreviewProductClicked(!previewProductClicked);
-                            setCurrentProductIndex(index);
+                            
                             setCurrentProduct(product);
                           }}
                           editProduct={() => {
                             setOverlayClicked(!overlayClicked);
                             setEditProductClicked(!editProductClicked);
-                            setCurrentProductIndex(index);
+                           
                             setCurrentProduct(product);
                           }}
                           deleteProduct={() => {
                             setOverlayClicked(!overlayClicked);
                             setdeleteProductClicked(!deleteProductClicked);
-                            setCurrentProductIndex(index);
+                            
                             setCurrentProduct(product);
                           }}
                         />

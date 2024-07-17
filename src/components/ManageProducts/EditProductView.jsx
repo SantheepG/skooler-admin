@@ -258,7 +258,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
   return (
     <React.Fragment>
       {product ? (
-        <div class="relative w-full max-w-5xl max-h-full">
+        <div class="animate-view-content relative w-full max-w-5xl max-h-full">
           <div className="fixed">
             <ToastContainer />
           </div>
@@ -275,6 +275,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                 <button
                   type="button"
                   class="py-2 px-8 me-2 mr-8 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
+                  disabled={updateProductClicked}
                   onClick={handleUpdateProductImgs}
                 >
                   <svg
@@ -303,6 +304,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                   type="button"
                   class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                   data-modal-hide="editUserModal"
+                  disabled={updateProductClicked}
                   onClick={() => closeModal()}
                 >
                   <svg
@@ -343,6 +345,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       value={updateDetails.name}
                       required=""
+                      disabled={updateProductClicked}
                       onChange={(e) =>
                         setUpdateDetails({
                           ...updateDetails,
@@ -365,6 +368,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                           rows="4"
                           class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
                           value={updateDetails.description}
+                          disabled={updateProductClicked}
                           onChange={(e) =>
                             setUpdateDetails({
                               ...updateDetails,
@@ -396,6 +400,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                               <button
                                 type="button"
                                 class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
+                                disabled={updateProductClicked}
                                 onClick={() => setImgToDelete(index)}
                               >
                                 <svg
@@ -417,6 +422,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                                 imgToDelete === index && (
                                   <p
                                     class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1 ml-6 text-xs border rounded-xl px-2 cursor-pointer hover:red-800"
+                                    disabled={updateProductClicked}
                                     onClick={() =>
                                       handleProductImgDelete(index)
                                     }
@@ -446,6 +452,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                             <button
                               type="button"
                               class="absolute text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1"
+                              disabled={updateProductClicked}
                               onClick={() => handleImgDelete(index)}
                             >
                               <svg
@@ -497,6 +504,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                           id="dropzone-file"
                           type="file"
                           class="hidden"
+                          disabled={updateProductClicked}
                           onChange={handleAddImage}
                           accept="image/*"
                         />
@@ -515,6 +523,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                     <select
                       id="category"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      disabled={updateProductClicked}
                       onChange={handleCategoryChange}
                     >
                       <option value="" disabled selected>
@@ -542,6 +551,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                     <select
                       id="category"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      disabled={updateProductClicked}
                       onChange={handleSubCategoryChange}
                     >
                       <option value="" disabled selected>
@@ -575,6 +585,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       value={updateDetails.price}
                       required=""
+                      disabled={updateProductClicked}
                       onChange={(e) =>
                         setUpdateDetails({
                           ...updateDetails,
@@ -598,6 +609,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                       value={updateDetails.stock}
                       required=""
                       min={0}
+                      disabled={updateProductClicked}
                       onChange={(e) =>
                         setUpdateDetails({
                           ...updateDetails,
@@ -621,6 +633,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                       value={updateDetails.discount}
                       required=""
                       min={0}
+                      disabled={updateProductClicked}
                       onChange={(e) =>
                         setUpdateDetails({
                           ...updateDetails,
@@ -643,6 +656,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       value={updateDetails.color}
                       required=""
+                      disabled={updateProductClicked}
                       onChange={(e) =>
                         setUpdateDetails({
                           ...updateDetails,
@@ -665,6 +679,7 @@ const EditProductView = ({ closeModal, product, reload }) => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       value={updateDetails.size}
                       required=""
+                      disabled={updateProductClicked}
                       onChange={(e) =>
                         setUpdateDetails({
                           ...updateDetails,

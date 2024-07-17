@@ -5,7 +5,7 @@ const UserDetailsView = ({ ViewOverlayHandler, user }) => {
   return (
     <React.Fragment>
       {user ? (
-        <div class="relative w-full max-w-2xl max-h-full">
+        <div class="animate-view-content relative w-full max-w-2xl max-h-full">
           <form class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
               <div className="h-24 w-24 rounded-full">
