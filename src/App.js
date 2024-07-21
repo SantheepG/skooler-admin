@@ -6,9 +6,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AppProvider } from "./AppContext";
 
 export const imgFormats = ["jpg", "jpeg", "png", "bmp", "wbmp"]; //img formats
-export const base_URL = "http://127.0.0.1:8000/api"; //URL for school DB
-export const base_URL2 ="http://localhost:8080/api"; //URL for main DB
-export const s3base_URL = "https://skooler.s3.amazonaws.com/"; //base url for amazon s3 bucket
+export const base_URL = "http://127.0.0.1:8001/api"; //URL for school DB
+export const base_URL2 ="http://localhost:8000/api"; //URL for main DB
+export const s3base_URL = "https://skooler-app.s3.amazonaws.com/"; //base url for amazon s3 bucket
 export const schoolID = "SC-24"; //School ID
 
 function App() {
