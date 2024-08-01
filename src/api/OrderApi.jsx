@@ -3,11 +3,7 @@ import { base_URL } from "../App";
 
 export const FetchOrders = async () => {
   try {
-    const response = await axios.get(`${base_URL}/admin/orders`, {
-      headers: {
-        "ngrok-skip-browser-warning": "0",
-      },
-    });
+    const response = await axios.get(`${base_URL}/admin/orders`);
     return response;
   } catch (error) {
     return error;
@@ -23,8 +19,7 @@ export const ChangeOrderStatus = async (id, status) => {
       },
       {
         headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "0",
+          "Content-Type": "application/json"
         },
       }
     );
@@ -37,8 +32,7 @@ export const UpdateOrder = async (data) => {
   try {
     const response = await axios.put(`${base_URL}/admin/order/update`, data, {
       headers: {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "0",
+        "Content-Type": "application/json"
       },
     });
     return response;
@@ -50,13 +44,7 @@ export const UpdateOrder = async (data) => {
 export const DeleteOrder = async (id) => {
   try {
     const response = await axios.delete(
-      `${base_URL}/admin/order/delete/${id}`,
-      {
-        headers: {
-          "ngrok-skip-browser-warning": "0",
-        },
-      }
-    );
+      `${base_URL}/admin/order/delete/${id}`);
     return response;
   } catch (error) {
     console.log(error);
