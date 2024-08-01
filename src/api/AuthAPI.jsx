@@ -5,8 +5,7 @@ export const AdminLogin = async (data) => {
   try {
     const response = await axios.post(`${base_URL}/login/admin`, data, {
       headers: {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "0",
+        "Content-Type": "application/json"
       },
     });
     return response;
@@ -19,8 +18,7 @@ export const FetchAdmin = async () => {
     let tkn = localStorage.getItem("tkn");
     const response = await axios.get(`${base_URL}/admin`, {
       headers: {
-        Authorization: `Bearer ${tkn}`,
-        "ngrok-skip-browser-warning": "0",
+        Authorization: `Bearer ${tkn}`
       },
     });
 
@@ -33,8 +31,7 @@ export const Logout = async () => {
   try {
     const response = await axios.post(`${base_URL}/logout/admin`, null, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("tkn")}`,
-        "ngrok-skip-browser-warning": "0",
+        Authorization: `Bearer ${localStorage.getItem("tkn")}`
       },
     });
     return response;
@@ -47,8 +44,7 @@ export const UpdatePwd = async (data) => {
     const response = await axios.put(`${base_URL}/admin/reset/pwd`, data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("tkn")}`,
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "0",
+        "Content-Type": "application/json"
       },
     });
     return response;
@@ -61,8 +57,7 @@ export const UpdateName = async (data) => {
     const response = await axios.put(`${base_URL}/admin/update/name`, data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("tkn")}`,
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "0",
+        "Content-Type": "application/json"
       },
     });
     return response;
@@ -77,8 +72,7 @@ export const VerifyAdminPhone = async (phoneNo) => {
       { mobile_no: phoneNo },
       {
         headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "0",
+          "Content-Type": "application/json"
         },
       }
     );
@@ -94,8 +88,7 @@ export const RecoverAccount = async (phoneNo, pwd) => {
       { mobile_no: phoneNo, pwd: pwd },
       {
         headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "0",
+          "Content-Type": "application/json"
         },
       }
     );
@@ -111,8 +104,7 @@ export const CheckOtp = async (phoneNo, otp) => {
       { mobile_no: phoneNo, otp: otp },
       {
         headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "0",
+          "Content-Type": "application/json"
         },
       }
     );
