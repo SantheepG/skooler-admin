@@ -1,13 +1,8 @@
 // reducer.js
 const initialState = {
-  dashboardClicked: true,
+  dashboardClicked: false,
   usersClicked: false,
-  adminsClicked: false,
-  productsClicked: false,
-  ordersClicked: false,
-  stockClicked: false,
-  eventsClicked: false,
-  complaintsClicked: false,
+  botsClicked: true,
 };
 
 const SidebarReducer = (state = initialState, action) => {

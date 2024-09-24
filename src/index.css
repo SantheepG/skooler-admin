@@ -47,6 +47,17 @@
     }
   }
 
+@keyframes slideOutToRight {
+    0% {
+        opacity: 1;
+        transform: translateX(0); 
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(100%); 
+    }
+}
+
   @-webkit-keyframes zoomIn {
   0% {
     -webkit-transform: scale(0);
@@ -87,6 +98,11 @@
   .animate-slide-in-from-right {
   animation: slideInFromRight 0.2s ease forwards;
 }
+
+  .animate-slide-out-to-right {
+  animation: slideOutToRight 0.2s ease-in-out forwards;
+}
+
 .transition-opacity {
   transition: opacity 0.3s ease-in-out;
 }

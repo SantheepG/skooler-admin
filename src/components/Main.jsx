@@ -3,18 +3,11 @@ import { useSelector } from "react-redux";
 import Sidebar from "./Navbar/Sidebar";
 import Navbar from "./Navbar/Navbar";
 import Dashboard from "./Dashboard/Dashboard";
-import ManageAdmins from "./ManageAdmins/ManageAdmins";
 import ManageUsers from "./ManageUsers/ManageUsers";
-import ManageProducts from "./ManageProducts/ManageProducts";
-import ManageOrders from "./ManageOrders/ManageOrders";
-import ManageStock from "./ManageStock/ManageStock";
-import ManageComplaints from "./ManageComplaints/ManageComplaints";
-import ManageEvents from "./ManageEvents/ManageEvents";
+import ManageBots from "./ManageBots/ManageBots";
 import { useNavigate } from "react-router-dom";
-import { useAppContext } from "../AppContext";
-
+import Drawer from "./Drawer/Drawer";
 const Main = () => {
-  const { roles } = useAppContext();
   const navigate = useNavigate();
   const [toggleSidebar, setToggleBar] = useState(false);
 
@@ -32,39 +25,17 @@ const Main = () => {
 
   if (state.dashboardClicked) {
     componentToRender = (
-      <Dashboard bool={roles.includes("Dashboard") ? true : false} />
+      <Dashboard />
     );
   } else if (state.usersClicked) {
     componentToRender = (
-      <ManageUsers bool={roles.includes("ManageUsers") ? true : false} />
+      <ManageUsers />
     );
-  } else if (state.adminsClicked) {
+  } else if (state.botsClicked) {
     componentToRender = (
-      <ManageAdmins bool={roles.includes("ManageAdmins") ? true : false} />
+      <ManageBots />
     );
-  } else if (state.productsClicked) {
-    componentToRender = (
-      <ManageProducts bool={roles.includes("ManageProducts") ? true : false} />
-    );
-  } else if (state.ordersClicked) {
-    componentToRender = (
-      <ManageOrders bool={roles.includes("ManageOrders") ? true : false} />
-    );
-  } else if (state.stockClicked) {
-    componentToRender = (
-      <ManageStock bool={roles.includes("ManageStock") ? true : false} />
-    );
-  } else if (state.complaintsClicked) {
-    componentToRender = (
-      <ManageComplaints
-        bool={roles.includes("ManageComplaints") ? true : false}
-      />
-    );
-  } else if (state.eventsClicked) {
-    componentToRender = (
-      <ManageEvents bool={roles.includes("ManageEvents") ? true : false} />
-    );
-  }
+  } 
 
   return (
     <React.Fragment>
@@ -75,6 +46,7 @@ const Main = () => {
           {componentToRender}
         </div>
       </div>
+     
     </React.Fragment>
   );
 };

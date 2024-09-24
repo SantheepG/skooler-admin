@@ -1,44 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { s3base_URL } from "../../App";
 import { Logout } from "../../api/AuthAPI";
 import defaultImg from "../../assets/default-avatar.png";
-import { useAppContext } from "../../AppContext";
+import hologoImg from "../../assets/Hologo_logo.png";
 
 const Navbar = ({ toggle }) => {
-  const { ui, school, setLoginStatus, admin } = useAppContext();
   const [userClicked, setUserClicked] = useState(false);
-  const navigate = useNavigate();
-  const [adminName, setAdminName] = useState("");
-  const [adminEmail, setEmailAdmin] = useState("");
 
-  useEffect(() => {
-    if (admin) {
-      setAdminName(`${admin.first_name} ${admin.last_name}`);
-      setEmailAdmin(admin.email);
-    }
-  }, []);
 
-  const handleLogout = async () => {
-    try {
-      const response = await Logout();
-      if (response.status === 200) {
-        setLoginStatus(false);
-        console.log("logged out");
-        localStorage.clear();
-        navigate("/");
-      } else {
-        console.log("Error: ", response);
-      }
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-  };
+
 
   return (
     <React.Fragment>
       <nav
-        class={`fixed border-b-2 border-${ui.secondary_clr} shadow-md lg:px-10 top-0 z-50 w-full bg-white`}
+        class={`fixed border-b-1 shadow-md lg:px-10 top-0 z-50 w-full bg-white`}
       >
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
           <div class="flex items-center justify-between">
@@ -68,13 +43,13 @@ const Navbar = ({ toggle }) => {
               </button>
               <div className="ml-10 w-12 h-12">
                 <img
-                  src={`${s3base_URL}${school.logo}`}
+                  src={hologoImg}
                   alt="School logo"
                   className="max-w-100"
                 />
               </div>
-              <span className="m-3 hidden lg:block md:block text-gray-600">
-                {school.name}
+              <span className="m-3 hidden lg:block md:block text-gray-600 font-semibold">
+                Hologo <span className="text-orange-600">AI</span>
               </span>
             </div>
             <div class="flex items-center">
@@ -108,10 +83,10 @@ const Navbar = ({ toggle }) => {
                 >
                   <div class="py-3 px-4">
                     <span class="block text-sm font-semibold text-gray-900 dark:text-white">
-                      {adminName}
+                      adminName
                     </span>
                     <span class="block text-sm text-gray-500 truncate dark:text-gray-400">
-                      {adminEmail}
+                      adminEmail
                     </span>
                   </div>
                   <a
@@ -120,7 +95,7 @@ const Navbar = ({ toggle }) => {
                     role="menuitem"
                     tabindex="-1"
                     id="user-menu-item-2"
-                    onClick={handleLogout}
+                  
                   >
                     Log out
                   </a>
